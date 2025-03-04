@@ -1,6 +1,6 @@
 [package]
 name = "treasure"
-version = "0.0.12"
+version = "0.0.13"
 description = "Use SSH private key to store your passwords locally and make them strong"
 authors = ["bestia.dev"]
 homepage = "https://bestia.dev"

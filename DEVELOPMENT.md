@@ -21,7 +21,6 @@ cargo auto release
 cargo auto doc
 cargo auto test
 cargo auto commit_and push
-cargo auto publish_to_crates_io
 cargo auto github_new_release
 ```
 

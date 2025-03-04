@@ -10,6 +10,8 @@ The TODO section is part of the [README.md](https://github.com/bestia-dev/treasu
 
 ## Unreleased
 
+- readme
+
 ## Version 0.0.1
 
 - Rust project created with `cargo auto new_cli treasure_your_passwords`

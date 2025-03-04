@@ -6,7 +6,7 @@
 [//]: # (auto_cargo_toml_to_md start)
 
 **Use SSH private key to store your passwords locally and make them strong**  
-***version: 0.0.12 date: 2025-03-04 author: [bestia.dev](https://bestia.dev) repository: [GitHub](https://github.com/bestia-dev/treasure_your_passwords)***
+***version: 0.0.13 date: 2025-03-04 author: [bestia.dev](https://bestia.dev) repository: [GitHub](https://github.com/bestia-dev/treasure_your_passwords)***
 
  ![maintained](https://img.shields.io/badge/maintained-green)
  ![work-in-progress](https://img.shields.io/badge/work_in_progress-yellow)
@@ -14,30 +14,51 @@
 
 [//]: # (auto_cargo_toml_to_md end)
 
-  [![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/bestia-dev/treasure_your_passwords/blob/main/LICENSE)
-  [![Rust](https://github.com/bestia-dev/treasure_your_passwords/workflows/rust_fmt_auto_build_test/badge.svg)](https://github.com/bestia-dev/treasure_your_passwords/)
+ ![License](https://img.shields.io/badge/license-MIT-blue.svg)
+ ![Rust](https://github.com/bestia-dev/treasure_your_passwords/workflows/rust_fmt_auto_build_test/badge.svg)
  ![treasure_your_passwords](https://bestia.dev/webpage_hit_counter/get_svg_image/779107454.svg)
 
 [//]: # (auto_lines_of_code start)
-[![Lines in Rust code](https://img.shields.io/badge/Lines_in_Rust-492-green.svg)]()
-[![Lines in Doc comments](https://img.shields.io/badge/Lines_in_Doc_comments-65-blue.svg)]()
-[![Lines in Comments](https://img.shields.io/badge/Lines_in_comments-58-purple.svg)]()
-[![Lines in examples](https://img.shields.io/badge/Lines_in_examples-0-yellow.svg)]()
-[![Lines in tests](https://img.shields.io/badge/Lines_in_tests-0-orange.svg)]()
+[![Lines in Rust code](https://img.shields.io/badge/Lines_in_Rust-492-green.svg)](https://github.com/bestia-dev/treasure/)
+[![Lines in Doc comments](https://img.shields.io/badge/Lines_in_Doc_comments-65-blue.svg)](https://github.com/bestia-dev/treasure/)
+[![Lines in Comments](https://img.shields.io/badge/Lines_in_comments-58-purple.svg)](https://github.com/bestia-dev/treasure/)
+[![Lines in examples](https://img.shields.io/badge/Lines_in_examples-0-yellow.svg)](https://github.com/bestia-dev/treasure/)
+[![Lines in tests](https://img.shields.io/badge/Lines_in_tests-0-orange.svg)](https://github.com/bestia-dev/treasure/)
 
 [//]: # (auto_lines_of_code end)
 
-Hashtags: #maintained #ready-for-use #rustlang #automation #workflow  
+Hashtags: #maintained #work-in-progress #rustlang 
 My projects on GitHub are more like a tutorial than a finished product: [bestia-dev tutorials](https://github.com/bestia-dev/tutorials_rust_wasm).  
 
+## create the SSH key
+
+Create the SSH key and protect it with a passcode.
+
+```bash
+ssh-keygen -t ed25519 -f "vault_ssh_1" -C "vault for secret tokens"
+```
+
+Save the file `ssh_private_key_bare_file_name.cfg` with the content `vault_ssh_1`. The program `treasure` will read this file to find the SSH private key in the `~/.ssh` folder.
 
 ## Use SSH private key to store passwords
 
-With one private key can store many secrets. 
+With one SSH private key, we can store many secret tokens.
 
-## generate strong password
+```bash
+treasure list
+treasure store token_name
+treasure show token_name
+treasure delete token_name
+```
 
-I'd like to have a CLI where to input a humane easy to memorize password.  
+## convert to strong password
+
+I'd like to have a CLI where to input a humane easy to memorize password and convert it into a strong password.  
+
+```bash
+treasure strong
+```
+
 Then sign it with a private key (this encryption is reversible using the public key).  
 Then hash it (this is a one way encryption, so nobody can come back to the first secret).  
 Finally, convert it into a string long 32 characters with ascii7 characters (lowercase, uppercase, numeric and special characters).  

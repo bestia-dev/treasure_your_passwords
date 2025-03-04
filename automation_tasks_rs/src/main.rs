@@ -121,8 +121,6 @@ fn match_arguments_and_call_tasks(mut args: std::env::Args) {
                 } else if &task == "commit_and_push" {
                     let arg_2 = args.next();
                     task_commit_and_push(arg_2);
-                } else if &task == "publish_to_crates_io" {
-                    task_publish_to_crates_io();
                 } else if &task == "github_new_release" {
                     task_github_new_release();
                 } else {
@@ -151,11 +149,6 @@ fn print_help() {
     {YELLOW}<https://github.com/CRUSTDE-ContainerizedRustDevEnv/crustde_cnt_img_pod/blob/main/ssh_easy.md>{YELLOW}
     {YELLOW}On the very first commit, this task will initialize a new local git repository and create a remote GitHub repo.{RESET}
     {YELLOW}For the GitHub API the task needs the Personal Access secret_token Classic from <https://github.com/settings/tokens>{RESET}
-    {YELLOW}You can choose to type the secret_token every time or to store it in a file encrypted with an SSH key.{RESET}
-    {YELLOW}Then you can type the passphrase of the private key every time. This is pretty secure.{RESET}
-    {YELLOW}Somewhat less secure (but more comfortable) way is to store the private key in ssh-agent.{RESET}
-{GREEN}cargo auto publish_to_crates_io{RESET} - {YELLOW}publish to crates.io, git tag{RESET}
-    {YELLOW}You need the API secret_token for publishing. Get the secret_token on <https://crates.io/settings/tokens>.{RESET}
     {YELLOW}You can choose to type the secret_token every time or to store it in a file encrypted with an SSH key.{RESET}
     {YELLOW}Then you can type the passphrase of the private key every time. This is pretty secure.{RESET}
     {YELLOW}Somewhat less secure (but more comfortable) way is to store the private key in ssh-agent.{RESET}
@@ -190,7 +183,7 @@ fn completion() {
     let last_word = args[3].as_str();
 
     if last_word == "cargo-auto" || last_word == "auto" {
-        let sub_commands = vec!["build", "release", "doc", "test", "commit_and_push", "publish_to_crates_io", "github_new_release"];
+        let sub_commands = vec!["build", "release", "doc", "test", "commit_and_push", "github_new_release"];
         cl::completion_return_one_or_more_sub_commands(sub_commands, word_being_completed);
     }
     /*
@@ -352,32 +345,9 @@ fn task_commit_and_push(arg_2: Option<String>) {
     println!(
         r#"
     {YELLOW}After `cargo auto commit_and_push "message"`{RESET}
-{GREEN}cargo auto publish_to_crates_io{RESET}
-"#
-    );
-}
 
-/// publish to crates.io and git tag
-fn task_publish_to_crates_io() {
-    let cargo_toml = cl::CargoToml::read();
-    let package_name = cargo_toml.package_name();
-    let version = cargo_toml.package_version();
-    // take care of tags
-    let tag_name_version = cl::git_tag_sync_check_create_push(&version);
-
-    // cargo publish with encrypted secret secret_token
-    let crates_io_client = crates_io_mod::CratesIoClient::new_with_stored_secret_token();
-    crates_io_client.publish_to_crates_io();
-
-    println!(
-        r#"
-    {YELLOW}After `cargo auto publish_to_crates_io`, check in browser{RESET}
-{GREEN}https://crates.io/crates/{package_name}{RESET}
-    {YELLOW}Add the dependency to your Rust project and check how it works.{RESET}
-{GREEN}{package_name} = "{version}"{RESET}
-
-    {YELLOW}First write the content of the release in the RELEASES.md in the `## Unreleased` section, then{RESET}
-    {YELLOW}Then create the GitHub-Release for {tag_name_version}.{RESET}
+    {YELLOW}First write the content of the release in the RELEASES.md in the `## Unreleased` section, {RESET}
+    {YELLOW}Then create the GitHub Release:{RESET}
 {GREEN}cargo auto github_new_release{RESET}
 "#
     );
