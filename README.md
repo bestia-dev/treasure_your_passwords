@@ -78,7 +78,7 @@ Read the releases changelog in a separate md file:
 
 ## TODO
 
-...
+- better readme
 
 ## Open-source and free as a beer
 
