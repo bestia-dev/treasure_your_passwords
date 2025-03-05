@@ -10,7 +10,7 @@ use crate::encrypt_decrypt_with_ssh_key_mod::{BLUE, GREEN, RED, RESET, YELLOW};
 pub(crate) fn list_token_from_vault(file_bare_name: &str) -> anyhow::Result<Vec<String>> {
     let mut ret_vec_string = vec![];
     println!("{YELLOW}  Check if the encrypted file exists.{RESET}");
-    let encrypted_file_name = camino::Utf8PathBuf::from(format!("/home/rustdevuser/.ssh/{file_bare_name}.enc").as_str());
+    let encrypted_file_name = ende::get_encrypted_file_path(file_bare_name)?;
     if !std::fs::exists(&encrypted_file_name)? {
         println!("{YELLOW}  Encrypted file {encrypted_file_name} does not exist.{RESET}");
         println!("{YELLOW}  Create the vault and store a secret using the store command. {RESET}");
@@ -38,7 +38,7 @@ pub(crate) fn list_token_from_vault(file_bare_name: &str) -> anyhow::Result<Vec<
 /// If exists, decrypt it from file.  
 pub(crate) fn show_secret_token_from_vault(file_bare_name: &str, token_name: &str) -> anyhow::Result<SecretString> {
     println!("{YELLOW}  Check if the ssh private key exists.{RESET}");
-    let private_key_file_path = camino::Utf8PathBuf::from(format!("/home/rustdevuser/.ssh/{file_bare_name}").as_str());
+    let private_key_file_path = ende::get_private_key_file_path(file_bare_name)?;
     if !std::fs::exists(&private_key_file_path)? {
         println!("{RED}Error: Private key {private_key_file_path} does not exist.{RESET}");
         println!("{YELLOW}  Create the private key in bash terminal:{RESET}");
@@ -47,7 +47,7 @@ pub(crate) fn show_secret_token_from_vault(file_bare_name: &str, token_name: &st
     }
 
     println!("{YELLOW}  Check if the encrypted file exists.{RESET}");
-    let encrypted_file_name = camino::Utf8PathBuf::from(format!("/home/rustdevuser/.ssh/{file_bare_name}.enc").as_str());
+    let encrypted_file_name = ende::get_encrypted_file_path(file_bare_name)?;
     if !std::fs::exists(&encrypted_file_name)? {
         println!("{YELLOW}  Encrypted file {encrypted_file_name} does not exist.{RESET}");
         println!("{YELLOW}  Create the vault and store a secret using the store command. {RESET}");
@@ -86,7 +86,7 @@ pub(crate) fn show_secret_token_from_vault(file_bare_name: &str, token_name: &st
 pub(crate) fn store_secret_token_to_vault(file_bare_name: &str, token_name: &str) -> anyhow::Result<()> {
     let mut vec_encrypted_text_with_metadata: Vec<ende::EncryptedTextWithMetadata> = vec![];
     println!("{YELLOW}  Check if the ssh private key exists.{RESET}");
-    let private_key_file_path = camino::Utf8PathBuf::from(format!("/home/rustdevuser/.ssh/{file_bare_name}").as_str());
+    let private_key_file_path = ende::get_private_key_file_path(file_bare_name)?;
     if !std::fs::exists(&private_key_file_path)? {
         println!("{RED}Error: Private key {private_key_file_path} does not exist.{RESET}");
         println!("{YELLOW}  Create the private key in bash terminal:{RESET}");
@@ -95,7 +95,7 @@ pub(crate) fn store_secret_token_to_vault(file_bare_name: &str, token_name: &str
     }
 
     println!("{YELLOW}  Check if the encrypted file exists.{RESET}");
-    let encrypted_file_name = camino::Utf8PathBuf::from(format!("/home/rustdevuser/.ssh/{file_bare_name}.enc").as_str());
+    let encrypted_file_name = ende::get_encrypted_file_path(file_bare_name)?;
     if std::fs::exists(&encrypted_file_name)? {
         println!("{YELLOW}  Open and read the encrypted file.{RESET}");
         let encrypted_text_with_metadata: String = ende::open_file_b64_get_string(&encrypted_file_name)?;
@@ -146,7 +146,7 @@ pub(crate) fn store_secret_token_to_vault(file_bare_name: &str, token_name: &str
 /// If exists, delete it from file.  
 pub(crate) fn delete_token_from_vault(file_bare_name: &str, token_name: &str) -> anyhow::Result<()> {
     println!("{YELLOW}  Check if the ssh private key exists.{RESET}");
-    let private_key_file_path = camino::Utf8PathBuf::from(format!("/home/rustdevuser/.ssh/{file_bare_name}").as_str());
+    let private_key_file_path = ende::get_private_key_file_path(file_bare_name)?;
     if !std::fs::exists(&private_key_file_path)? {
         println!("{RED}Error: Private key {private_key_file_path} does not exist.{RESET}");
         println!("{YELLOW}  Create the private key in bash terminal:{RESET}");
@@ -155,7 +155,7 @@ pub(crate) fn delete_token_from_vault(file_bare_name: &str, token_name: &str) ->
     }
 
     println!("{YELLOW}  Check if the encrypted file exists.{RESET}");
-    let encrypted_file_name = camino::Utf8PathBuf::from(format!("/home/rustdevuser/.ssh/{file_bare_name}.enc").as_str());
+    let encrypted_file_name = ende::get_encrypted_file_path(file_bare_name)?;
     if !std::fs::exists(&encrypted_file_name)? {
         println!("{YELLOW}  Encrypted file {encrypted_file_name} does not exist.{RESET}");
         println!("{YELLOW}  Create the vault and store a secret using the store command. {RESET}");

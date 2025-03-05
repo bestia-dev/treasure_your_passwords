@@ -11,7 +11,7 @@ use crate::encrypt_decrypt_with_ssh_key_mod::{BLUE, GREEN, RED, RESET, YELLOW};
 
 pub(crate) fn generate_strong_password(file_bare_name: &str) -> anyhow::Result<String> {
     println!("{YELLOW}  Check if the ssh private key exists.{RESET}");
-    let private_key_file_path = camino::Utf8PathBuf::from(format!("/home/rustdevuser/.ssh/{file_bare_name}").as_str());
+    let private_key_file_path = ende::get_private_key_file_path(file_bare_name)?;
     if !std::fs::exists(&private_key_file_path)? {
         println!("{RED}Error: Private key {private_key_file_path} does not exist.{RESET}");
         println!("{YELLOW}  Create the private key in bash terminal:{RESET}");

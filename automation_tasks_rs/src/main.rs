@@ -114,6 +114,8 @@ fn match_arguments_and_call_tasks(mut args: std::env::Args) {
                     task_build();
                 } else if &task == "release" {
                     task_release();
+                } else if &task == "win_release" {
+                    task_win_release();
                 } else if &task == "doc" {
                     task_doc();
                 } else if &task == "test" {
@@ -142,6 +144,7 @@ fn print_help() {
     {YELLOW}User defined tasks in automation_tasks_rs:{RESET}
 {GREEN}cargo auto build{RESET} - {YELLOW}builds the crate in debug mode, fmt, increment version{RESET}
 {GREEN}cargo auto release{RESET} - {YELLOW}builds the crate in release mode, fmt, increment version{RESET}
+{GREEN}cargo auto win_release{RESET} - {YELLOW}builds the crate for windows release mode, fmt, increment version{RESET}
 {GREEN}cargo auto doc{RESET} - {YELLOW}builds the docs, copy to docs directory{RESET}
 {GREEN}cargo auto test{RESET} - {YELLOW}runs all the tests{RESET}
 {GREEN}cargo auto commit_and_push "message"{RESET} - {YELLOW}commits with message and push with mandatory message{RESET}
@@ -183,7 +186,7 @@ fn completion() {
     let last_word = args[3].as_str();
 
     if last_word == "cargo-auto" || last_word == "auto" {
-        let sub_commands = vec!["build", "release", "doc", "test", "commit_and_push", "github_new_release"];
+        let sub_commands = vec!["build", "release","win_release", "doc", "test", "commit_and_push", "github_new_release"];
         cl::completion_return_one_or_more_sub_commands(sub_commands, word_being_completed);
     }
     /*
@@ -216,6 +219,7 @@ fn task_build() {
 {GREEN}{package_name} delete name_1{RESET}
     {YELLOW}if ok then{RESET}
 {GREEN}cargo auto release{RESET}
+{GREEN}cargo auto win_release{RESET}
 "#,
         package_name = cargo_toml.package_name(),
     );
@@ -245,6 +249,39 @@ fn task_release() {
 {GREEN}{package_name} store name_1{RESET}
 {GREEN}{package_name} show name_1{RESET}
 {GREEN}{package_name} delete name_1{RESET}
+    {YELLOW}if ok then{RESET}
+{GREEN}cargo auto doc{RESET}
+{GREEN}cargo auto win_release{RESET}
+"#,
+        package_name = cargo_toml.package_name(),
+    );
+    print_examples_cmd();
+}
+
+/// cargo build --release
+fn task_win_release() {
+    let cargo_toml = cl::CargoToml::read();
+    cl::auto_version_increment_semver_or_date();
+    cl::auto_cargo_toml_to_md();
+    cl::auto_lines_of_code("");
+
+    cl::run_shell_command_static("cargo fmt").unwrap_or_else(|e| panic!("{e}"));
+    cl::run_shell_command_static("cargo build --release --target x86_64-pc-windows-gnu").unwrap_or_else(|e| panic!("{e}"));
+
+    // cl::ShellCommandLimitedDoubleQuotesSanitizer::new(r#"strip "target/release/{package_name}" "#).unwrap_or_else(|e| panic!("{e}"))
+    // .arg("{package_name}", &cargo_toml.package_name()).unwrap_or_else(|e| panic!("{e}"))
+    // .run().unwrap_or_else(|e| panic!("{e}"));
+
+    println!(
+        r#"
+    {YELLOW}After `cargo auto win_release`, run the compiled binary, examples and/or tests{RESET}
+    {YELLOW}In Windows git-bash, copy the exe file from the Crustde container to Windows.{RESET}
+{GREEN}cd ~/rustprojects/{package_name}{RESET}
+{GREEN}scp rustdevuser@crustde:/home/rustdevuser/rustprojects/{package_name}/target/x86_64-pc-windows-gnu/release/{package_name}.exe . {RESET}
+    {YELLOW}Run the exe in Windows git-bash.{RESET}
+{GREEN}cd ~/rustprojects/{package_name}
+./{package_name}.exe{RESET} 
+
     {YELLOW}if ok then{RESET}
 {GREEN}cargo auto doc{RESET}
 "#,

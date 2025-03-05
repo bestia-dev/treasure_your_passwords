@@ -1,6 +1,6 @@
 [package]
 name = "treasure"
-version = "0.0.13"
+version = "0.0.19"
 description = "Use SSH private key to store your passwords locally and make them strong"
 authors = ["bestia.dev"]
 homepage = "https://bestia.dev"
@@ -30,7 +30,8 @@ serde ={ version= "1.0.217", features=["std","derive"]}
 serde_json = "1.0.140"
 
 ssh-key = { version = "0.6.7", features = [ "rsa", "encryption","ed25519"] }
-ssh-agent-client-rs = "0.9.1"
+# ssh-agent-client-rs = "0.9.1"
+ssh-agent-client-rs = {path = "../ssh-agent-client-rs"}
 rsa = { version = "0.9.7", features = ["sha2","pem"] }
 zeroize = {version="1.8.1", features=["derive"]}
 aes-gcm = "0.10.3"
@@ -38,3 +39,5 @@ camino = "1.1.6"
 base64ct = {version = "1.6.0", features = ["alloc"] }
 inquire = "0.7.0"
 secrecy = "0.10.3"
+directories = "6.0.0"
+uds_windows="1.1.0"

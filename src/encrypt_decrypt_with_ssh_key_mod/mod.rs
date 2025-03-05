@@ -20,6 +20,7 @@ pub const BLUE: &str = "\x1b[34m";
 pub const RESET: &str = "\x1b[0m";
 // endregion: Public API constants
 
+use anyhow::Context;
 use secrecy::{ExposeSecret, ExposeSecretMut, SecretBox, SecretString};
 
 /// Struct that represents the json data saved in the '*.enc' file
@@ -31,6 +32,20 @@ pub(crate) struct EncryptedTextWithMetadata {
     pub(crate) token_name: Option<String>,
     pub(crate) access_token_expiration: Option<String>,
     pub(crate) refresh_token_expiration: Option<String>,
+}
+
+pub(crate) fn get_private_key_file_path(file_bare_name: &str) -> anyhow::Result<camino::Utf8PathBuf> {
+    let user_dirs = directories::UserDirs::new().context("directories::UserDirs")?;
+    let path_buf = user_dirs.home_dir().join(".ssh").join(file_bare_name);
+    let private_key_file_path = camino::Utf8PathBuf::from_path_buf(path_buf).expect("Utf8PathBuf::from_path_buf");
+    Ok(private_key_file_path)
+}
+
+pub(crate) fn get_encrypted_file_path(file_bare_name: &str) -> anyhow::Result<camino::Utf8PathBuf> {
+    let user_dirs = directories::UserDirs::new().context("directories::UserDirs")?;
+    let path_buf = user_dirs.home_dir().join(".ssh").join(file_bare_name).with_extension("enc");
+    let encrypted_file_path = camino::Utf8PathBuf::from_path_buf(path_buf).expect("Utf8PathBuf::from_path_buf");
+    Ok(encrypted_file_path)
 }
 
 /// Generate a random seed
@@ -147,11 +162,12 @@ pub(crate) fn sign_seed_with_ssh_agent_or_private_key_file(private_key_file_path
 fn sign_seed_with_ssh_agent(plain_seed_bytes_32bytes: [u8; 32], private_key_file_path: &camino::Utf8Path) -> anyhow::Result<SecretBox<[u8; 32]>> {
     /// Internal function returns the public_key inside ssh-add
     fn public_key_from_ssh_agent(client: &mut ssh_agent_client_rs::Client, fingerprint_from_file: &str) -> anyhow::Result<ssh_key::PublicKey> {
+        dbg!("list_identities");
         let vec_public_key = client.list_identities()?;
 
         for public_key in vec_public_key.iter() {
             let fingerprint_from_agent = public_key.key_data().fingerprint(Default::default()).to_string();
-
+            dbg!(&fingerprint_from_agent);
             if fingerprint_from_agent == fingerprint_from_file {
                 return Ok(public_key.to_owned());
             }
@@ -166,6 +182,8 @@ fn sign_seed_with_ssh_agent(plain_seed_bytes_32bytes: [u8; 32], private_key_file
     println!("{YELLOW}  Connect to ssh-agent on SSH_AUTH_SOCK{RESET}");
     let var_ssh_auth_sock = std::env::var("SSH_AUTH_SOCK")?;
     let path_ssh_auth_sock = camino::Utf8Path::new(&var_ssh_auth_sock);
+    dbg!(&path_ssh_auth_sock);
+    dbg!(&fingerprint_from_file);
     let mut ssh_agent_client = ssh_agent_client_rs::Client::connect(&path_ssh_auth_sock.as_std_path())?;
 
     let public_key = public_key_from_ssh_agent(&mut ssh_agent_client, &fingerprint_from_file)?;
