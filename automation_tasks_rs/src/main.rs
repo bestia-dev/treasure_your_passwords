@@ -275,12 +275,13 @@ fn task_win_release() {
     println!(
         r#"
     {YELLOW}After `cargo auto win_release`, run the compiled binary, examples and/or tests{RESET}
-    {YELLOW}In Windows git-bash, copy the exe file from the Crustde container to Windows.{RESET}
+    {YELLOW}In Windows git-bash, copy the exe file from the crustde container to Windows.{RESET}
+{GREEN}mkdir ~/rustprojects/{package_name}{RESET}
 {GREEN}cd ~/rustprojects/{package_name}{RESET}
 {GREEN}scp rustdevuser@crustde:/home/rustdevuser/rustprojects/{package_name}/target/x86_64-pc-windows-gnu/release/{package_name}.exe . {RESET}
+{GREEN}alias treasure=./treasure{RESET}
     {YELLOW}Run the exe in Windows git-bash.{RESET}
-{GREEN}cd ~/rustprojects/{package_name}
-./{package_name}.exe{RESET} 
+{GREEN}{package_name} --help{RESET} 
 
     {YELLOW}if ok then{RESET}
 {GREEN}cargo auto doc{RESET}

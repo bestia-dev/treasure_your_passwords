@@ -1,6 +1,6 @@
 [package]
 name = "treasure"
-version = "0.0.19"
+version = "0.0.41"
 description = "Use SSH private key to store your passwords locally and make them strong"
 authors = ["bestia.dev"]
 homepage = "https://bestia.dev"
@@ -40,4 +40,3 @@ base64ct = {version = "1.6.0", features = ["alloc"] }
 inquire = "0.7.0"
 secrecy = "0.10.3"
 directories = "6.0.0"
-uds_windows="1.1.0"
