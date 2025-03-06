@@ -2008,6 +2008,7 @@ dependencies = [
 [[package]]
 name = "ssh-agent-client-rs"
 version = "0.9.1"
+source = "git+https://github.com/bestia-dev/ssh-agent-client-rs.git#c0325c8fd537371e00ab0768cbc8de470a155029"
 dependencies = [
  "bytes",
  "regex",
@@ -2318,7 +2319,7 @@ dependencies = [
 
 [[package]]
 name = "treasure"
-version = "0.0.41"
+version = "0.0.42"
 dependencies = [
  "aes-gcm",
  "anyhow",
