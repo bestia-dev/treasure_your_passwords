@@ -568,8 +568,8 @@ pub(crate) fn github_api_create_new_release(github_owner_or_organization: &str, 
         "prerelease":false,
         "generate_release_notes":false,
     });
-    let body = body.to_string();
-
+    dbg!(&body);
+    let body = serde_json::to_string_pretty(&body).unwrap();
     reqwest::blocking::Client::new()
         .post(releases_url.as_str())
         .header("Content-Type", "application/vnd.github+json")

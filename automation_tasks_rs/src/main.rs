@@ -210,12 +210,12 @@ fn task_build() {
     println!(
         r#"
     {YELLOW}After `cargo auto build`, run the compiled binary, examples and/or tests{RESET}
-{GREEN}alias {package_name}=./target/debug/{package_name}{RESET}
-{GREEN}{package_name} strong{RESET}
-{GREEN}{package_name} list{RESET}
-{GREEN}{package_name} store name_1{RESET}
-{GREEN}{package_name} show name_1{RESET}
-{GREEN}{package_name} delete name_1{RESET}
+{GREEN}alias treasure=./target/debug/{package_name}{RESET}
+{GREEN}treasure strong{RESET}
+{GREEN}treasure list{RESET}
+{GREEN}treasure store name_1{RESET}
+{GREEN}treasure show name_1{RESET}
+{GREEN}treasure delete name_1{RESET}
     {YELLOW}if ok then{RESET}
 {GREEN}cargo auto release{RESET}
 {GREEN}cargo auto win_release{RESET}
@@ -242,12 +242,12 @@ fn task_release() {
     println!(
         r#"
     {YELLOW}After `cargo auto release`, run the compiled binary, examples and/or tests{RESET}
-{GREEN}alias {package_name}=./target/release/{package_name}{RESET}
-{GREEN}{package_name} strong{RESET}
-{GREEN}{package_name} list{RESET}
-{GREEN}{package_name} store name_1{RESET}
-{GREEN}{package_name} show name_1{RESET}
-{GREEN}{package_name} delete name_1{RESET}
+{GREEN}alias treasure=./target/release/{package_name}{RESET}
+{GREEN}treasure strong{RESET}
+{GREEN}treasure list{RESET}
+{GREEN}treasure store name_1{RESET}
+{GREEN}treasure show name_1{RESET}
+{GREEN}treasure delete name_1{RESET}
     {YELLOW}if ok then{RESET}
 {GREEN}cargo auto doc{RESET}
 {GREEN}cargo auto win_release{RESET}
@@ -267,10 +267,6 @@ fn task_win_release() {
     cl::run_shell_command_static("cargo fmt").unwrap_or_else(|e| panic!("{e}"));
     cl::run_shell_command_static("cargo build --release --target x86_64-pc-windows-gnu").unwrap_or_else(|e| panic!("{e}"));
 
-    // cl::ShellCommandLimitedDoubleQuotesSanitizer::new(r#"strip "target/release/{package_name}" "#).unwrap_or_else(|e| panic!("{e}"))
-    // .arg("{package_name}", &cargo_toml.package_name()).unwrap_or_else(|e| panic!("{e}"))
-    // .run().unwrap_or_else(|e| panic!("{e}"));
-
     println!(
         r#"
     {YELLOW}After `cargo auto win_release`, run the compiled binary, examples and/or tests{RESET}
@@ -278,9 +274,9 @@ fn task_win_release() {
 {GREEN}mkdir ~/rustprojects/{package_name}{RESET}
 {GREEN}cd ~/rustprojects/{package_name}{RESET}
 {GREEN}scp rustdevuser@crustde:/home/rustdevuser/rustprojects/{package_name}/target/x86_64-pc-windows-gnu/release/{package_name}.exe . {RESET}
-{GREEN}alias treasure=./treasure{RESET}
+{GREEN}alias treasure=./treasure_your_passwords.exe{RESET}
     {YELLOW}Run the exe in Windows git-bash.{RESET}
-{GREEN}{package_name} --help{RESET} 
+{GREEN}treasure --help{RESET} 
 
     {YELLOW}if ok then{RESET}
 {GREEN}cargo auto doc{RESET}
@@ -404,8 +400,10 @@ fn task_github_new_release() {
     // First, the user must write the content into file RELEASES.md in the section ## Unreleased.
     // Then the automation task will copy the content to GitHub release
     let body_md_text = cl::body_text_from_releases_md().unwrap();
-
-    let json_value = ende::github_api_token_with_oauth2_mod::send_to_github_api_with_secret_token(cgl::github_api_create_new_release(&github_owner, &repo_name, &tag_name_version, &release_name, branch, &body_md_text)).unwrap();
+    let request = cgl::github_api_create_new_release(&github_owner, &repo_name, &tag_name_version, &release_name, branch, &body_md_text);
+    dbg!(&request);
+    let json_value = ende::github_api_token_with_oauth2_mod::send_to_github_api_with_secret_token(request).unwrap();
+    dbg!(&json_value);
     // early exit on error
     if let Some(error_message) = json_value.get("message") {
         eprintln!("{RED}{error_message}{RESET}");

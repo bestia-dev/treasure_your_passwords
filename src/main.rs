@@ -1,4 +1,4 @@
-//! src/bin/treasure/main.rs
+//! src/bin/treasure_your_passwords/main.rs
 
 mod encrypt_decrypt_with_ssh_key_mod;
 use encrypt_decrypt_with_ssh_key_mod as ende;

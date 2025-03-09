@@ -46,7 +46,7 @@ A separate `lib.rs` enables one to make good tests and examples without worrying
 
 ## super simple argument parsing
 
-I use a super simple code to parse CLI arguments inside the `src/bin/treasure/main.rs`. There are crate libraries that enable very complex argument parsing if needed.
+I use a super simple code to parse CLI arguments inside the `src/bin/treasure_your_passwords/main.rs`. There are crate libraries that enable very complex argument parsing if needed.
 
 ## Modules
 
