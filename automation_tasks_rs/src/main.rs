@@ -2,13 +2,13 @@
 
 // region: library and modules with basic automation tasks
 
-// for projects that don't use GitHub, delete all the mentions of GitHub
-mod secrets_always_local_mod;
-use crate::secrets_always_local_mod::crates_io_mod;
-use crate::secrets_always_local_mod::github_mod;
+mod encrypt_decrypt_with_ssh_key_mod;
+mod cargo_auto_github_api_mod;
 
-use cargo_auto_github_lib as cgl;
+
 use cargo_auto_lib as cl;
+use encrypt_decrypt_with_ssh_key_mod as ende;
+use cargo_auto_github_api_mod as cgl;
 
 use cl::GREEN;
 use cl::RED;
@@ -16,7 +16,6 @@ use cl::RESET;
 use cl::YELLOW;
 
 // traits must be in scope (Rust strangeness)
-use cgl::SendToGitHubApi;
 use cl::CargoTomlPublicApiMethods;
 use cl::ShellCommandLimitedDoubleQuotesSanitizerTrait;
 
@@ -355,13 +354,11 @@ fn task_commit_and_push(arg_2: Option<String>) {
 
     // If needed, ask to create a GitHub remote repository
     if !cgl::git_has_remote() || !cgl::git_has_upstream() {
-        let github_client = github_mod::GitHubClient::new_with_stored_secret_token();
-        cgl::new_remote_github_repository(&github_client).unwrap();
-        cgl::description_and_topics_to_github(&github_client);
+        cgl::new_remote_github_repository().unwrap();
+        cgl::description_and_topics_to_github();
     } else {
-        let github_client = github_mod::GitHubClient::new_with_stored_secret_token();
         // if description or topics/keywords/tags have changed
-        cgl::description_and_topics_to_github(&github_client);
+        cgl::description_and_topics_to_github();
 
         // separate commit for docs if they changed, to not make a lot of noise in the real commit
         if std::path::Path::new("docs").exists() {
@@ -408,8 +405,7 @@ fn task_github_new_release() {
     // Then the automation task will copy the content to GitHub release
     let body_md_text = cl::body_text_from_releases_md().unwrap();
 
-    let github_client = github_mod::GitHubClient::new_with_stored_secret_token();
-    let json_value = github_client.send_to_github_api(cgl::github_api_create_new_release(&github_owner, &repo_name, &tag_name_version, &release_name, branch, &body_md_text));
+    let json_value = ende::github_api_token_with_oauth2_mod::send_to_github_api_with_secret_token(cgl::github_api_create_new_release(&github_owner, &repo_name, &tag_name_version, &release_name, branch, &body_md_text)).unwrap();
     // early exit on error
     if let Some(error_message) = json_value.get("message") {
         eprintln!("{RED}{error_message}{RESET}");
@@ -450,7 +446,7 @@ fn task_github_new_release() {
     .run().unwrap_or_else(|e| panic!("{e}"));
 
     // upload asset
-    cgl::github_api_upload_asset_to_release(&github_client, &github_owner, &repo_name, &release_id, &tar_name);
+    cgl::github_api_upload_asset_to_release( &github_owner, &repo_name, &release_id, &tar_name);
 
     cl::ShellCommandLimitedDoubleQuotesSanitizer::new(r#"rm "{tar_name_sanitized_for_double_quote}" "#).unwrap_or_else(|e| panic!("{e}"))
     .arg("{tar_name_sanitized_for_double_quote}", &tar_name).unwrap_or_else(|e| panic!("{e}"))

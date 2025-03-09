@@ -10,6 +10,8 @@ The TODO section is part of the [README.md](https://github.com/bestia-dev/treasu
 
 ## Unreleased
 
+- update cargo-auto
+
 ## Version 0.0.13 (2025-03-04)
 
 - readme
