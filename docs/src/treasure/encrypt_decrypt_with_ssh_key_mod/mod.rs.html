@@ -270,7 +270,21 @@
 <a href="#269" id="269">269</a>
 <a href="#270" id="270">270</a>
 <a href="#271" id="271">271</a>
-<a href="#272" id="272">272</a></pre></div><pre class="rust"><code><span class="comment">// encrypt_decrypt_with_ssh_key_mod.rs
+<a href="#272" id="272">272</a>
+<a href="#273" id="273">273</a>
+<a href="#274" id="274">274</a>
+<a href="#275" id="275">275</a>
+<a href="#276" id="276">276</a>
+<a href="#277" id="277">277</a>
+<a href="#278" id="278">278</a>
+<a href="#279" id="279">279</a>
+<a href="#280" id="280">280</a>
+<a href="#281" id="281">281</a>
+<a href="#282" id="282">282</a>
+<a href="#283" id="283">283</a>
+<a href="#284" id="284">284</a>
+<a href="#285" id="285">285</a>
+<a href="#286" id="286">286</a></pre></div><pre class="rust"><code><span class="comment">// encrypt_decrypt_with_ssh_key_mod.rs
 
 </span><span class="kw">pub mod </span>generate_strong_password_mod;
 <span class="kw">pub mod </span>secret_vault_mod;
@@ -292,7 +306,8 @@
 </span><span class="kw">pub const </span>RESET: <span class="kw-2">&amp;</span>str = <span class="string">"\x1b[0m"</span>;
 <span class="comment">// endregion: Public API constants
 
-</span><span class="kw">use </span>secrecy::{ExposeSecret, ExposeSecretMut, SecretBox, SecretString};
+</span><span class="kw">use </span>anyhow::Context;
+<span class="kw">use </span>secrecy::{ExposeSecret, ExposeSecretMut, SecretBox, SecretString};
 
 <span class="doccomment">/// Struct that represents the json data saved in the '*.enc' file
 </span><span class="attr">#[derive(serde::Deserialize, serde::Serialize)]
@@ -303,6 +318,20 @@
     <span class="kw">pub</span>(<span class="kw">crate</span>) token_name: <span class="prelude-ty">Option</span>&lt;String&gt;,
     <span class="kw">pub</span>(<span class="kw">crate</span>) access_token_expiration: <span class="prelude-ty">Option</span>&lt;String&gt;,
     <span class="kw">pub</span>(<span class="kw">crate</span>) refresh_token_expiration: <span class="prelude-ty">Option</span>&lt;String&gt;,
+}
+
+<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>get_private_key_file_path(file_bare_name: <span class="kw-2">&amp;</span>str) -&gt; anyhow::Result&lt;camino::Utf8PathBuf&gt; {
+    <span class="kw">let </span>user_dirs = directories::UserDirs::new().context(<span class="string">"directories::UserDirs"</span>)<span class="question-mark">?</span>;
+    <span class="kw">let </span>path_buf = user_dirs.home_dir().join(<span class="string">".ssh"</span>).join(file_bare_name);
+    <span class="kw">let </span>private_key_file_path = camino::Utf8PathBuf::from_path_buf(path_buf).expect(<span class="string">"Utf8PathBuf::from_path_buf"</span>);
+    <span class="prelude-val">Ok</span>(private_key_file_path)
+}
+
+<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>get_encrypted_file_path(file_bare_name: <span class="kw-2">&amp;</span>str) -&gt; anyhow::Result&lt;camino::Utf8PathBuf&gt; {
+    <span class="kw">let </span>user_dirs = directories::UserDirs::new().context(<span class="string">"directories::UserDirs"</span>)<span class="question-mark">?</span>;
+    <span class="kw">let </span>path_buf = user_dirs.home_dir().join(<span class="string">".ssh"</span>).join(file_bare_name).with_extension(<span class="string">"enc"</span>);
+    <span class="kw">let </span>encrypted_file_path = camino::Utf8PathBuf::from_path_buf(path_buf).expect(<span class="string">"Utf8PathBuf::from_path_buf"</span>);
+    <span class="prelude-val">Ok</span>(encrypted_file_path)
 }
 
 <span class="doccomment">/// Generate a random seed
@@ -423,7 +452,6 @@
 
         <span class="kw">for </span>public_key <span class="kw">in </span>vec_public_key.iter() {
             <span class="kw">let </span>fingerprint_from_agent = public_key.key_data().fingerprint(Default::default()).to_string();
-
             <span class="kw">if </span>fingerprint_from_agent == fingerprint_from_file {
                 <span class="kw">return </span><span class="prelude-val">Ok</span>(public_key.to_owned());
             }
@@ -436,9 +464,9 @@
     <span class="kw">let </span>fingerprint_from_file = public_key.fingerprint(Default::default()).to_string();
 
     <span class="macro">println!</span>(<span class="string">"{YELLOW}  Connect to ssh-agent on SSH_AUTH_SOCK{RESET}"</span>);
-    <span class="kw">let </span>var_ssh_auth_sock = std::env::var(<span class="string">"SSH_AUTH_SOCK"</span>)<span class="question-mark">?</span>;
-    <span class="kw">let </span>path_ssh_auth_sock = camino::Utf8Path::new(<span class="kw-2">&amp;</span>var_ssh_auth_sock);
-    <span class="kw">let </span><span class="kw-2">mut </span>ssh_agent_client = ssh_agent_client_rs::Client::connect(<span class="kw-2">&amp;</span>path_ssh_auth_sock.as_std_path())<span class="question-mark">?</span>;
+    <span class="kw">let </span>var_ssh_auth_sock = std::env::var(<span class="string">"SSH_AUTH_SOCK"</span>).unwrap();
+    <span class="kw">let </span>path_ssh_auth_sock = std::path::PathBuf::from(<span class="kw-2">&amp;</span>var_ssh_auth_sock);
+    <span class="kw">let </span><span class="kw-2">mut </span>ssh_agent_client = ssh_agent_client_rs::Client::connect(<span class="kw-2">&amp;</span>path_ssh_auth_sock)<span class="question-mark">?</span>;
 
     <span class="kw">let </span>public_key = public_key_from_ssh_agent(<span class="kw-2">&amp;mut </span>ssh_agent_client, <span class="kw-2">&amp;</span>fingerprint_from_file)<span class="question-mark">?</span>;
 

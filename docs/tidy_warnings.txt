@@ -371,6 +371,19 @@ line 1 column 1866 - Warning: trimming empty <button>
 This document has errors that must be fixed before
 using HTML Tidy to generate a tidied up version.
 
+./docs/treasure/encrypt_decrypt_with_ssh_key_mod/fn.get_encrypted_file_path.html
+Document: "2" is not a file!
+
+line 1 column 2348 - Error: <rustdoc-search> is not recognized! Did you mean to enable the custom-tags option?
+line 1 column 2348 - Warning: discarding unexpected <rustdoc-search>
+line 1 column 2364 - Warning: discarding unexpected </rustdoc-search>
+line 1 column 2738 - Error: <rustdoc-toolbar> is not recognized! Did you mean to enable the custom-tags option?
+line 1 column 2738 - Warning: discarding unexpected <rustdoc-toolbar>
+line 1 column 2755 - Warning: discarding unexpected </rustdoc-toolbar>
+line 1 column 1883 - Warning: trimming empty <button>
+This document has errors that must be fixed before
+using HTML Tidy to generate a tidied up version.
+
 ./docs/treasure/encrypt_decrypt_with_ssh_key_mod/fn.random_seed_32bytes_and_string.html
 Document: "2" is not a file!
 
@@ -407,6 +420,19 @@ line 1 column 2644 - Error: <rustdoc-toolbar> is not recognized! Did you mean to
 line 1 column 2644 - Warning: discarding unexpected <rustdoc-toolbar>
 line 1 column 2661 - Warning: discarding unexpected </rustdoc-toolbar>
 line 1 column 1801 - Warning: trimming empty <button>
+This document has errors that must be fixed before
+using HTML Tidy to generate a tidied up version.
+
+./docs/treasure/encrypt_decrypt_with_ssh_key_mod/fn.get_private_key_file_path.html
+Document: "2" is not a file!
+
+line 1 column 2352 - Error: <rustdoc-search> is not recognized! Did you mean to enable the custom-tags option?
+line 1 column 2352 - Warning: discarding unexpected <rustdoc-search>
+line 1 column 2368 - Warning: discarding unexpected </rustdoc-search>
+line 1 column 2744 - Error: <rustdoc-toolbar> is not recognized! Did you mean to enable the custom-tags option?
+line 1 column 2744 - Warning: discarding unexpected <rustdoc-toolbar>
+line 1 column 2761 - Warning: discarding unexpected </rustdoc-toolbar>
+line 1 column 1887 - Warning: trimming empty <button>
 This document has errors that must be fixed before
 using HTML Tidy to generate a tidied up version.
 
