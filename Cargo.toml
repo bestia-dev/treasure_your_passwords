@@ -1,6 +1,6 @@
 [package]
 name = "treasure_your_passwords"
-version = "0.0.52"
+version = "0.0.53"
 description = "Use SSH private key to store your passwords locally and make them strong"
 authors = ["bestia.dev"]
 homepage = "https://bestia.dev"
@@ -31,7 +31,7 @@ serde_json = "1.0.140"
 
 ssh-key = { version = "0.6.7", features = [ "rsa", "encryption","ed25519"] }
 # I forked this crate to add implementation for 'windows git-bash'
-ssh-agent-client-rs = {git = "https://github.com/bestia-dev/ssh-agent-client-rs.git"}
+ssh-agent-client-rs = {git = "https://github.com/bestia-dev/ssh-agent-client-rs-win-git-bash.git", branch="win_git_bash"}
 rsa = { version = "0.9.7", features = ["sha2","pem"] }
 zeroize = {version="1.8.1", features=["derive"]}
 aes-gcm = "0.10.3"

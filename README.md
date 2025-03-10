@@ -6,10 +6,10 @@
 [//]: # (auto_cargo_toml_to_md start)
 
 **Use SSH private key to store your passwords locally and make them strong**  
-***version: 0.0.52 date: 2025-03-10 author: [bestia.dev](https://bestia.dev) repository: [GitHub](https://github.com/bestia-dev/treasure_your_passwords)***
+***version: 0.0.53 date: 2025-03-10 author: [bestia.dev](https://bestia.dev) repository: [GitHub](https://github.com/bestia-dev/treasure_your_passwords)***
 
  ![maintained](https://img.shields.io/badge/maintained-green)
- ![ready-for.use](https://img.shields.io/badge/ready_for_use-green)
+ ![ready-for-use](https://img.shields.io/badge/ready_for_use-green)
  ![rustlang](https://img.shields.io/badge/rustlang-orange)
 
 [//]: # (auto_cargo_toml_to_md end)
