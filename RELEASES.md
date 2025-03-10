@@ -12,6 +12,8 @@ The TODO section is part of the [README.md](https://github.com/bestia-dev/treasu
 
 - github_api_secret_token_key
 
+- cargo_auto_lib = 3.0.4
+
 ## Version 0.0.51 (2025-03-10)
 
 - github app permission

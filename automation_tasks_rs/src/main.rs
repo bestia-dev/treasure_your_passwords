@@ -249,7 +249,6 @@ fn task_release() {
 {GREEN}treasure show name_1{RESET}
 {GREEN}treasure delete name_1{RESET}
   {YELLOW}if ok then{RESET}
-{GREEN}cargo auto doc{RESET}
 {GREEN}cargo auto win_release{RESET}
 "#,
         package_name = cargo_toml.package_name(),

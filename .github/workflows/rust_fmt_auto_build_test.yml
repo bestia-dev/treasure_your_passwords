@@ -49,4 +49,6 @@ jobs:
 
     - name: cargo auto test
       run: cargo auto test
-      
+
+    - name: cargo clippy --no-deps
+      run: cargo clippy --no-deps

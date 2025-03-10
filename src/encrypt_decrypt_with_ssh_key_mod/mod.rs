@@ -174,7 +174,7 @@ fn sign_seed_with_ssh_agent(plain_seed_bytes_32bytes: [u8; 32], private_key_file
     }
     let public_key_file_path = format!("{private_key_file_path}.pub");
     let public_key_file_path = camino::Utf8Path::new(&public_key_file_path);
-    let public_key = ssh_key::PublicKey::read_openssh_file(&public_key_file_path.as_std_path())?;
+    let public_key = ssh_key::PublicKey::read_openssh_file(public_key_file_path.as_std_path())?;
     let fingerprint_from_file = public_key.fingerprint(Default::default()).to_string();
 
     println!("  {YELLOW}Connect to ssh-agent on SSH_AUTH_SOCK{RESET}");
