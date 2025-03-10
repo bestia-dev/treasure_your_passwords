@@ -50,24 +50,24 @@ use crate::encrypt_decrypt_with_ssh_key_mod::{BLUE, GREEN, RED, RESET, YELLOW};
 ///
 /// If exists, decrypt it from file.  
 /// Else ask user to input the token and encrypt it into a file.  
-pub(crate) fn get_docker_hub_secret_token(file_bare_name: &str) -> anyhow::Result<SecretString> {
-    println!("{YELLOW}  Check if the ssh private key exists.{RESET}");
-    let private_key_file_path = camino::Utf8PathBuf::from(format!("/home/rustdevuser/.ssh/{file_bare_name}").as_str());
+pub(crate) fn get_docker_hub_secret_token(private_key_file_bare_name: &str) -> anyhow::Result<SecretString> {
+    println!("  {YELLOW}Check if the ssh private key exists.{RESET}");
+    let private_key_file_path = camino::Utf8PathBuf::from(format!("/home/rustdevuser/.ssh/{private_key_file_bare_name}").as_str());
     if !std::fs::exists(&private_key_file_path)? {
-        println!("{RED}Error: Private key {private_key_file_path} does not exist.{RESET}");
-        println!("{YELLOW}  Create the private key in bash terminal:{RESET}");
+        eprintln!("{RED}Error: Private key {private_key_file_path} does not exist.{RESET}");
+        println!("  {YELLOW}Create the private key in bash terminal:{RESET}");
         println!(r#"{GREEN}ssh-keygen -t ed25519 -f "{private_key_file_path}" -C "docker.io secret_token"{RESET}"#);
         anyhow::bail!("Private key file not found.");
     }
 
-    println!("{YELLOW}  Check if the encrypted file exists.{RESET}");
-    let encrypted_file_name = camino::Utf8PathBuf::from(format!("/home/rustdevuser/.ssh/{file_bare_name}.enc").as_str());
+    println!("  {YELLOW}Check if the encrypted file exists.{RESET}");
+    let encrypted_file_name = camino::Utf8PathBuf::from(format!("/home/rustdevuser/.ssh/{private_key_file_bare_name}.enc").as_str());
     if !std::fs::exists(&encrypted_file_name)? {
-        println!("{YELLOW}  Encrypted file {encrypted_file_name} does not exist.{RESET}");
-        println!("{YELLOW}  Get your secret token from: https://app.docker.com/settings/personal-access-tokens {RESET}");
-        println!("{YELLOW}  This function will encrypt the secret with your ssh private key. {RESET}");
-        println!("");
-        eprintln!("   {BLUE}Enter the secret_access_token to encrypt:{RESET}");
+        println!("  {YELLOW}Encrypted file {encrypted_file_name} does not exist.{RESET}");
+        println!("  {YELLOW}Get your secret token from: https://app.docker.com/settings/personal-access-tokens {RESET}");
+        println!("  {YELLOW}This function will encrypt the secret with your ssh private key. {RESET}");
+        println!();
+        println!("{BLUE}Enter the secret_access_token to encrypt:{RESET}");
         let secret_access_token = secrecy::SecretString::from(inquire::Password::new("").without_confirmation().with_display_mode(inquire::PasswordDisplayMode::Masked).prompt()?);
 
         // prepare the random bytes, sign it with the private key, that is the true passcode used to encrypt the secret
@@ -90,14 +90,14 @@ pub(crate) fn get_docker_hub_secret_token(file_bare_name: &str) -> anyhow::Resul
         let file_text = ende::encode64_from_string_to_string(&file_text);
 
         std::fs::write(&encrypted_file_name, file_text)?;
-        println!("{YELLOW}  Encrypted text saved to file.{RESET}");
+        println!("  {YELLOW}Encrypted text saved to file.{RESET}");
     }
 
-    println!("{YELLOW}  Open and read the encrypted file.{RESET}");
+    println!("  {YELLOW}Open and read the encrypted file.{RESET}");
     let encrypted_text_with_metadata: String = ende::open_file_b64_get_string(&encrypted_file_name)?;
     // parse json
     let encrypted_text_with_metadata: ende::EncryptedTextWithMetadata = serde_json::from_str(&encrypted_text_with_metadata)?;
-    println!("{YELLOW}  Decrypt the file with ssh-agent or private key.{RESET}");
+    println!("  {YELLOW}Decrypt the file with ssh-agent or private key.{RESET}");
     let plain_seed_bytes_32bytes = ende::decode64_from_string_to_32bytes(&encrypted_text_with_metadata.plain_seed_string)?;
     let private_key_file_path = camino::Utf8PathBuf::from(&encrypted_text_with_metadata.private_key_file_path);
     let secret_passcode_32bytes: SecretBox<[u8; 32]> = ende::sign_seed_with_ssh_agent_or_private_key_file(&private_key_file_path, plain_seed_bytes_32bytes)?;

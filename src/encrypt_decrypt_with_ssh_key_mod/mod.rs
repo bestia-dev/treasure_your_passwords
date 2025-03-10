@@ -142,13 +142,13 @@ pub(crate) fn sign_seed_with_ssh_agent_or_private_key_file(private_key_file_path
         secret_passcode_32bytes_maybe?
     } else {
         // ask user to think about adding key into ssh-agent with ssh-add
-        println!("   {YELLOW}SSH key for encrypted secret_token is not found in the ssh-agent.{RESET}");
-        println!("   {YELLOW}Without ssh-agent, you will have to type the private key passphrase every time.{RESET}");
-        println!("   {YELLOW}This is more secure, but inconvenient.{RESET}");
-        println!("   {YELLOW}WARNING: using ssh-agent is less secure, because there is no need for user interaction.{RESET}");
-        println!("   {YELLOW}Knowing this, you can manually add the SSH private key to ssh-agent for 1 hour:{RESET}");
+        println!("  {YELLOW}SSH key for encrypted secret_token is not found in the ssh-agent.{RESET}");
+        println!("  {YELLOW}Without ssh-agent, you will have to type the private key passphrase every time.{RESET}");
+        println!("  {YELLOW}This is more secure, but inconvenient.{RESET}");
+        println!("  {YELLOW}WARNING: using ssh-agent is less secure, because there is no need for user interaction.{RESET}");
+        println!("  {YELLOW}Knowing this, you can manually add the SSH private key to ssh-agent for 1 hour:{RESET}");
         println!("{GREEN}ssh-add -t 1h {private_key_file_path}{RESET}");
-        println!("   {YELLOW}Unlock the private key to decrypt the saved file.{RESET}");
+        println!("  {YELLOW}Unlock the private key to decrypt the saved file.{RESET}");
 
         sign_seed_with_private_key_file(plain_seed_bytes_32bytes, private_key_file_path)?
     };
@@ -177,7 +177,7 @@ fn sign_seed_with_ssh_agent(plain_seed_bytes_32bytes: [u8; 32], private_key_file
     let public_key = ssh_key::PublicKey::read_openssh_file(&public_key_file_path.as_std_path())?;
     let fingerprint_from_file = public_key.fingerprint(Default::default()).to_string();
 
-    println!("{YELLOW}  Connect to ssh-agent on SSH_AUTH_SOCK{RESET}");
+    println!("  {YELLOW}Connect to ssh-agent on SSH_AUTH_SOCK{RESET}");
     let var_ssh_auth_sock = std::env::var("SSH_AUTH_SOCK").unwrap();
     let path_ssh_auth_sock = std::path::PathBuf::from(&var_ssh_auth_sock);
     let mut ssh_agent_client = ssh_agent_client_rs::Client::connect(&path_ssh_auth_sock)?;
@@ -202,8 +202,8 @@ fn sign_seed_with_ssh_agent(plain_seed_bytes_32bytes: [u8; 32], private_key_file
 fn sign_seed_with_private_key_file(plain_seed_bytes_32bytes: [u8; 32], private_key_file_path: &camino::Utf8Path) -> anyhow::Result<SecretBox<[u8; 32]>> {
     /// Internal function for user input passphrase
     fn user_input_secret_passphrase() -> anyhow::Result<SecretString> {
-        eprintln!(" ");
-        eprintln!("   {BLUE}Enter the passphrase for the SSH private key:{RESET}");
+        println!();
+        println!("{BLUE}Enter the passphrase for the SSH private key:{RESET}");
 
         let secret_passphrase = SecretString::from(inquire::Password::new("").without_confirmation().with_display_mode(inquire::PasswordDisplayMode::Masked).prompt()?);
 
@@ -213,15 +213,15 @@ fn sign_seed_with_private_key_file(plain_seed_bytes_32bytes: [u8; 32], private_k
     let secret_user_passphrase: SecretString = user_input_secret_passphrase()?;
 
     // sign_with_ssh_private_key_file
-    println!("{YELLOW}  Use ssh private key from file {RESET}");
+    println!("  {YELLOW}Use ssh private key from file {RESET}");
     let private_key = ssh_key::PrivateKey::read_openssh_file(private_key_file_path.as_std_path())?;
-    println!("{YELLOW}  Unlock the private key {RESET}");
+    println!("  {YELLOW}Unlock the private key {RESET}");
 
     // cannot use secrecy: PrivateKey does not have trait Zeroize
     let mut secret_private_key = private_key.decrypt(secret_user_passphrase.expose_secret())?;
 
     // FYI: this type of signature is compatible with ssh-agent because it does not involve namespace
-    println!("{YELLOW}  Sign the seed {RESET}");
+    println!("  {YELLOW}Sign the seed {RESET}");
 
     let mut secret_passcode_32bytes = SecretBox::new(Box::new([0u8; 32]));
     // only the data part of the signature goes into as_bytes.

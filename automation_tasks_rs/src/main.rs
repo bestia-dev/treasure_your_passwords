@@ -108,7 +108,7 @@ fn match_arguments_and_call_tasks(mut args: std::env::Args) {
             if &task == "completion" {
                 completion();
             } else {
-                println!("{YELLOW}Running automation task: {task}{RESET}");
+                println!("  {YELLOW}Running automation task: {task}{RESET}");
                 if &task == "build" {
                     task_build();
                 } else if &task == "release" {
@@ -137,30 +137,30 @@ fn match_arguments_and_call_tasks(mut args: std::env::Args) {
 fn print_help() {
     println!(
         r#"
-    {YELLOW}Welcome to cargo-auto !{RESET}
-    {YELLOW}This program automates your custom tasks when developing a Rust project.{RESET}
+  {YELLOW}Welcome to cargo-auto !{RESET}
+  {YELLOW}This program automates your custom tasks when developing a Rust project.{RESET}
 
-    {YELLOW}User defined tasks in automation_tasks_rs:{RESET}
+  {YELLOW}User defined tasks in automation_tasks_rs:{RESET}
 {GREEN}cargo auto build{RESET} - {YELLOW}builds the crate in debug mode, fmt, increment version{RESET}
 {GREEN}cargo auto release{RESET} - {YELLOW}builds the crate in release mode, fmt, increment version{RESET}
 {GREEN}cargo auto win_release{RESET} - {YELLOW}builds the crate for windows release mode, fmt, increment version{RESET}
 {GREEN}cargo auto doc{RESET} - {YELLOW}builds the docs, copy to docs directory{RESET}
 {GREEN}cargo auto test{RESET} - {YELLOW}runs all the tests{RESET}
 {GREEN}cargo auto commit_and_push "message"{RESET} - {YELLOW}commits with message and push with mandatory message{RESET}
-    {YELLOW}It is preferred to use SSH for git push to GitHub.{RESET}
-    {YELLOW}<https://github.com/CRUSTDE-ContainerizedRustDevEnv/crustde_cnt_img_pod/blob/main/ssh_easy.md>{YELLOW}
-    {YELLOW}On the very first commit, this task will initialize a new local git repository and create a remote GitHub repo.{RESET}
-    {YELLOW}For the GitHub API the task needs the Personal Access secret_token Classic from <https://github.com/settings/tokens>{RESET}
-    {YELLOW}You can choose to type the secret_token every time or to store it in a file encrypted with an SSH key.{RESET}
-    {YELLOW}Then you can type the passphrase of the private key every time. This is pretty secure.{RESET}
-    {YELLOW}Somewhat less secure (but more comfortable) way is to store the private key in ssh-agent.{RESET}
+  {YELLOW}It is preferred to use SSH for git push to GitHub.{RESET}
+  {YELLOW}<https://github.com/CRUSTDE-ContainerizedRustDevEnv/crustde_cnt_img_pod/blob/main/ssh_easy.md>{YELLOW}
+  {YELLOW}On the very first commit, this task will initialize a new local git repository and create a remote GitHub repo.{RESET}
+  {YELLOW}For the GitHub API the task needs the Personal Access secret_token Classic from <https://github.com/settings/tokens>{RESET}
+  {YELLOW}You can choose to type the secret_token every time or to store it in a file encrypted with an SSH key.{RESET}
+  {YELLOW}Then you can type the passphrase of the private key every time. This is pretty secure.{RESET}
+  {YELLOW}Somewhat less secure (but more comfortable) way is to store the private key in ssh-agent.{RESET}
 {GREEN}cargo auto github_new_release{RESET} - {YELLOW}creates new release on GitHub{RESET}
-    {YELLOW}For the GitHub API the task needs the Personal Access secret_token Classic from <https://github.com/settings/tokens>{RESET}
-    {YELLOW}You can choose to type the secret_token every time or to store it in a file encrypted with an SSH key.{RESET}
-    {YELLOW}Then you can type the passphrase of the private key every time. This is pretty secure.{RESET}
-    {YELLOW}Somewhat less secure (but more comfortable) way is to store the private key in ssh-agent.{RESET}
+  {YELLOW}For the GitHub API the task needs the Personal Access secret_token Classic from <https://github.com/settings/tokens>{RESET}
+  {YELLOW}You can choose to type the secret_token every time or to store it in a file encrypted with an SSH key.{RESET}
+  {YELLOW}Then you can type the passphrase of the private key every time. This is pretty secure.{RESET}
+  {YELLOW}Somewhat less secure (but more comfortable) way is to store the private key in ssh-agent.{RESET}
 
-    {YELLOW}© 2025 bestia.dev  MIT License github.com/automation--tasks--rs/cargo-auto{RESET}
+  {YELLOW}© 2025 bestia.dev  MIT License github.com/automation--tasks--rs/cargo-auto{RESET}
 "#
     );
     print_examples_cmd();
@@ -171,7 +171,7 @@ fn print_examples_cmd() {
 /*
     println!(
         r#"
-    {YELLOW}run examples:{RESET}
+  {YELLOW}run examples:{RESET}
 {GREEN}cargo run --example plantuml1{RESET}
 "#
     );
@@ -209,14 +209,14 @@ fn task_build() {
     cl::run_shell_command_static("cargo build").unwrap_or_else(|e| panic!("{e}"));
     println!(
         r#"
-    {YELLOW}After `cargo auto build`, run the compiled binary, examples and/or tests{RESET}
+  {YELLOW}After `cargo auto build`, run the compiled binary, examples and/or tests{RESET}
 {GREEN}alias treasure=./target/debug/{package_name}{RESET}
 {GREEN}treasure strong{RESET}
 {GREEN}treasure list{RESET}
 {GREEN}treasure store name_1{RESET}
 {GREEN}treasure show name_1{RESET}
 {GREEN}treasure delete name_1{RESET}
-    {YELLOW}if ok then{RESET}
+  {YELLOW}if ok then{RESET}
 {GREEN}cargo auto release{RESET}
 {GREEN}cargo auto win_release{RESET}
 "#,
@@ -241,14 +241,14 @@ fn task_release() {
 
     println!(
         r#"
-    {YELLOW}After `cargo auto release`, run the compiled binary, examples and/or tests{RESET}
+  {YELLOW}After `cargo auto release`, run the compiled binary, examples and/or tests{RESET}
 {GREEN}alias treasure=./target/release/{package_name}{RESET}
 {GREEN}treasure strong{RESET}
 {GREEN}treasure list{RESET}
 {GREEN}treasure store name_1{RESET}
 {GREEN}treasure show name_1{RESET}
 {GREEN}treasure delete name_1{RESET}
-    {YELLOW}if ok then{RESET}
+  {YELLOW}if ok then{RESET}
 {GREEN}cargo auto doc{RESET}
 {GREEN}cargo auto win_release{RESET}
 "#,
@@ -269,16 +269,16 @@ fn task_win_release() {
 
     println!(
         r#"
-    {YELLOW}After `cargo auto win_release`, run the compiled binary, examples and/or tests{RESET}
-    {YELLOW}In Windows git-bash, copy the exe file from the crustde container to Windows.{RESET}
+  {YELLOW}After `cargo auto win_release`, run the compiled binary, examples and/or tests{RESET}
+  {YELLOW}In Windows git-bash, copy the exe file from the crustde container to Windows.{RESET}
 {GREEN}mkdir ~/rustprojects/{package_name}{RESET}
 {GREEN}cd ~/rustprojects/{package_name}{RESET}
 {GREEN}scp rustdevuser@crustde:/home/rustdevuser/rustprojects/{package_name}/target/x86_64-pc-windows-gnu/release/{package_name}.exe . {RESET}
 {GREEN}alias treasure=./treasure_your_passwords.exe{RESET}
-    {YELLOW}Run the exe in Windows git-bash.{RESET}
+  {YELLOW}Run the exe in Windows git-bash.{RESET}
 {GREEN}treasure --help{RESET} 
 
-    {YELLOW}if ok then{RESET}
+  {YELLOW}if ok then{RESET}
 {GREEN}cargo auto doc{RESET}
 "#,
         package_name = cargo_toml.package_name(),
@@ -313,7 +313,7 @@ fn task_doc() {
     // message to help user with next move
     println!(
         r#"
-    {YELLOW}After `cargo auto doc`, ctrl-click on `docs/index.html`. 
+  {YELLOW}After `cargo auto doc`, ctrl-click on `docs/index.html`. 
     It will show the index.html in VSCode Explorer, then right-click and choose "Show Preview".
     This works inside the CRUSTDE container, because of the extension "Live Preview" 
     <https://marketplace.visualstudio.com/items?itemName=ms-vscode.live-server>
@@ -328,8 +328,8 @@ fn task_test() {
     cl::run_shell_command_static("cargo test").unwrap_or_else(|e| panic!("{e}"));
     println!(
         r#"
-    {YELLOW}After `cargo auto test`. If ok then {RESET}
-    {YELLOW}(commit message is mandatory){RESET}
+  {YELLOW}After `cargo auto test`. If ok then {RESET}
+  {YELLOW}(commit message is mandatory){RESET}
 {GREEN}cargo auto commit_and_push "message"{RESET}
 "#
     );
@@ -375,10 +375,10 @@ fn task_commit_and_push(arg_2: Option<String>) {
 
     println!(
         r#"
-    {YELLOW}After `cargo auto commit_and_push "message"`{RESET}
+  {YELLOW}After `cargo auto commit_and_push "message"`{RESET}
 
-    {YELLOW}First write the content of the release in the RELEASES.md in the `## Unreleased` section, {RESET}
-    {YELLOW}Then create the GitHub Release:{RESET}
+  {YELLOW}First write the content of the release in the RELEASES.md in the `## Unreleased` section, {RESET}
+  {YELLOW}Then create the GitHub Release:{RESET}
 {GREEN}cargo auto github_new_release{RESET}
 "#
     );
@@ -401,9 +401,7 @@ fn task_github_new_release() {
     // Then the automation task will copy the content to GitHub release
     let body_md_text = cl::body_text_from_releases_md().unwrap();
     let request = cgl::github_api_create_new_release(&github_owner, &repo_name, &tag_name_version, &release_name, branch, &body_md_text);
-    dbg!(&request);
     let json_value = ende::github_api_token_with_oauth2_mod::send_to_github_api_with_secret_token(request).unwrap();
-    dbg!(&json_value);
     // early exit on error
     if let Some(error_message) = json_value.get("message") {
         eprintln!("{RED}{error_message}{RESET}");
@@ -421,20 +419,12 @@ fn task_github_new_release() {
     // Create a new Version title in RELEASES.md.
     cl::create_new_version_in_releases_md(&release_name).unwrap();
 
-    println!(
-        "
-    {YELLOW}New GitHub release created: {release_name}.{RESET}
-"
-    );
+    println!("  {YELLOW}New GitHub release created: {release_name}.{RESET}");
 
     // region: upload asset only for executables, not for libraries
 
     let release_id = json_value.get("id").unwrap().as_i64().unwrap().to_string();
-    println!(
-        "
-        {YELLOW}Now uploading release asset. This can take some time if the files are big. Wait...{RESET}
-    "
-    );
+    println!(        "  {YELLOW}Now uploading release asset. This can take some time if the files are big. Wait...{RESET}");
     // compress files tar.gz
     let tar_name = format!("{repo_name}-{tag_name_version}-x86_64-unknown-linux-gnu.tar.gz");
 
@@ -449,19 +439,10 @@ fn task_github_new_release() {
     cl::ShellCommandLimitedDoubleQuotesSanitizer::new(r#"rm "{tar_name_sanitized_for_double_quote}" "#).unwrap_or_else(|e| panic!("{e}"))
     .arg("{tar_name_sanitized_for_double_quote}", &tar_name).unwrap_or_else(|e| panic!("{e}"))
     .run().unwrap_or_else(|e| panic!("{e}"));
-
-    println!(
-        r#"
-    {YELLOW}Asset uploaded. Open and edit the description on GitHub Releases in the browser.{RESET}
-    "#
-    );
+println!( r#"  {YELLOW}Asset uploaded. Open and edit the description on GitHub Releases in the browser.{RESET}"# );
 
     // endregion: upload asset only for executables, not for libraries
 
-    println!(
-        r#"
-{GREEN}https://github.com/{github_owner}/{repo_name}/releases{RESET}
-    "#
-    );
+    println!( r#"{GREEN}https://github.com/{github_owner}/{repo_name}/releases{RESET} "# );
 }
 // endregion: tasks

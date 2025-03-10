@@ -9,18 +9,18 @@ use crate::encrypt_decrypt_with_ssh_key_mod::{BLUE, GREEN, RED, RESET, YELLOW};
 
 pub(crate) fn list_token_from_vault(file_bare_name: &str) -> anyhow::Result<Vec<String>> {
     let mut ret_vec_string = vec![];
-    println!("{YELLOW}  Check if the encrypted file exists.{RESET}");
+    println!("  {YELLOW}Check if the encrypted file exists.{RESET}");
     let encrypted_file_name = ende::get_encrypted_file_path(file_bare_name)?;
     if !std::fs::exists(&encrypted_file_name)? {
-        println!("{YELLOW}  Encrypted file {encrypted_file_name} does not exist.{RESET}");
-        println!("{YELLOW}  Create the vault and store a secret using the store command. {RESET}");
+        println!("  {YELLOW}Encrypted file {encrypted_file_name} does not exist.{RESET}");
+        println!("  {YELLOW}Create the vault and store a secret using the store command. {RESET}");
         anyhow::bail!("Encrypted file not found.");
     }
-    println!("{YELLOW}  Open and read the encrypted file.{RESET}");
+    println!("  {YELLOW}Open and read the encrypted file.{RESET}");
     let encrypted_text_with_metadata: String = ende::open_file_b64_get_string(&encrypted_file_name)?;
     // parse json
     let vec_encrypted_text_with_metadata: Vec<ende::EncryptedTextWithMetadata> = serde_json::from_str(&encrypted_text_with_metadata)?;
-    println!("{YELLOW}  Decrypt the file with ssh-agent or private key.{RESET}");
+    println!("  {YELLOW}Decrypt the file with ssh-agent or private key.{RESET}");
     for encrypted_text_with_metadata in vec_encrypted_text_with_metadata.iter() {
         let iter_token_name = if let Some(iter_token_name) = encrypted_text_with_metadata.token_name.as_ref() {
             iter_token_name
@@ -37,28 +37,28 @@ pub(crate) fn list_token_from_vault(file_bare_name: &str) -> anyhow::Result<Vec<
 ///
 /// If exists, decrypt it from file.  
 pub(crate) fn show_secret_token_from_vault(file_bare_name: &str, token_name: &str) -> anyhow::Result<SecretString> {
-    println!("{YELLOW}  Check if the ssh private key exists.{RESET}");
+    println!("  {YELLOW}Check if the ssh private key exists.{RESET}");
     let private_key_file_path = ende::get_private_key_file_path(file_bare_name)?;
     if !std::fs::exists(&private_key_file_path)? {
-        println!("{RED}Error: Private key {private_key_file_path} does not exist.{RESET}");
-        println!("{YELLOW}  Create the private key in bash terminal:{RESET}");
+        eprintln!("{RED}Error: Private key {private_key_file_path} does not exist.{RESET}");
+        println!("  {YELLOW}Create the private key in bash terminal:{RESET}");
         println!(r#"{GREEN}ssh-keygen -t ed25519 -f "{private_key_file_path}" -C "vault for secret tokens"{RESET}"#);
         anyhow::bail!("Private key file not found.");
     }
 
-    println!("{YELLOW}  Check if the encrypted file exists.{RESET}");
+    println!("  {YELLOW}Check if the encrypted file exists.{RESET}");
     let encrypted_file_name = ende::get_encrypted_file_path(file_bare_name)?;
     if !std::fs::exists(&encrypted_file_name)? {
-        println!("{YELLOW}  Encrypted file {encrypted_file_name} does not exist.{RESET}");
-        println!("{YELLOW}  Create the vault and store a secret using the store command. {RESET}");
+        println!("  {YELLOW}Encrypted file {encrypted_file_name} does not exist.{RESET}");
+        println!("  {YELLOW}Create the vault and store a secret using the store command. {RESET}");
         anyhow::bail!("Encrypted file not found.");
     }
 
-    println!("{YELLOW}  Open and read the encrypted file.{RESET}");
+    println!("  {YELLOW}Open and read the encrypted file.{RESET}");
     let encrypted_text_with_metadata: String = ende::open_file_b64_get_string(&encrypted_file_name)?;
     // parse json
     let vec_encrypted_text_with_metadata: Vec<ende::EncryptedTextWithMetadata> = serde_json::from_str(&encrypted_text_with_metadata)?;
-    println!("{YELLOW}  Decrypt the file with ssh-agent or private key.{RESET}");
+    println!("  {YELLOW}Decrypt the file with ssh-agent or private key.{RESET}");
     for encrypted_text_with_metadata in vec_encrypted_text_with_metadata.iter() {
         let iter_token_name = if let Some(iter_token_name) = encrypted_text_with_metadata.token_name.as_ref() {
             iter_token_name
@@ -85,25 +85,25 @@ pub(crate) fn show_secret_token_from_vault(file_bare_name: &str, token_name: &st
 /// If exists, decrypt it from file.  
 pub(crate) fn store_secret_token_to_vault(file_bare_name: &str, token_name: &str) -> anyhow::Result<()> {
     let mut vec_encrypted_text_with_metadata: Vec<ende::EncryptedTextWithMetadata> = vec![];
-    println!("{YELLOW}  Check if the ssh private key exists.{RESET}");
+    println!("  {YELLOW}Check if the ssh private key exists.{RESET}");
     let private_key_file_path = ende::get_private_key_file_path(file_bare_name)?;
     if !std::fs::exists(&private_key_file_path)? {
-        println!("{RED}Error: Private key {private_key_file_path} does not exist.{RESET}");
-        println!("{YELLOW}  Create the private key in bash terminal:{RESET}");
+        eprintln!("{RED}Error: Private key {private_key_file_path} does not exist.{RESET}");
+        println!("  {YELLOW}Create the private key in bash terminal:{RESET}");
         println!(r#"{GREEN}ssh-keygen -t ed25519 -f "{private_key_file_path}" -C "vault for secret tokens"{RESET}"#);
         anyhow::bail!("Private key file not found.");
     }
 
-    println!("{YELLOW}  Check if the encrypted file exists.{RESET}");
+    println!("  {YELLOW}Check if the encrypted file exists.{RESET}");
     let encrypted_file_name = ende::get_encrypted_file_path(file_bare_name)?;
     if std::fs::exists(&encrypted_file_name)? {
-        println!("{YELLOW}  Open and read the encrypted file.{RESET}");
+        println!("  {YELLOW}Open and read the encrypted file.{RESET}");
         let encrypted_text_with_metadata: String = ende::open_file_b64_get_string(&encrypted_file_name)?;
         // parse json
         vec_encrypted_text_with_metadata = serde_json::from_str(&encrypted_text_with_metadata)?;
     }
-    println!("");
-    eprintln!("   {BLUE}Enter the secret token to encrypt:{RESET}");
+    println!();
+    println!("{BLUE}Enter the secret token to encrypt:{RESET}");
     let secret_access_token = secrecy::SecretString::from(inquire::Password::new("").without_confirmation().with_display_mode(inquire::PasswordDisplayMode::Masked).prompt()?);
 
     // prepare the random bytes, sign it with the private key, that is the true passcode used to encrypt the secret
@@ -137,7 +137,7 @@ pub(crate) fn store_secret_token_to_vault(file_bare_name: &str, token_name: &str
     let file_text = ende::encode64_from_string_to_string(&file_text);
 
     std::fs::write(&encrypted_file_name, file_text)?;
-    println!("{YELLOW}  Encrypted text saved to file.{RESET}");
+    println!("  {YELLOW}Encrypted text saved to file.{RESET}");
     Ok(())
 }
 
@@ -145,28 +145,28 @@ pub(crate) fn store_secret_token_to_vault(file_bare_name: &str, token_name: &str
 ///
 /// If exists, delete it from file.  
 pub(crate) fn delete_token_from_vault(file_bare_name: &str, token_name: &str) -> anyhow::Result<()> {
-    println!("{YELLOW}  Check if the ssh private key exists.{RESET}");
+    println!("  {YELLOW}Check if the ssh private key exists.{RESET}");
     let private_key_file_path = ende::get_private_key_file_path(file_bare_name)?;
     if !std::fs::exists(&private_key_file_path)? {
-        println!("{RED}Error: Private key {private_key_file_path} does not exist.{RESET}");
-        println!("{YELLOW}  Create the private key in bash terminal:{RESET}");
+        eprintln!("{RED}Error: Private key {private_key_file_path} does not exist.{RESET}");
+        println!("  {YELLOW}Create the private key in bash terminal:{RESET}");
         println!(r#"{GREEN}ssh-keygen -t ed25519 -f "{private_key_file_path}" -C "vault for secret tokens"{RESET}"#);
         anyhow::bail!("Private key file not found.");
     }
 
-    println!("{YELLOW}  Check if the encrypted file exists.{RESET}");
+    println!("  {YELLOW}Check if the encrypted file exists.{RESET}");
     let encrypted_file_name = ende::get_encrypted_file_path(file_bare_name)?;
     if !std::fs::exists(&encrypted_file_name)? {
-        println!("{YELLOW}  Encrypted file {encrypted_file_name} does not exist.{RESET}");
-        println!("{YELLOW}  Create the vault and store a secret using the store command. {RESET}");
+        println!("  {YELLOW}Encrypted file {encrypted_file_name} does not exist.{RESET}");
+        println!("  {YELLOW}Create the vault and store a secret using the store command. {RESET}");
         anyhow::bail!("Encrypted file not found.");
     }
 
-    println!("{YELLOW}  Open and read the encrypted file.{RESET}");
+    println!("  {YELLOW}Open and read the encrypted file.{RESET}");
     let encrypted_text_with_metadata: String = ende::open_file_b64_get_string(&encrypted_file_name)?;
     // parse json
     let mut vec_encrypted_text_with_metadata: Vec<ende::EncryptedTextWithMetadata> = serde_json::from_str(&encrypted_text_with_metadata)?;
-    println!("{YELLOW}  Decrypt the file with ssh-agent or private key.{RESET}");
+    println!("  {YELLOW}Decrypt the file with ssh-agent or private key.{RESET}");
     let mut index_to_delete = None;
 
     for (index, encrypted_text_with_metadata) in vec_encrypted_text_with_metadata.iter().enumerate() {
@@ -182,7 +182,7 @@ pub(crate) fn delete_token_from_vault(file_bare_name: &str, token_name: &str) ->
         break;
     }
     if let Some(index_to_delete) = index_to_delete {
-        println!("{YELLOW}  Delete token {token_name} from vault. {RESET}");
+        println!("  {YELLOW}Delete token {token_name} from vault. {RESET}");
 
         vec_encrypted_text_with_metadata.remove(index_to_delete);
 
@@ -191,7 +191,7 @@ pub(crate) fn delete_token_from_vault(file_bare_name: &str, token_name: &str) ->
         let file_text = ende::encode64_from_string_to_string(&file_text);
 
         std::fs::write(&encrypted_file_name, file_text)?;
-        println!("{YELLOW}  Encrypted text saved to file.{RESET}");
+        println!("  {YELLOW}Encrypted text saved to file.{RESET}");
     } else {
         anyhow::bail!("Token with this name not found.");
     }

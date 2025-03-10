@@ -68,7 +68,7 @@ pub(crate) fn new_remote_github_repository() -> Option<()> {
             .unwrap_or_else(|| panic!("{RED}ERROR: Element Description in Cargo.toml does not exist!{RESET}"));
 
         // ask interactive
-        println!("    {BLUE}This project does not have a remote GitHub repository.{RESET}");
+        println!("{BLUE}This project does not have a remote GitHub repository.{RESET}");
         let answer = inquire::Text::new(&format!("{BLUE}Do you want to create a new remote GitHub repository? (y/n){RESET}"))
             .prompt()
             .unwrap();
@@ -115,10 +115,10 @@ pub(crate) fn new_remote_github_repository() -> Option<()> {
         };
 
         // get just the name, description and html_url from json
-        println!("{YELLOW}name: {}{RESET}", json_value.get("name").unwrap().as_str().unwrap());
-        println!("{YELLOW}description: {}{RESET}", json_value.get("description").unwrap().as_str().unwrap());
+        println!("  {YELLOW}name: {}{RESET}", json_value.get("name").unwrap().as_str().unwrap());
+        println!("  {YELLOW}description: {}{RESET}", json_value.get("description").unwrap().as_str().unwrap());
         let repo_html_url = json_value.get("html_url").unwrap().as_str().unwrap().to_string();
-        println!("{YELLOW}url: {}{RESET}", &repo_html_url);
+        println!("  {YELLOW}url: {}{RESET}", &repo_html_url);
 
         // add this GitHub repository to origin remote over SSH (use sshadd for passphrase)
         cl::ShellCommandLimitedDoubleQuotesSanitizer::new(r#"git remote add origin "git@github.com:{github_owner_or_organization}/{name}.git" "#)
@@ -503,7 +503,7 @@ pub(crate) fn github_api_create_a_github_pages_site(github_owner_or_organization
 
 /// Upload asset to github release  
 pub(crate) fn github_api_upload_asset_to_release(github_owner_or_organization: &str, repo: &str, release_id: &str, path_to_file: &str) {
-    println!("    {YELLOW}Uploading file to GitHub release: {path_to_file}{RESET}");
+    println!("  {YELLOW}Uploading file to GitHub release: {path_to_file}{RESET}");
     let file = camino::Utf8Path::new(&path_to_file);
     let file_name = file.file_name().unwrap();
 
@@ -511,7 +511,7 @@ pub(crate) fn github_api_upload_asset_to_release(github_owner_or_organization: &
     let mut release_upload_url = <url::Url as std::str::FromStr>::from_str(&release_upload_url).unwrap();
     release_upload_url.set_query(Some(format!("{}={}", "name", file_name).as_str()));
     let file_size = std::fs::metadata(file).unwrap().len();
-    println!("    {YELLOW}It can take some time to upload. File size: {file_size}. Wait...{RESET}");
+    println!("  {YELLOW}It can take some time to upload. File size: {file_size}. Wait...{RESET}");
     // region: async code made sync locally
     let rt = tokio::runtime::Runtime::new().unwrap();
     rt.block_on(async move {
@@ -568,7 +568,6 @@ pub(crate) fn github_api_create_new_release(github_owner_or_organization: &str, 
         "prerelease":false,
         "generate_release_notes":false,
     });
-    dbg!(&body);
     let body = serde_json::to_string_pretty(&body).unwrap();
     reqwest::blocking::Client::new()
         .post(releases_url.as_str())

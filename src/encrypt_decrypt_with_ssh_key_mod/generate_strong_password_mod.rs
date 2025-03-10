@@ -10,17 +10,17 @@ use crate::encrypt_decrypt_with_ssh_key_mod as ende;
 use crate::encrypt_decrypt_with_ssh_key_mod::{BLUE, GREEN, RED, RESET, YELLOW};
 
 pub(crate) fn generate_strong_password(file_bare_name: &str) -> anyhow::Result<String> {
-    println!("{YELLOW}  Check if the ssh private key exists.{RESET}");
+    println!("  {YELLOW}Check if the ssh private key exists.{RESET}");
     let private_key_file_path = ende::get_private_key_file_path(file_bare_name)?;
     if !std::fs::exists(&private_key_file_path)? {
-        println!("{RED}Error: Private key {private_key_file_path} does not exist.{RESET}");
-        println!("{YELLOW}  Create the private key in bash terminal:{RESET}");
+        eprintln!("{RED}Error: Private key {private_key_file_path} does not exist.{RESET}");
+        println!("  {YELLOW}Create the private key in bash terminal:{RESET}");
         println!(r#"{GREEN}ssh-keygen -t ed25519 -f "{private_key_file_path}" -C "strong password"{RESET}"#);
         anyhow::bail!("Private key file not found.");
     }
-    println!("{YELLOW}  This function will convert your human password into a digital form hopefully harder to guess. {RESET}");
-    println!("");
-    eprintln!("   {BLUE}Enter the human easy password to convert:{RESET}");
+    println!("  {YELLOW}This function will convert your human password into a digital form hopefully harder to guess. {RESET}");
+    println!();
+    println!("{BLUE}Enter the human easy password to convert:{RESET}");
     let secret_human_password = secrecy::SecretString::from(inquire::Password::new("").without_confirmation().with_display_mode(inquire::PasswordDisplayMode::Masked).prompt()?);
     let secret_first_human_hash_32bytes: [u8; 32] = rsa::sha2::Sha256::digest(secret_human_password.expose_secret().as_bytes()).into();
     // first try to use the private key from ssh-agent, else use the private file with user interaction

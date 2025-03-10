@@ -21,23 +21,23 @@ fn main() {
             Some(token_name) => {
                 store_token(token_name);
             }
-            None => println!("{RED}Error: Missing arguments `token_name`.{RESET}"),
+            None => eprintln!("{RED}Error: Missing arguments `token_name`.{RESET}"),
         },
         Some("show") => match std::env::args().nth(2).as_deref() {
             // second argument
             Some(token_name) => {
                 show_token(token_name);
             }
-            None => println!("{RED}Error: Missing arguments `token_name`.{RESET}"),
+            None => eprintln!("{RED}Error: Missing arguments `token_name`.{RESET}"),
         },
         Some("delete") => match std::env::args().nth(2).as_deref() {
             // second argument
             Some(token_name) => {
                 delete_token(token_name);
             }
-            None => println!("{RED}Error: Missing arguments `token_name`.{RESET}"),
+            None => eprintln!("{RED}Error: Missing arguments `token_name`.{RESET}"),
         },
-        _ => println!("{RED}Error: Unrecognized arguments. Try `treasure --help`{RESET}"),
+        _ => eprintln!("{RED}Error: Unrecognized arguments. Try `treasure --help`{RESET}"),
     }
 }
 
@@ -45,7 +45,7 @@ fn main() {
 fn print_help() {
     println!(
         r#"
-    {YELLOW}Welcome to treasure CLI!
+  {YELLOW}Welcome to treasure CLI!
     Please, treasure your passwords!
     This small CLI can store your passwords encrypted with your SSH private key.
     With the same private key it can convert a simple human readable seed to a strong password.
@@ -58,7 +58,7 @@ fn print_help() {
 {GREEN}treasure show token_name{RESET}
 {GREEN}treasure delete token_name{RESET}
 
-    {YELLOW}© 2025 bestia.dev  MIT License github.com/bestia-dev/treasure_your_passwords{RESET}
+  {YELLOW}© 2025 bestia.dev  MIT License github.com/bestia-dev/treasure_your_passwords{RESET}
 "#
     );
 }
