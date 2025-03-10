@@ -9,7 +9,7 @@
 ***version: 0.0.52 date: 2025-03-10 author: [bestia.dev](https://bestia.dev) repository: [GitHub](https://github.com/bestia-dev/treasure_your_passwords)***
 
  ![maintained](https://img.shields.io/badge/maintained-green)
- ![work-in-progress](https://img.shields.io/badge/work_in_progress-yellow)
+ ![ready-for.use](https://img.shields.io/badge/ready_for_use-green)
  ![rustlang](https://img.shields.io/badge/rustlang-orange)
 
 [//]: # (auto_cargo_toml_to_md end)
@@ -27,7 +27,7 @@
 
 [//]: # (auto_lines_of_code end)
 
-Hashtags: #maintained #work-in-progress #rustlang  
+Hashtags: #maintained #ready-for-use #rustlang  
 My projects on GitHub are more like a tutorial than a finished product: [bestia-dev tutorials](https://github.com/bestia-dev/tutorials_rust_wasm).  
 
 ## create the SSH key
