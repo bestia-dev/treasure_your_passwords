@@ -117,23 +117,23 @@
             </span><span class="prelude-val">Some</span>(token_name) =&gt; {
                 store_token(token_name);
             }
-            <span class="prelude-val">None </span>=&gt; <span class="macro">println!</span>(<span class="string">"{RED}Error: Missing arguments `token_name`.{RESET}"</span>),
+            <span class="prelude-val">None </span>=&gt; <span class="macro">eprintln!</span>(<span class="string">"{RED}Error: Missing arguments `token_name`.{RESET}"</span>),
         },
         <span class="prelude-val">Some</span>(<span class="string">"show"</span>) =&gt; <span class="kw">match </span>std::env::args().nth(<span class="number">2</span>).as_deref() {
             <span class="comment">// second argument
             </span><span class="prelude-val">Some</span>(token_name) =&gt; {
                 show_token(token_name);
             }
-            <span class="prelude-val">None </span>=&gt; <span class="macro">println!</span>(<span class="string">"{RED}Error: Missing arguments `token_name`.{RESET}"</span>),
+            <span class="prelude-val">None </span>=&gt; <span class="macro">eprintln!</span>(<span class="string">"{RED}Error: Missing arguments `token_name`.{RESET}"</span>),
         },
         <span class="prelude-val">Some</span>(<span class="string">"delete"</span>) =&gt; <span class="kw">match </span>std::env::args().nth(<span class="number">2</span>).as_deref() {
             <span class="comment">// second argument
             </span><span class="prelude-val">Some</span>(token_name) =&gt; {
                 delete_token(token_name);
             }
-            <span class="prelude-val">None </span>=&gt; <span class="macro">println!</span>(<span class="string">"{RED}Error: Missing arguments `token_name`.{RESET}"</span>),
+            <span class="prelude-val">None </span>=&gt; <span class="macro">eprintln!</span>(<span class="string">"{RED}Error: Missing arguments `token_name`.{RESET}"</span>),
         },
-        <span class="kw">_ </span>=&gt; <span class="macro">println!</span>(<span class="string">"{RED}Error: Unrecognized arguments. Try `treasure --help`{RESET}"</span>),
+        <span class="kw">_ </span>=&gt; <span class="macro">eprintln!</span>(<span class="string">"{RED}Error: Unrecognized arguments. Try `treasure --help`{RESET}"</span>),
     }
 }
 
@@ -141,7 +141,7 @@
 </span><span class="kw">fn </span>print_help() {
     <span class="macro">println!</span>(
         <span class="string">r#"
-    {YELLOW}Welcome to treasure CLI!
+  {YELLOW}Welcome to treasure CLI!
     Please, treasure your passwords!
     This small CLI can store your passwords encrypted with your SSH private key.
     With the same private key it can convert a simple human readable seed to a strong password.
@@ -154,7 +154,7 @@
 {GREEN}treasure show token_name{RESET}
 {GREEN}treasure delete token_name{RESET}
 
-    {YELLOW}© 2025 bestia.dev  MIT License github.com/bestia-dev/treasure_your_passwords{RESET}
+  {YELLOW}© 2025 bestia.dev  MIT License github.com/bestia-dev/treasure_your_passwords{RESET}
 "#
     </span>);
 }

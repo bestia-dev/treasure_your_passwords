@@ -428,13 +428,13 @@
         secret_passcode_32bytes_maybe<span class="question-mark">?
     </span>} <span class="kw">else </span>{
         <span class="comment">// ask user to think about adding key into ssh-agent with ssh-add
-        </span><span class="macro">println!</span>(<span class="string">"   {YELLOW}SSH key for encrypted secret_token is not found in the ssh-agent.{RESET}"</span>);
-        <span class="macro">println!</span>(<span class="string">"   {YELLOW}Without ssh-agent, you will have to type the private key passphrase every time.{RESET}"</span>);
-        <span class="macro">println!</span>(<span class="string">"   {YELLOW}This is more secure, but inconvenient.{RESET}"</span>);
-        <span class="macro">println!</span>(<span class="string">"   {YELLOW}WARNING: using ssh-agent is less secure, because there is no need for user interaction.{RESET}"</span>);
-        <span class="macro">println!</span>(<span class="string">"   {YELLOW}Knowing this, you can manually add the SSH private key to ssh-agent for 1 hour:{RESET}"</span>);
+        </span><span class="macro">println!</span>(<span class="string">"  {YELLOW}SSH key for encrypted secret_token is not found in the ssh-agent.{RESET}"</span>);
+        <span class="macro">println!</span>(<span class="string">"  {YELLOW}Without ssh-agent, you will have to type the private key passphrase every time.{RESET}"</span>);
+        <span class="macro">println!</span>(<span class="string">"  {YELLOW}This is more secure, but inconvenient.{RESET}"</span>);
+        <span class="macro">println!</span>(<span class="string">"  {YELLOW}WARNING: using ssh-agent is less secure, because there is no need for user interaction.{RESET}"</span>);
+        <span class="macro">println!</span>(<span class="string">"  {YELLOW}Knowing this, you can manually add the SSH private key to ssh-agent for 1 hour:{RESET}"</span>);
         <span class="macro">println!</span>(<span class="string">"{GREEN}ssh-add -t 1h {private_key_file_path}{RESET}"</span>);
-        <span class="macro">println!</span>(<span class="string">"   {YELLOW}Unlock the private key to decrypt the saved file.{RESET}"</span>);
+        <span class="macro">println!</span>(<span class="string">"  {YELLOW}Unlock the private key to decrypt the saved file.{RESET}"</span>);
 
         sign_seed_with_private_key_file(plain_seed_bytes_32bytes, private_key_file_path)<span class="question-mark">?
     </span>};
@@ -463,7 +463,7 @@
     <span class="kw">let </span>public_key = ssh_key::PublicKey::read_openssh_file(<span class="kw-2">&amp;</span>public_key_file_path.as_std_path())<span class="question-mark">?</span>;
     <span class="kw">let </span>fingerprint_from_file = public_key.fingerprint(Default::default()).to_string();
 
-    <span class="macro">println!</span>(<span class="string">"{YELLOW}  Connect to ssh-agent on SSH_AUTH_SOCK{RESET}"</span>);
+    <span class="macro">println!</span>(<span class="string">"  {YELLOW}Connect to ssh-agent on SSH_AUTH_SOCK{RESET}"</span>);
     <span class="kw">let </span>var_ssh_auth_sock = std::env::var(<span class="string">"SSH_AUTH_SOCK"</span>).unwrap();
     <span class="kw">let </span>path_ssh_auth_sock = std::path::PathBuf::from(<span class="kw-2">&amp;</span>var_ssh_auth_sock);
     <span class="kw">let </span><span class="kw-2">mut </span>ssh_agent_client = ssh_agent_client_rs::Client::connect(<span class="kw-2">&amp;</span>path_ssh_auth_sock)<span class="question-mark">?</span>;
@@ -488,8 +488,8 @@
 </span><span class="kw">fn </span>sign_seed_with_private_key_file(plain_seed_bytes_32bytes: [u8; <span class="number">32</span>], private_key_file_path: <span class="kw-2">&amp;</span>camino::Utf8Path) -&gt; anyhow::Result&lt;SecretBox&lt;[u8; <span class="number">32</span>]&gt;&gt; {
     <span class="doccomment">/// Internal function for user input passphrase
     </span><span class="kw">fn </span>user_input_secret_passphrase() -&gt; anyhow::Result&lt;SecretString&gt; {
-        <span class="macro">eprintln!</span>(<span class="string">" "</span>);
-        <span class="macro">eprintln!</span>(<span class="string">"   {BLUE}Enter the passphrase for the SSH private key:{RESET}"</span>);
+        <span class="macro">println!</span>();
+        <span class="macro">println!</span>(<span class="string">"{BLUE}Enter the passphrase for the SSH private key:{RESET}"</span>);
 
         <span class="kw">let </span>secret_passphrase = SecretString::from(inquire::Password::new(<span class="string">""</span>).without_confirmation().with_display_mode(inquire::PasswordDisplayMode::Masked).prompt()<span class="question-mark">?</span>);
 
@@ -499,15 +499,15 @@
     </span><span class="kw">let </span>secret_user_passphrase: SecretString = user_input_secret_passphrase()<span class="question-mark">?</span>;
 
     <span class="comment">// sign_with_ssh_private_key_file
-    </span><span class="macro">println!</span>(<span class="string">"{YELLOW}  Use ssh private key from file {RESET}"</span>);
+    </span><span class="macro">println!</span>(<span class="string">"  {YELLOW}Use ssh private key from file {RESET}"</span>);
     <span class="kw">let </span>private_key = ssh_key::PrivateKey::read_openssh_file(private_key_file_path.as_std_path())<span class="question-mark">?</span>;
-    <span class="macro">println!</span>(<span class="string">"{YELLOW}  Unlock the private key {RESET}"</span>);
+    <span class="macro">println!</span>(<span class="string">"  {YELLOW}Unlock the private key {RESET}"</span>);
 
     <span class="comment">// cannot use secrecy: PrivateKey does not have trait Zeroize
     </span><span class="kw">let </span><span class="kw-2">mut </span>secret_private_key = private_key.decrypt(secret_user_passphrase.expose_secret())<span class="question-mark">?</span>;
 
     <span class="comment">// FYI: this type of signature is compatible with ssh-agent because it does not involve namespace
-    </span><span class="macro">println!</span>(<span class="string">"{YELLOW}  Sign the seed {RESET}"</span>);
+    </span><span class="macro">println!</span>(<span class="string">"  {YELLOW}Sign the seed {RESET}"</span>);
 
     <span class="kw">let </span><span class="kw-2">mut </span>secret_passcode_32bytes = SecretBox::new(Box::new([<span class="number">0u8</span>; <span class="number">32</span>]));
     <span class="comment">// only the data part of the signature goes into as_bytes.
