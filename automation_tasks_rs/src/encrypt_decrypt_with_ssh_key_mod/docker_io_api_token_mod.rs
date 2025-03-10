@@ -79,8 +79,8 @@ pub(crate) fn get_docker_hub_secret_token(private_key_file_bare_name: &str) -> a
         // prepare a struct to save as encoded string
         let encrypted_text_with_metadata = ende::EncryptedTextWithMetadata {
             private_key_file_path: private_key_file_path.to_string(),
-            plain_seed_string: plain_seed_string,
-            plain_encrypted_text: plain_encrypted_text,
+            plain_seed_string,
+            plain_encrypted_text,
             access_token_expiration: None,
             refresh_token_expiration: None,
             token_name: None,

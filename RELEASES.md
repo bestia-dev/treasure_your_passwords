@@ -10,6 +10,8 @@ The TODO section is part of the [README.md](https://github.com/bestia-dev/treasu
 
 ## Unreleased
 
+- clippy
+
 ## Version 0.0.52 (2025-03-10)
 
 - github_api_secret_token_key
