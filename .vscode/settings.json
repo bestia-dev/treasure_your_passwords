@@ -46,6 +46,7 @@
         "rustprojects",
         "serde",
         "sscanf",
+        "sshadd",
         "STIME",
         "struct",
         "subsecond",

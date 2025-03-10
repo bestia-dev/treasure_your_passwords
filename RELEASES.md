@@ -10,18 +10,13 @@ The TODO section is part of the [README.md](https://github.com/bestia-dev/treasu
 
 ## Unreleased
 
+## Version 0.0.51 (2025-03-10)
+
 - github app permission
 
 ## Version 0.0.50 (2025-03-10)
 
-## Version 0.0.50 (2025-03-10)
-
-## Version 0.0.50 (2025-03-10)
-
-## Version 0.0.50 (2025-03-10)
-
 - update cargo-auto
-
 - package name and binary name should be the same. Makes everything easier.
 
 ## Version 0.0.13 (2025-03-04)
