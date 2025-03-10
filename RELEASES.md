@@ -10,6 +10,8 @@ The TODO section is part of the [README.md](https://github.com/bestia-dev/treasu
 
 ## Unreleased
 
+- github_api_secret_token_key
+
 ## Version 0.0.51 (2025-03-10)
 
 - github app permission
