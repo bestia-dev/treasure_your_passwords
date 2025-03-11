@@ -97,7 +97,7 @@ pub use ende::{GREEN, RED, RESET, YELLOW};
 // import trait
 use secrecy::ExposeSecret;
 
-/// # entry point into the bin-executable
+/// Entry point into the bin-executable.
 fn main() {
     // logging is essential for every project
     pretty_env_logger::init();
@@ -132,7 +132,7 @@ fn main() {
     }
 }
 
-/// # print help
+/// Print help on the terminal.
 fn print_help() {
     println!(
         r#"
@@ -155,7 +155,7 @@ fn print_help() {
     );
 }
 
-/// # panics if it cannot read file_bare_name
+/// Panics if it cannot read file_bare_name.
 fn read_bare_file_name() -> String {
     let Ok(file_bare_name) = std::fs::read_to_string("ssh_private_key_bare_file_name.cfg") else {
         panic!("{RED}Cannot read file ssh_private_key_bare_file_name.cfg{RESET}");
@@ -163,34 +163,34 @@ fn read_bare_file_name() -> String {
     file_bare_name
 }
 
-/// # convert to strong password
+/// Convert to strong password.
 fn convert_to_strong_password() {
     let file_bare_name = read_bare_file_name();
     let strong_password = ende::generate_strong_password_mod::generate_strong_password(&file_bare_name).unwrap();
     println!("{}", strong_password);
 }
 
-/// # list token names
+/// List token names.
 fn list_token_names() {
     let file_bare_name = read_bare_file_name();
     let vec_string = ende::secret_vault_mod::list_tokens_from_vault(&file_bare_name).unwrap();
     println!("{:?}", vec_string);
 }
 
-/// # store token
+/// Store token, encrypted.
 fn store_token(token_name: &str) {
     let file_bare_name = read_bare_file_name();
     ende::secret_vault_mod::store_secret_token_to_vault(&file_bare_name, token_name).unwrap();
 }
 
-/// # show token
+/// Show token, decrypted.
 fn show_token(token_name: &str) {
     let file_bare_name = read_bare_file_name();
     let secret_token = ende::secret_vault_mod::show_secret_token_from_vault(&file_bare_name, token_name).unwrap();
     println!("{}", secret_token.expose_secret());
 }
 
-/// # delete token
+/// Delete token.
 fn delete_token(token_name: &str) {
     let file_bare_name = read_bare_file_name();
     ende::secret_vault_mod::delete_token_from_vault(&file_bare_name, token_name).unwrap();
