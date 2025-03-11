@@ -1,4 +1,4 @@
-// encrypt_decrypt_with_ssh_key_mod.rs
+// encrypt_decrypt_with_ssh_key_mod/mod.rs
 
 pub mod generate_strong_password_mod;
 pub mod secret_vault_mod;
@@ -51,7 +51,8 @@ pub(crate) fn get_encrypted_file_path(file_bare_name: &str) -> anyhow::Result<ca
 /// Generate a random seed
 ///
 /// This seed will be signed with the private key and
-/// that will be the passcode for symmetric encryption
+/// that will be the passcode for symmetric encryption.
+/// It is not a secret.
 /// We will need the bytes and the string representation
 pub(crate) fn random_seed_32bytes_and_string() -> anyhow::Result<([u8; 32], String)> {
     let mut seed_32bytes = [0_u8; 32];
@@ -87,7 +88,7 @@ pub(crate) fn shorten_vec_bytes_to_32bytes(vec_u8: Vec<u8>) -> anyhow::Result<[u
     Ok(secret_passcode_32bytes)
 }
 
-// region: seed encode and decode - string and bytes
+// region: encode and decode strings and bytes
 
 /// Decode base64 from string to 32bytes
 pub(crate) fn encode64_from_32bytes_to_string(bytes_32bytes: [u8; 32]) -> anyhow::Result<String> {
@@ -106,11 +107,6 @@ pub(crate) fn encode64_from_bytes_to_string(plain_seed_bytes_32bytes: Vec<u8>) -
     <base64ct::Base64 as base64ct::Encoding>::encode_string(&plain_seed_bytes_32bytes)
 }
 
-// /// decode base64 from string to bytes
-// pub(crate) fn decode64_from_string_to_bytes(plain_encrypted_string: String) -> anyhow::Result<Vec<u8>> {
-//     Ok(<base64ct::Base64 as base64ct::Encoding>::decode_vec(&plain_encrypted_string)?)
-// }
-
 /// Encode base64 from string to string
 ///
 /// It is a silly little obfuscation just to avoid using plain text.
@@ -126,7 +122,7 @@ pub(crate) fn decode64_from_string_to_string(string_to_decode: &str) -> anyhow::
     Ok(decoded_string)
 }
 
-// endregion: seed encode and decode - string and bytes
+// endregion: encode and decode strings and bytes
 
 // region: sign the seed with ssh-agent or private key
 
@@ -135,7 +131,7 @@ pub(crate) fn decode64_from_string_to_string(string_to_decode: &str) -> anyhow::
 /// First it tries to use the ssh-agent.
 /// Else it uses the private key and ask the user to input the passphrase.
 /// The secret signed seed will be the actual password for symmetrical encryption.
-/// Returns secret_password_bytes
+/// Returns secret_passcode_32bytes
 pub(crate) fn sign_seed_with_ssh_agent_or_private_key_file(private_key_file_path: &camino::Utf8Path, plain_seed_bytes_32bytes: [u8; 32]) -> anyhow::Result<SecretBox<[u8; 32]>> {
     let secret_passcode_32bytes_maybe = sign_seed_with_ssh_agent(plain_seed_bytes_32bytes, private_key_file_path);
     let secret_passcode_32bytes: SecretBox<[u8; 32]> = if secret_passcode_32bytes_maybe.is_ok() {
@@ -158,7 +154,7 @@ pub(crate) fn sign_seed_with_ssh_agent_or_private_key_file(private_key_file_path
 /// Sign seed with ssh-agent into 32 bytes secret
 ///
 /// This will be the true passcode for symmetrical encryption and decryption.  
-/// Returns secret_password_bytes  
+/// Returns secret_passcode_32bytes  
 fn sign_seed_with_ssh_agent(plain_seed_bytes_32bytes: [u8; 32], private_key_file_path: &camino::Utf8Path) -> anyhow::Result<SecretBox<[u8; 32]>> {
     /// Internal function returns the public_key inside ssh-add
     fn public_key_from_ssh_agent(client: &mut ssh_agent_client_rs::Client, fingerprint_from_file: &str) -> anyhow::Result<ssh_key::PublicKey> {
@@ -198,7 +194,7 @@ fn sign_seed_with_ssh_agent(plain_seed_bytes_32bytes: [u8; 32], private_key_file
 ///
 /// User must input the passphrase to unlock the private key file.  
 /// This will be the true passcode for symmetrical encryption and decryption.  
-/// Returns secret_password_bytes
+/// Returns secret_passcode_32bytes
 fn sign_seed_with_private_key_file(plain_seed_bytes_32bytes: [u8; 32], private_key_file_path: &camino::Utf8Path) -> anyhow::Result<SecretBox<[u8; 32]>> {
     /// Internal function for user input passphrase
     fn user_input_secret_passphrase() -> anyhow::Result<SecretString> {

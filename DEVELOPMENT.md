@@ -1,4 +1,16 @@
-# Development details
+# Development details of treasure_your_passwords
+
+## Project name and program name
+
+The project (package) name is long and descriptive `treasure_your_passwords`. The program name to execute in CLI should be short and concise: `treasure`.
+
+It complicates the automation scripts to have this 2 names different. To make it simpler, in development I use only the long name.
+
+Then finally in bash terinal, I make an alias to use it with the short name.
+
+```bash
+alias treasure = ./treasure_your_passwords
+```
 
 ## CRUSTDE - Containerized Rust Development Environment
 
@@ -33,17 +45,6 @@ You can open the automation sub-project in VSCode and then code your own tasks i
 code automation_tasks_rs
 ```
 
-## Separate main.rs and lib.rs
-
-It is always good to split the project between a `main.rs` (executable) and a `lib.rs` (library crate).
-
-Even for the smallest project. Maybe some other program will use the library eventually.
-
-All the input/output is coded in the `main.rs`: keyboard and monitor (stdin and stdout), access to files, and some access to the network.  
-The library must not operate directly with the stdin/stdout, because some other caller of the library can have other ideas around input-output options. Maybe it is a Graphical user interface that does things completely different than CLI applications.
-
-A separate `lib.rs` enables one to make good tests and examples without worrying about input-output.
-
 ## super simple argument parsing
 
 I use a super simple code to parse CLI arguments inside the `src/bin/treasure_your_passwords/main.rs`. There are crate libraries that enable very complex argument parsing if needed.
@@ -57,20 +58,6 @@ The code is separated into module files.
 README.md and all the doc-comments are in markdown. To separate paragraphs in markdown use an empty line between them.
 I tried other variants like double-space or backslash, but an empty line is the most used in the wild.
 
-## tests
-
-I added a unit-test, just to show how it looks. And an integration-test. So it is "ready-to-go".
-Run them with `cargo test`.
-
-## examples
-
-In the directory `examples` every rs file is a bin-executable.
-Run it with:
-
-```bash
-cargo run --example example_1
-```
-
 ## Error handling thiserror and anyhow
 
 Rule number one is never to use `.unwrap()` in your real Rust code. It is a sign, you are not Error handling properly.
@@ -80,18 +67,8 @@ The bin-executable does not want to be involved in every possible error separate
 Inside the code, mostly propagate the errors with the `?` Operator after the `Result` value instead of unwrap() or the match expression.
 In the tests we don't want to work with Error handling. There, instead of `.unwrap()`, use the similar function `.expect(&str)` that has an additional description string. I use expect() when I am 100% sure the panic cannot happen because I checked some conditions before it.  
 
-## Template release
+## Windows git-bash
 
-Cargo-auto will download the template release from:
-<https://github.com/bestia-dev/treasure_your_passwords/releases/download/v1.0.0/template.tar.gz>
+This CLI program can run in `windows git-bash`. This environment has also other names like: cygwin, msys2, msys64, MingW64, git-for-windows, msys or msysGit.
 
-To create this release use the commands:
-
-```bash
-git archive -o template.tar HEAD
-# delete directory docs
-tar -vf template.tar --delete docs
-gzip template.tar
-```
-
-Then manually create a GitHub release and upload the tar.
+There is still a library crate `ssh-agent-client-rs` that does not run on windows, but I sent a [Pull Request](https://github.com/nresare/ssh-agent-client-rs/pull/29) to solve this problem. In the meantime I use my fork on `https://github.com/bestia-dev/ssh-agent-client-rs-win-git-bash` and the branch `win-git-bash`.

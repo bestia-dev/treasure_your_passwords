@@ -2,13 +2,20 @@
 
 #![allow(dead_code)]
 
-//use anyhow::Context;
 use rsa::sha2::Digest;
 use secrecy::{ExposeSecret, SecretBox};
 
 use crate::encrypt_decrypt_with_ssh_key_mod as ende;
 use crate::encrypt_decrypt_with_ssh_key_mod::{BLUE, GREEN, RED, RESET, YELLOW};
 
+/// generate strong password
+///
+/// Starts with a human readable password.
+/// It hashes it to 32 bytes, just to make it a little more complex.
+/// Sign it with the ssh private key, that only the owner can user.
+/// This could be reversed by using the public key. Because of that:
+/// Hash it into a 32 bytes. This is a one way encryption
+/// Finally encode it into a ascii7 string with lowercase, uppercase, numerals and few symbols.
 pub(crate) fn generate_strong_password(file_bare_name: &str) -> anyhow::Result<String> {
     println!("  {YELLOW}Check if the ssh private key exists.{RESET}");
     let private_key_file_path = ende::get_private_key_file_path(file_bare_name)?;

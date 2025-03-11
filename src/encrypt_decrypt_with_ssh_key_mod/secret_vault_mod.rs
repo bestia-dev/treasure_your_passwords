@@ -1,5 +1,9 @@
 // secret_vault_mod.rs
 
+//! secret vault
+//!
+//! With one SSH private key, we can store many secret tokens.
+
 #![allow(dead_code)]
 
 use secrecy::{SecretBox, SecretString};
@@ -7,7 +11,10 @@ use secrecy::{SecretBox, SecretString};
 use crate::encrypt_decrypt_with_ssh_key_mod as ende;
 use crate::encrypt_decrypt_with_ssh_key_mod::{BLUE, GREEN, RED, RESET, YELLOW};
 
-pub(crate) fn list_token_from_vault(file_bare_name: &str) -> anyhow::Result<Vec<String>> {
+/// list tokens
+///
+/// no need to decrypt the tokens here
+pub(crate) fn list_tokens_from_vault(file_bare_name: &str) -> anyhow::Result<Vec<String>> {
     let mut ret_vec_string = vec![];
     println!("  {YELLOW}Check if the encrypted file exists.{RESET}");
     let encrypted_file_name = ende::get_encrypted_file_path(file_bare_name)?;
