@@ -294,7 +294,7 @@
 <span class="comment">// import trait
 </span><span class="kw">use </span>secrecy::ExposeSecret;
 
-<span class="doccomment">/// # entry point into the bin-executable
+<span class="doccomment">/// Entry point into the bin-executable.
 </span><span class="kw">fn </span>main() {
     <span class="comment">// logging is essential for every project
     </span>pretty_env_logger::init();
@@ -329,7 +329,7 @@
     }
 }
 
-<span class="doccomment">/// # print help
+<span class="doccomment">/// Print help on the terminal.
 </span><span class="kw">fn </span>print_help() {
     <span class="macro">println!</span>(
         <span class="string">r#"
@@ -352,7 +352,7 @@
     </span>);
 }
 
-<span class="doccomment">/// # panics if it cannot read file_bare_name
+<span class="doccomment">/// Panics if it cannot read file_bare_name.
 </span><span class="kw">fn </span>read_bare_file_name() -&gt; String {
     <span class="kw">let </span><span class="prelude-val">Ok</span>(file_bare_name) = std::fs::read_to_string(<span class="string">"ssh_private_key_bare_file_name.cfg"</span>) <span class="kw">else </span>{
         <span class="macro">panic!</span>(<span class="string">"{RED}Cannot read file ssh_private_key_bare_file_name.cfg{RESET}"</span>);
@@ -360,34 +360,34 @@
     file_bare_name
 }
 
-<span class="doccomment">/// # convert to strong password
+<span class="doccomment">/// Convert to strong password.
 </span><span class="kw">fn </span>convert_to_strong_password() {
     <span class="kw">let </span>file_bare_name = read_bare_file_name();
     <span class="kw">let </span>strong_password = ende::generate_strong_password_mod::generate_strong_password(<span class="kw-2">&amp;</span>file_bare_name).unwrap();
     <span class="macro">println!</span>(<span class="string">"{}"</span>, strong_password);
 }
 
-<span class="doccomment">/// # list token names
+<span class="doccomment">/// List token names.
 </span><span class="kw">fn </span>list_token_names() {
     <span class="kw">let </span>file_bare_name = read_bare_file_name();
     <span class="kw">let </span>vec_string = ende::secret_vault_mod::list_tokens_from_vault(<span class="kw-2">&amp;</span>file_bare_name).unwrap();
     <span class="macro">println!</span>(<span class="string">"{:?}"</span>, vec_string);
 }
 
-<span class="doccomment">/// # store token
+<span class="doccomment">/// Store token, encrypted.
 </span><span class="kw">fn </span>store_token(token_name: <span class="kw-2">&amp;</span>str) {
     <span class="kw">let </span>file_bare_name = read_bare_file_name();
     ende::secret_vault_mod::store_secret_token_to_vault(<span class="kw-2">&amp;</span>file_bare_name, token_name).unwrap();
 }
 
-<span class="doccomment">/// # show token
+<span class="doccomment">/// Show token, decrypted.
 </span><span class="kw">fn </span>show_token(token_name: <span class="kw-2">&amp;</span>str) {
     <span class="kw">let </span>file_bare_name = read_bare_file_name();
     <span class="kw">let </span>secret_token = ende::secret_vault_mod::show_secret_token_from_vault(<span class="kw-2">&amp;</span>file_bare_name, token_name).unwrap();
     <span class="macro">println!</span>(<span class="string">"{}"</span>, secret_token.expose_secret());
 }
 
-<span class="doccomment">/// # delete token
+<span class="doccomment">/// Delete token.
 </span><span class="kw">fn </span>delete_token(token_name: <span class="kw-2">&amp;</span>str) {
     <span class="kw">let </span>file_bare_name = read_bare_file_name();
     ende::secret_vault_mod::delete_token_from_vault(<span class="kw-2">&amp;</span>file_bare_name, token_name).unwrap();
