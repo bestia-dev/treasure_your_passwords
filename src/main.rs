@@ -15,7 +15,7 @@
 //!  ![treasure_your_passwords](https://bestia.dev/webpage_hit_counter/get_svg_image/779107454.svg)
 //!
 //! [![Lines in Rust code](https://img.shields.io/badge/Lines_in_Rust-511-green.svg)](https://github.com/bestia-dev/treasure/)
-//! [![Lines in Doc comments](https://img.shields.io/badge/Lines_in_Doc_comments-194-blue.svg)](https://github.com/bestia-dev/treasure/)
+//! [![Lines in Doc comments](https://img.shields.io/badge/Lines_in_Doc_comments-208-blue.svg)](https://github.com/bestia-dev/treasure/)
 //! [![Lines in Comments](https://img.shields.io/badge/Lines_in_comments-56-purple.svg)](https://github.com/bestia-dev/treasure/)
 //! [![Lines in examples](https://img.shields.io/badge/Lines_in_examples-0-yellow.svg)](https://github.com/bestia-dev/treasure/)
 //! [![Lines in tests](https://img.shields.io/badge/Lines_in_tests-0-orange.svg)](https://github.com/bestia-dev/treasure/)

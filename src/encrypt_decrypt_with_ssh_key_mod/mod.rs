@@ -1,16 +1,29 @@
 // encrypt_decrypt_with_ssh_key_mod/mod.rs
 
-//! encrypt and decrypt with ssh key
+//! # encrypt and decrypt with ssh key
 //!
 //! In development, we often use SSH keys to connect to remote computers.  
 //! Because of this, we learned how to create and maintain SSH private keys.  
 //! This knowledge can be used to encrypt and decrypt many different secrets.  
-//! The core principle is simple:  
+//! The core principle is simple.  
+//!
+//! ## Encrypt
+//!
 //! Create a random seed 32 bytes. This is not a secret.  
 //! Sign it with the SSH private key. Only the owner can do that.  
 //! The signature is our new secret password.  
 //! Use symmetrical encryption to encrypt the strings.  
-//! Use bas64 encoding to convert between strings and bytes.  
+//! Use base64 encoding to convert between strings and bytes.  
+//! Save in the same file the encrypted string and the random seed.  
+//!
+//! ## Decrypt
+//!
+//! Read the file and parse the encrypted string and the random seed.  
+//! Sign it with the SSH private key. Only the owner can do that.
+//! The signature is our new secret password.
+//! Use symmetrical encryption to decrypt the strings.   
+//!
+//! ## SSH private key
 //!
 //! Private SSH keys are protected by a passcode that only the owner knows.  
 //! This is the foundation of the security of this process.  
