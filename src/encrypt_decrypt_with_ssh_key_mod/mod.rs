@@ -37,24 +37,24 @@ pub mod secret_vault_mod;
 // region: Public API constants
 // ANSI colors for Linux terminal
 // https://github.com/shiena/ansicolor/blob/master/README.md
-/// ANSI color
+/// # ANSI color
 pub const RED: &str = "\x1b[31m";
-/// ANSI color
+/// # ANSI color
 #[allow(dead_code)]
 pub const GREEN: &str = "\x1b[32m";
-/// ANSI color
+/// # ANSI color
 pub const YELLOW: &str = "\x1b[33m";
-/// ANSI color
+/// # ANSI color
 #[allow(dead_code)]
 pub const BLUE: &str = "\x1b[34m";
-/// ANSI color
+/// # ANSI color
 pub const RESET: &str = "\x1b[0m";
 // endregion: Public API constants
 
 use anyhow::Context;
 use secrecy::{ExposeSecret, ExposeSecretMut, SecretBox, SecretString};
 
-/// Struct that represents the json data saved in the '*.enc' file
+/// # Struct that represents the json data saved in the '*.enc' file
 #[derive(serde::Deserialize, serde::Serialize)]
 pub(crate) struct EncryptedTextWithMetadata {
     pub(crate) private_key_file_path: String,
@@ -65,7 +65,7 @@ pub(crate) struct EncryptedTextWithMetadata {
     pub(crate) refresh_token_expiration: Option<String>,
 }
 
-/// get private key file path
+/// # get private key file path
 pub(crate) fn get_private_key_file_path(file_bare_name: &str) -> anyhow::Result<camino::Utf8PathBuf> {
     let user_dirs = directories::UserDirs::new().context("directories::UserDirs")?;
     let path_buf = user_dirs.home_dir().join(".ssh").join(file_bare_name);
@@ -73,7 +73,7 @@ pub(crate) fn get_private_key_file_path(file_bare_name: &str) -> anyhow::Result<
     Ok(private_key_file_path)
 }
 
-/// get encrypted file path
+/// # get encrypted file path
 pub(crate) fn get_encrypted_file_path(file_bare_name: &str) -> anyhow::Result<camino::Utf8PathBuf> {
     let user_dirs = directories::UserDirs::new().context("directories::UserDirs")?;
     let path_buf = user_dirs.home_dir().join(".ssh").join(file_bare_name).with_extension("enc");
@@ -123,19 +123,19 @@ pub(crate) fn shorten_vec_bytes_to_32bytes(vec_u8: Vec<u8>) -> anyhow::Result<[u
 
 // region: encode and decode strings and bytes
 
-/// Decode base64 from string to 32bytes
+/// # Decode base64 from string to 32bytes
 pub(crate) fn encode64_from_32bytes_to_string(bytes_32bytes: [u8; 32]) -> anyhow::Result<String> {
     Ok(<base64ct::Base64 as base64ct::Encoding>::encode_string(&bytes_32bytes))
 }
 
-/// Decode base64 from string to 32bytes
+/// # Decode base64 from string to 32bytes
 pub(crate) fn decode64_from_string_to_32bytes(plain_seed_string: &str) -> anyhow::Result<[u8; 32]> {
     let plain_seed_bytes = <base64ct::Base64 as base64ct::Encoding>::decode_vec(plain_seed_string)?;
     let plain_seed_bytes_32bytes = shorten_vec_bytes_to_32bytes(plain_seed_bytes)?;
     Ok(plain_seed_bytes_32bytes)
 }
 
-/// Encode base64 from bytes to string
+/// # Encode base64 from bytes to string
 pub(crate) fn encode64_from_bytes_to_string(plain_seed_bytes_32bytes: Vec<u8>) -> String {
     <base64ct::Base64 as base64ct::Encoding>::encode_string(&plain_seed_bytes_32bytes)
 }
