@@ -1,6 +1,6 @@
 // secret_vault_mod.rs
 
-//! secret vault
+//! # secret vault
 //!
 //! With one SSH private key, we can store many secret tokens.
 
@@ -9,7 +9,7 @@ use secrecy::{SecretBox, SecretString};
 use crate::encrypt_decrypt_with_ssh_key_mod as ende;
 use crate::encrypt_decrypt_with_ssh_key_mod::{BLUE, GREEN, RED, RESET, YELLOW};
 
-/// list tokens
+/// # list tokens
 ///
 /// no need to decrypt the tokens here
 pub(crate) fn list_tokens_from_vault(file_bare_name: &str) -> anyhow::Result<Vec<String>> {
@@ -38,7 +38,7 @@ pub(crate) fn list_tokens_from_vault(file_bare_name: &str) -> anyhow::Result<Vec
     Ok(ret_vec_string)
 }
 
-/// get secret token from vault
+/// # get secret token from vault
 ///
 /// If exists, decrypt it from file.  
 pub(crate) fn show_secret_token_from_vault(file_bare_name: &str, token_name: &str) -> anyhow::Result<SecretString> {
@@ -85,7 +85,7 @@ pub(crate) fn show_secret_token_from_vault(file_bare_name: &str, token_name: &st
     anyhow::bail!("Token with this name not found.");
 }
 
-/// store secret token to vault
+/// # store secret token to vault
 ///
 /// If exists, decrypt it from file.  
 pub(crate) fn store_secret_token_to_vault(file_bare_name: &str, token_name: &str) -> anyhow::Result<()> {
@@ -144,7 +144,7 @@ pub(crate) fn store_secret_token_to_vault(file_bare_name: &str, token_name: &str
     Ok(())
 }
 
-/// delete secret token from vault
+/// # delete secret token from vault
 ///
 /// If exists, delete it from file.  
 pub(crate) fn delete_token_from_vault(file_bare_name: &str, token_name: &str) -> anyhow::Result<()> {

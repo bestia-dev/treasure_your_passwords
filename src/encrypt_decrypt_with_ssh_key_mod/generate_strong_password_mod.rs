@@ -1,6 +1,6 @@
 // generate_strong_password_mod.rs
 
-//! generate strong password
+//! # generate strong password
 //!
 //! Starts with a human readable password.  
 //! It hashes it to 32 bytes, just to make it a little more complex.  
@@ -15,7 +15,7 @@ use secrecy::{ExposeSecret, SecretBox};
 use crate::encrypt_decrypt_with_ssh_key_mod as ende;
 use crate::encrypt_decrypt_with_ssh_key_mod::{BLUE, GREEN, RED, RESET, YELLOW};
 
-/// generate strong password
+/// # generate strong password
 ///
 /// Starts with a human readable password.  
 /// It hashes it to 32 bytes, just to make it a little more complex.  
