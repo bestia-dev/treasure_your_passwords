@@ -25,6 +25,8 @@ The TODO section is part of the [README.md](https://github.com/bestia-dev/treasu
 
 - docs
 
+- docs
+
 ## Version 0.0.55 (2025-03-11)
 
 - clippy

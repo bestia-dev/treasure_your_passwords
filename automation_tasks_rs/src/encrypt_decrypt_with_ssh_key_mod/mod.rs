@@ -1,11 +1,8 @@
 // encrypt_decrypt_with_ssh_key_mod.rs
 
-// region: auto_md_to_doc_comments include doc_comments/encrypt_decrypt_with_ssh_key_mod.md A //!
-//! # generic functions to encrypt and decrypt secrets using the ssh private key
+//! Generic functions to encrypt and decrypt secrets using the ssh private key.
 //!
-//! Functions to encrypt decrypt a secret string
-//!
-// endregion: auto_md_to_doc_comments include doc_comments/encrypt_decrypt_with_ssh_key_mod.md A //!
+//! Functions to encrypt decrypt a secret string.
 
 pub mod crates_io_api_token_mod;
 pub mod docker_io_api_token_mod;
