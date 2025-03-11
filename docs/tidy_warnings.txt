@@ -82,12 +82,12 @@ line 1 column 1 - Warning: inserting missing 'title' element
 ./docs/treasure_your_passwords/fn.main.html
 Document: "2" is not a file!
 
-line 1 column 2178 - Error: <rustdoc-search> is not recognized! Did you mean to enable the custom-tags option?
-line 1 column 2178 - Warning: discarding unexpected <rustdoc-search>
-line 1 column 2194 - Warning: discarding unexpected </rustdoc-search>
-line 1 column 2497 - Error: <rustdoc-toolbar> is not recognized! Did you mean to enable the custom-tags option?
-line 1 column 2497 - Warning: discarding unexpected <rustdoc-toolbar>
-line 1 column 2514 - Warning: discarding unexpected </rustdoc-toolbar>
+line 1 column 2556 - Error: <rustdoc-search> is not recognized! Did you mean to enable the custom-tags option?
+line 1 column 2556 - Warning: discarding unexpected <rustdoc-search>
+line 1 column 2572 - Warning: discarding unexpected </rustdoc-search>
+line 1 column 2875 - Error: <rustdoc-toolbar> is not recognized! Did you mean to enable the custom-tags option?
+line 1 column 2875 - Warning: discarding unexpected <rustdoc-toolbar>
+line 1 column 2892 - Warning: discarding unexpected </rustdoc-toolbar>
 line 1 column 1785 - Warning: trimming empty <button>
 This document has errors that must be fixed before
 using HTML Tidy to generate a tidied up version.
@@ -108,12 +108,12 @@ using HTML Tidy to generate a tidied up version.
 ./docs/treasure_your_passwords/encrypt_decrypt_with_ssh_key_mod/constant.GREEN.html
 Document: "2" is not a file!
 
-line 1 column 2361 - Error: <rustdoc-search> is not recognized! Did you mean to enable the custom-tags option?
-line 1 column 2361 - Warning: discarding unexpected <rustdoc-search>
-line 1 column 2377 - Warning: discarding unexpected </rustdoc-search>
-line 1 column 2754 - Error: <rustdoc-toolbar> is not recognized! Did you mean to enable the custom-tags option?
-line 1 column 2754 - Warning: discarding unexpected <rustdoc-toolbar>
-line 1 column 2771 - Warning: discarding unexpected </rustdoc-toolbar>
+line 1 column 2572 - Error: <rustdoc-search> is not recognized! Did you mean to enable the custom-tags option?
+line 1 column 2572 - Warning: discarding unexpected <rustdoc-search>
+line 1 column 2588 - Warning: discarding unexpected </rustdoc-search>
+line 1 column 2965 - Error: <rustdoc-toolbar> is not recognized! Did you mean to enable the custom-tags option?
+line 1 column 2965 - Warning: discarding unexpected <rustdoc-toolbar>
+line 1 column 2982 - Warning: discarding unexpected </rustdoc-toolbar>
 line 1 column 1831 - Warning: trimming empty <button>
 This document has errors that must be fixed before
 using HTML Tidy to generate a tidied up version.
@@ -121,102 +121,102 @@ using HTML Tidy to generate a tidied up version.
 ./docs/treasure_your_passwords/encrypt_decrypt_with_ssh_key_mod/struct.EncryptedTextWithMetadata.html
 Document: "2" is not a file!
 
-line 1 column 5220 - Error: <rustdoc-search> is not recognized! Did you mean to enable the custom-tags option?
-line 1 column 5220 - Warning: discarding unexpected <rustdoc-search>
-line 1 column 5236 - Warning: discarding unexpected </rustdoc-search>
-line 1 column 5629 - Error: <rustdoc-toolbar> is not recognized! Did you mean to enable the custom-tags option?
-line 1 column 5629 - Warning: discarding unexpected <rustdoc-toolbar>
-line 1 column 5646 - Warning: discarding unexpected </rustdoc-toolbar>
-line 9 column 2695 - Warning: missing </summary> before <section>
-line 9 column 3399 - Warning: discarding unexpected </summary>
-line 9 column 3476 - Warning: missing </summary> before <section>
-line 9 column 4221 - Warning: <div> isn't allowed in <h4> elements
-line 10 column 163 - Warning: discarding unexpected </div>
-line 10 column 184 - Warning: discarding unexpected </summary>
-line 10 column 461 - Warning: missing </summary> before <section>
-line 10 column 1117 - Warning: discarding unexpected </summary>
-line 10 column 1194 - Warning: missing </summary> before <section>
-line 10 column 2097 - Warning: <div> isn't allowed in <h4> elements
-line 11 column 148 - Warning: discarding unexpected </div>
-line 11 column 169 - Warning: discarding unexpected </summary>
-line 11 column 3977 - Warning: missing </summary> before <section>
-line 11 column 4335 - Warning: <div> isn't allowed in <h3> elements
-line 12 column 149 - Warning: discarding unexpected </div>
-line 12 column 170 - Warning: discarding unexpected </summary>
-line 12 column 247 - Warning: missing </summary> before <section>
-line 12 column 752 - Warning: discarding unexpected </summary>
-line 12 column 1008 - Warning: missing </summary> before <section>
-line 12 column 1413 - Warning: <div> isn't allowed in <h3> elements
+line 1 column 5500 - Error: <rustdoc-search> is not recognized! Did you mean to enable the custom-tags option?
+line 1 column 5500 - Warning: discarding unexpected <rustdoc-search>
+line 1 column 5516 - Warning: discarding unexpected </rustdoc-search>
+line 1 column 5909 - Error: <rustdoc-toolbar> is not recognized! Did you mean to enable the custom-tags option?
+line 1 column 5909 - Warning: discarding unexpected <rustdoc-toolbar>
+line 1 column 5926 - Warning: discarding unexpected </rustdoc-toolbar>
+line 8 column 3062 - Warning: missing </summary> before <section>
+line 8 column 3766 - Warning: discarding unexpected </summary>
+line 8 column 3843 - Warning: missing </summary> before <section>
+line 8 column 4588 - Warning: <div> isn't allowed in <h4> elements
+line 9 column 163 - Warning: discarding unexpected </div>
+line 9 column 184 - Warning: discarding unexpected </summary>
+line 9 column 461 - Warning: missing </summary> before <section>
+line 9 column 1117 - Warning: discarding unexpected </summary>
+line 9 column 1194 - Warning: missing </summary> before <section>
+line 9 column 2097 - Warning: <div> isn't allowed in <h4> elements
+line 10 column 148 - Warning: discarding unexpected </div>
+line 10 column 169 - Warning: discarding unexpected </summary>
+line 10 column 3977 - Warning: missing </summary> before <section>
+line 10 column 4335 - Warning: <div> isn't allowed in <h3> elements
+line 11 column 149 - Warning: discarding unexpected </div>
+line 11 column 170 - Warning: discarding unexpected </summary>
+line 11 column 247 - Warning: missing </summary> before <section>
+line 11 column 752 - Warning: discarding unexpected </summary>
+line 11 column 1008 - Warning: missing </summary> before <section>
+line 11 column 1413 - Warning: <div> isn't allowed in <h3> elements
+line 12 column 139 - Warning: discarding unexpected </div>
+line 12 column 160 - Warning: discarding unexpected </summary>
+line 12 column 237 - Warning: missing </summary> before <section>
+line 12 column 718 - Warning: discarding unexpected </summary>
+line 12 column 967 - Warning: missing </summary> before <section>
+line 12 column 1387 - Warning: <div> isn't allowed in <h3> elements
 line 13 column 139 - Warning: discarding unexpected </div>
 line 13 column 160 - Warning: discarding unexpected </summary>
 line 13 column 237 - Warning: missing </summary> before <section>
-line 13 column 718 - Warning: discarding unexpected </summary>
-line 13 column 967 - Warning: missing </summary> before <section>
-line 13 column 1387 - Warning: <div> isn't allowed in <h3> elements
-line 14 column 139 - Warning: discarding unexpected </div>
-line 14 column 160 - Warning: discarding unexpected </summary>
-line 14 column 237 - Warning: missing </summary> before <section>
-line 14 column 745 - Warning: discarding unexpected </summary>
-line 14 column 999 - Warning: missing </summary> before <section>
-line 14 column 1416 - Warning: discarding unexpected </summary>
-line 14 column 1493 - Warning: missing </summary> before <section>
-line 14 column 1866 - Warning: discarding unexpected </summary>
-line 15 column 77 - Warning: missing </summary> before <section>
-line 15 column 486 - Warning: <div> isn't allowed in <h3> elements
-line 16 column 146 - Warning: discarding unexpected </div>
-line 16 column 167 - Warning: discarding unexpected </summary>
-line 16 column 244 - Warning: missing </summary> before <section>
-line 16 column 617 - Warning: discarding unexpected </summary>
-line 19 column 77 - Warning: missing </summary> before <section>
-line 19 column 492 - Warning: discarding unexpected </summary>
-line 19 column 555 - Warning: missing </summary> before <section>
-line 19 column 981 - Warning: discarding unexpected </summary>
-line 19 column 1123 - Warning: missing </summary> before <section>
-line 19 column 1547 - Warning: <div> isn't allowed in <h3> elements
-line 20 column 146 - Warning: discarding unexpected </div>
-line 20 column 167 - Warning: discarding unexpected </summary>
-line 20 column 230 - Warning: missing </summary> before <section>
-line 20 column 790 - Warning: discarding unexpected </summary>
-line 20 column 934 - Warning: missing </summary> before <section>
-line 20 column 1801 - Warning: discarding unexpected </summary>
-line 20 column 1933 - Warning: missing </summary> before <section>
-line 20 column 2357 - Warning: <div> isn't allowed in <h3> elements
-line 21 column 155 - Warning: discarding unexpected </div>
-line 21 column 176 - Warning: discarding unexpected </summary>
-line 21 column 239 - Warning: missing </summary> before <section>
-line 21 column 984 - Warning: discarding unexpected </summary>
-line 21 column 1128 - Warning: missing </summary> before <section>
-line 21 column 1991 - Warning: discarding unexpected </summary>
-line 21 column 2123 - Warning: missing </summary> before <section>
-line 21 column 2296 - Warning: <div> isn't allowed in <h3> elements
-line 22 column 27 - Warning: discarding unexpected </div>
-line 22 column 48 - Warning: discarding unexpected </summary>
-line 22 column 683 - Warning: <div> isn't allowed in <h3> elements
-line 23 column 173 - Warning: discarding unexpected </div>
+line 13 column 745 - Warning: discarding unexpected </summary>
+line 13 column 999 - Warning: missing </summary> before <section>
+line 13 column 1416 - Warning: discarding unexpected </summary>
+line 13 column 1493 - Warning: missing </summary> before <section>
+line 13 column 1866 - Warning: discarding unexpected </summary>
+line 14 column 77 - Warning: missing </summary> before <section>
+line 14 column 486 - Warning: <div> isn't allowed in <h3> elements
+line 15 column 146 - Warning: discarding unexpected </div>
+line 15 column 167 - Warning: discarding unexpected </summary>
+line 15 column 244 - Warning: missing </summary> before <section>
+line 15 column 617 - Warning: discarding unexpected </summary>
+line 18 column 77 - Warning: missing </summary> before <section>
+line 18 column 492 - Warning: discarding unexpected </summary>
+line 18 column 555 - Warning: missing </summary> before <section>
+line 18 column 981 - Warning: discarding unexpected </summary>
+line 18 column 1123 - Warning: missing </summary> before <section>
+line 18 column 1547 - Warning: <div> isn't allowed in <h3> elements
+line 19 column 146 - Warning: discarding unexpected </div>
+line 19 column 167 - Warning: discarding unexpected </summary>
+line 19 column 230 - Warning: missing </summary> before <section>
+line 19 column 790 - Warning: discarding unexpected </summary>
+line 19 column 934 - Warning: missing </summary> before <section>
+line 19 column 1801 - Warning: discarding unexpected </summary>
+line 19 column 1933 - Warning: missing </summary> before <section>
+line 19 column 2357 - Warning: <div> isn't allowed in <h3> elements
+line 20 column 155 - Warning: discarding unexpected </div>
+line 20 column 176 - Warning: discarding unexpected </summary>
+line 20 column 239 - Warning: missing </summary> before <section>
+line 20 column 984 - Warning: discarding unexpected </summary>
+line 20 column 1128 - Warning: missing </summary> before <section>
+line 20 column 1991 - Warning: discarding unexpected </summary>
+line 20 column 2123 - Warning: missing </summary> before <section>
+line 20 column 2296 - Warning: <div> isn't allowed in <h3> elements
+line 21 column 27 - Warning: discarding unexpected </div>
+line 21 column 48 - Warning: discarding unexpected </summary>
+line 21 column 683 - Warning: <div> isn't allowed in <h3> elements
+line 22 column 173 - Warning: discarding unexpected </div>
 line 1 column 1901 - Warning: trimming empty <button>
-line 9 column 2695 - Warning: trimming empty <summary>
-line 9 column 3476 - Warning: trimming empty <summary>
-line 10 column 461 - Warning: trimming empty <summary>
-line 10 column 1194 - Warning: trimming empty <summary>
-line 11 column 3977 - Warning: trimming empty <summary>
-line 12 column 247 - Warning: trimming empty <summary>
-line 12 column 1008 - Warning: trimming empty <summary>
+line 8 column 3062 - Warning: trimming empty <summary>
+line 8 column 3843 - Warning: trimming empty <summary>
+line 9 column 461 - Warning: trimming empty <summary>
+line 9 column 1194 - Warning: trimming empty <summary>
+line 10 column 3977 - Warning: trimming empty <summary>
+line 11 column 247 - Warning: trimming empty <summary>
+line 11 column 1008 - Warning: trimming empty <summary>
+line 12 column 237 - Warning: trimming empty <summary>
+line 12 column 967 - Warning: trimming empty <summary>
 line 13 column 237 - Warning: trimming empty <summary>
-line 13 column 967 - Warning: trimming empty <summary>
-line 14 column 237 - Warning: trimming empty <summary>
-line 14 column 999 - Warning: trimming empty <summary>
-line 14 column 1493 - Warning: trimming empty <summary>
-line 15 column 77 - Warning: trimming empty <summary>
-line 16 column 244 - Warning: trimming empty <summary>
-line 19 column 77 - Warning: trimming empty <summary>
-line 19 column 555 - Warning: trimming empty <summary>
-line 19 column 1123 - Warning: trimming empty <summary>
-line 20 column 230 - Warning: trimming empty <summary>
-line 20 column 934 - Warning: trimming empty <summary>
-line 20 column 1933 - Warning: trimming empty <summary>
-line 21 column 239 - Warning: trimming empty <summary>
-line 21 column 1128 - Warning: trimming empty <summary>
-line 21 column 2123 - Warning: trimming empty <summary>
+line 13 column 999 - Warning: trimming empty <summary>
+line 13 column 1493 - Warning: trimming empty <summary>
+line 14 column 77 - Warning: trimming empty <summary>
+line 15 column 244 - Warning: trimming empty <summary>
+line 18 column 77 - Warning: trimming empty <summary>
+line 18 column 555 - Warning: trimming empty <summary>
+line 18 column 1123 - Warning: trimming empty <summary>
+line 19 column 230 - Warning: trimming empty <summary>
+line 19 column 934 - Warning: trimming empty <summary>
+line 19 column 1933 - Warning: trimming empty <summary>
+line 20 column 239 - Warning: trimming empty <summary>
+line 20 column 1128 - Warning: trimming empty <summary>
+line 20 column 2123 - Warning: trimming empty <summary>
 This document has errors that must be fixed before
 using HTML Tidy to generate a tidied up version.
 
@@ -249,12 +249,12 @@ using HTML Tidy to generate a tidied up version.
 ./docs/treasure_your_passwords/encrypt_decrypt_with_ssh_key_mod/fn.encode64_from_bytes_to_string.html
 Document: "2" is not a file!
 
-line 1 column 2403 - Error: <rustdoc-search> is not recognized! Did you mean to enable the custom-tags option?
-line 1 column 2403 - Warning: discarding unexpected <rustdoc-search>
-line 1 column 2419 - Warning: discarding unexpected </rustdoc-search>
-line 1 column 2814 - Error: <rustdoc-toolbar> is not recognized! Did you mean to enable the custom-tags option?
-line 1 column 2814 - Warning: discarding unexpected <rustdoc-toolbar>
-line 1 column 2831 - Warning: discarding unexpected </rustdoc-toolbar>
+line 1 column 2730 - Error: <rustdoc-search> is not recognized! Did you mean to enable the custom-tags option?
+line 1 column 2730 - Warning: discarding unexpected <rustdoc-search>
+line 1 column 2746 - Warning: discarding unexpected </rustdoc-search>
+line 1 column 3141 - Error: <rustdoc-toolbar> is not recognized! Did you mean to enable the custom-tags option?
+line 1 column 3141 - Warning: discarding unexpected <rustdoc-toolbar>
+line 1 column 3158 - Warning: discarding unexpected </rustdoc-toolbar>
 line 1 column 1873 - Warning: trimming empty <button>
 This document has errors that must be fixed before
 using HTML Tidy to generate a tidied up version.
@@ -340,12 +340,12 @@ using HTML Tidy to generate a tidied up version.
 ./docs/treasure_your_passwords/encrypt_decrypt_with_ssh_key_mod/fn.encode64_from_32bytes_to_string.html
 Document: "2" is not a file!
 
-line 1 column 2407 - Error: <rustdoc-search> is not recognized! Did you mean to enable the custom-tags option?
-line 1 column 2407 - Warning: discarding unexpected <rustdoc-search>
-line 1 column 2423 - Warning: discarding unexpected </rustdoc-search>
-line 1 column 2820 - Error: <rustdoc-toolbar> is not recognized! Did you mean to enable the custom-tags option?
-line 1 column 2820 - Warning: discarding unexpected <rustdoc-toolbar>
-line 1 column 2837 - Warning: discarding unexpected </rustdoc-toolbar>
+line 1 column 2742 - Error: <rustdoc-search> is not recognized! Did you mean to enable the custom-tags option?
+line 1 column 2742 - Warning: discarding unexpected <rustdoc-search>
+line 1 column 2758 - Warning: discarding unexpected </rustdoc-search>
+line 1 column 3155 - Error: <rustdoc-toolbar> is not recognized! Did you mean to enable the custom-tags option?
+line 1 column 3155 - Warning: discarding unexpected <rustdoc-toolbar>
+line 1 column 3172 - Warning: discarding unexpected </rustdoc-toolbar>
 line 1 column 1877 - Warning: trimming empty <button>
 This document has errors that must be fixed before
 using HTML Tidy to generate a tidied up version.
@@ -379,12 +379,12 @@ using HTML Tidy to generate a tidied up version.
 ./docs/treasure_your_passwords/encrypt_decrypt_with_ssh_key_mod/fn.get_encrypted_file_path.html
 Document: "2" is not a file!
 
-line 1 column 2386 - Error: <rustdoc-search> is not recognized! Did you mean to enable the custom-tags option?
-line 1 column 2386 - Warning: discarding unexpected <rustdoc-search>
-line 1 column 2402 - Warning: discarding unexpected </rustdoc-search>
-line 1 column 2791 - Error: <rustdoc-toolbar> is not recognized! Did you mean to enable the custom-tags option?
-line 1 column 2791 - Warning: discarding unexpected <rustdoc-toolbar>
-line 1 column 2808 - Warning: discarding unexpected </rustdoc-toolbar>
+line 1 column 2669 - Error: <rustdoc-search> is not recognized! Did you mean to enable the custom-tags option?
+line 1 column 2669 - Warning: discarding unexpected <rustdoc-search>
+line 1 column 2685 - Warning: discarding unexpected </rustdoc-search>
+line 1 column 3074 - Error: <rustdoc-toolbar> is not recognized! Did you mean to enable the custom-tags option?
+line 1 column 3074 - Warning: discarding unexpected <rustdoc-toolbar>
+line 1 column 3091 - Warning: discarding unexpected </rustdoc-toolbar>
 line 1 column 1856 - Warning: trimming empty <button>
 This document has errors that must be fixed before
 using HTML Tidy to generate a tidied up version.
@@ -405,12 +405,12 @@ using HTML Tidy to generate a tidied up version.
 ./docs/treasure_your_passwords/encrypt_decrypt_with_ssh_key_mod/constant.YELLOW.html
 Document: "2" is not a file!
 
-line 1 column 2362 - Error: <rustdoc-search> is not recognized! Did you mean to enable the custom-tags option?
-line 1 column 2362 - Warning: discarding unexpected <rustdoc-search>
-line 1 column 2378 - Warning: discarding unexpected </rustdoc-search>
-line 1 column 2756 - Error: <rustdoc-toolbar> is not recognized! Did you mean to enable the custom-tags option?
-line 1 column 2756 - Warning: discarding unexpected <rustdoc-toolbar>
-line 1 column 2773 - Warning: discarding unexpected </rustdoc-toolbar>
+line 1 column 2574 - Error: <rustdoc-search> is not recognized! Did you mean to enable the custom-tags option?
+line 1 column 2574 - Warning: discarding unexpected <rustdoc-search>
+line 1 column 2590 - Warning: discarding unexpected </rustdoc-search>
+line 1 column 2968 - Error: <rustdoc-toolbar> is not recognized! Did you mean to enable the custom-tags option?
+line 1 column 2968 - Warning: discarding unexpected <rustdoc-toolbar>
+line 1 column 2985 - Warning: discarding unexpected </rustdoc-toolbar>
 line 1 column 1832 - Warning: trimming empty <button>
 This document has errors that must be fixed before
 using HTML Tidy to generate a tidied up version.
@@ -418,12 +418,12 @@ using HTML Tidy to generate a tidied up version.
 ./docs/treasure_your_passwords/encrypt_decrypt_with_ssh_key_mod/constant.RESET.html
 Document: "2" is not a file!
 
-line 1 column 2361 - Error: <rustdoc-search> is not recognized! Did you mean to enable the custom-tags option?
-line 1 column 2361 - Warning: discarding unexpected <rustdoc-search>
-line 1 column 2377 - Warning: discarding unexpected </rustdoc-search>
-line 1 column 2754 - Error: <rustdoc-toolbar> is not recognized! Did you mean to enable the custom-tags option?
-line 1 column 2754 - Warning: discarding unexpected <rustdoc-toolbar>
-line 1 column 2771 - Warning: discarding unexpected </rustdoc-toolbar>
+line 1 column 2572 - Error: <rustdoc-search> is not recognized! Did you mean to enable the custom-tags option?
+line 1 column 2572 - Warning: discarding unexpected <rustdoc-search>
+line 1 column 2588 - Warning: discarding unexpected </rustdoc-search>
+line 1 column 2965 - Error: <rustdoc-toolbar> is not recognized! Did you mean to enable the custom-tags option?
+line 1 column 2965 - Warning: discarding unexpected <rustdoc-toolbar>
+line 1 column 2982 - Warning: discarding unexpected </rustdoc-toolbar>
 line 1 column 1831 - Warning: trimming empty <button>
 This document has errors that must be fixed before
 using HTML Tidy to generate a tidied up version.
@@ -431,12 +431,12 @@ using HTML Tidy to generate a tidied up version.
 ./docs/treasure_your_passwords/encrypt_decrypt_with_ssh_key_mod/fn.get_private_key_file_path.html
 Document: "2" is not a file!
 
-line 1 column 2390 - Error: <rustdoc-search> is not recognized! Did you mean to enable the custom-tags option?
-line 1 column 2390 - Warning: discarding unexpected <rustdoc-search>
-line 1 column 2406 - Warning: discarding unexpected </rustdoc-search>
-line 1 column 2797 - Error: <rustdoc-toolbar> is not recognized! Did you mean to enable the custom-tags option?
-line 1 column 2797 - Warning: discarding unexpected <rustdoc-toolbar>
-line 1 column 2814 - Warning: discarding unexpected </rustdoc-toolbar>
+line 1 column 2686 - Error: <rustdoc-search> is not recognized! Did you mean to enable the custom-tags option?
+line 1 column 2686 - Warning: discarding unexpected <rustdoc-search>
+line 1 column 2702 - Warning: discarding unexpected </rustdoc-search>
+line 1 column 3093 - Error: <rustdoc-toolbar> is not recognized! Did you mean to enable the custom-tags option?
+line 1 column 3093 - Warning: discarding unexpected <rustdoc-toolbar>
+line 1 column 3110 - Warning: discarding unexpected </rustdoc-toolbar>
 line 1 column 1860 - Warning: trimming empty <button>
 This document has errors that must be fixed before
 using HTML Tidy to generate a tidied up version.
@@ -457,12 +457,12 @@ using HTML Tidy to generate a tidied up version.
 ./docs/treasure_your_passwords/encrypt_decrypt_with_ssh_key_mod/fn.decode64_from_string_to_32bytes.html
 Document: "2" is not a file!
 
-line 1 column 2407 - Error: <rustdoc-search> is not recognized! Did you mean to enable the custom-tags option?
-line 1 column 2407 - Warning: discarding unexpected <rustdoc-search>
-line 1 column 2423 - Warning: discarding unexpected </rustdoc-search>
-line 1 column 2820 - Error: <rustdoc-toolbar> is not recognized! Did you mean to enable the custom-tags option?
-line 1 column 2820 - Warning: discarding unexpected <rustdoc-toolbar>
-line 1 column 2837 - Warning: discarding unexpected </rustdoc-toolbar>
+line 1 column 2742 - Error: <rustdoc-search> is not recognized! Did you mean to enable the custom-tags option?
+line 1 column 2742 - Warning: discarding unexpected <rustdoc-search>
+line 1 column 2758 - Warning: discarding unexpected </rustdoc-search>
+line 1 column 3155 - Error: <rustdoc-toolbar> is not recognized! Did you mean to enable the custom-tags option?
+line 1 column 3155 - Warning: discarding unexpected <rustdoc-toolbar>
+line 1 column 3172 - Warning: discarding unexpected </rustdoc-toolbar>
 line 1 column 1877 - Warning: trimming empty <button>
 This document has errors that must be fixed before
 using HTML Tidy to generate a tidied up version.
@@ -470,12 +470,12 @@ using HTML Tidy to generate a tidied up version.
 ./docs/treasure_your_passwords/encrypt_decrypt_with_ssh_key_mod/constant.RED.html
 Document: "2" is not a file!
 
-line 1 column 2359 - Error: <rustdoc-search> is not recognized! Did you mean to enable the custom-tags option?
-line 1 column 2359 - Warning: discarding unexpected <rustdoc-search>
-line 1 column 2375 - Warning: discarding unexpected </rustdoc-search>
-line 1 column 2750 - Error: <rustdoc-toolbar> is not recognized! Did you mean to enable the custom-tags option?
-line 1 column 2750 - Warning: discarding unexpected <rustdoc-toolbar>
-line 1 column 2767 - Warning: discarding unexpected </rustdoc-toolbar>
+line 1 column 2568 - Error: <rustdoc-search> is not recognized! Did you mean to enable the custom-tags option?
+line 1 column 2568 - Warning: discarding unexpected <rustdoc-search>
+line 1 column 2584 - Warning: discarding unexpected </rustdoc-search>
+line 1 column 2959 - Error: <rustdoc-toolbar> is not recognized! Did you mean to enable the custom-tags option?
+line 1 column 2959 - Warning: discarding unexpected <rustdoc-toolbar>
+line 1 column 2976 - Warning: discarding unexpected </rustdoc-toolbar>
 line 1 column 1829 - Warning: trimming empty <button>
 This document has errors that must be fixed before
 using HTML Tidy to generate a tidied up version.
@@ -522,12 +522,12 @@ using HTML Tidy to generate a tidied up version.
 ./docs/treasure_your_passwords/encrypt_decrypt_with_ssh_key_mod/constant.BLUE.html
 Document: "2" is not a file!
 
-line 1 column 2360 - Error: <rustdoc-search> is not recognized! Did you mean to enable the custom-tags option?
-line 1 column 2360 - Warning: discarding unexpected <rustdoc-search>
-line 1 column 2376 - Warning: discarding unexpected </rustdoc-search>
-line 1 column 2752 - Error: <rustdoc-toolbar> is not recognized! Did you mean to enable the custom-tags option?
-line 1 column 2752 - Warning: discarding unexpected <rustdoc-toolbar>
-line 1 column 2769 - Warning: discarding unexpected </rustdoc-toolbar>
+line 1 column 2570 - Error: <rustdoc-search> is not recognized! Did you mean to enable the custom-tags option?
+line 1 column 2570 - Warning: discarding unexpected <rustdoc-search>
+line 1 column 2586 - Warning: discarding unexpected </rustdoc-search>
+line 1 column 2962 - Error: <rustdoc-toolbar> is not recognized! Did you mean to enable the custom-tags option?
+line 1 column 2962 - Warning: discarding unexpected <rustdoc-toolbar>
+line 1 column 2979 - Warning: discarding unexpected </rustdoc-toolbar>
 line 1 column 1830 - Warning: trimming empty <button>
 This document has errors that must be fixed before
 using HTML Tidy to generate a tidied up version.
@@ -561,12 +561,12 @@ using HTML Tidy to generate a tidied up version.
 ./docs/treasure_your_passwords/fn.print_help.html
 Document: "2" is not a file!
 
-line 1 column 2159 - Error: <rustdoc-search> is not recognized! Did you mean to enable the custom-tags option?
-line 1 column 2159 - Warning: discarding unexpected <rustdoc-search>
-line 1 column 2175 - Warning: discarding unexpected </rustdoc-search>
-line 1 column 2484 - Error: <rustdoc-toolbar> is not recognized! Did you mean to enable the custom-tags option?
-line 1 column 2484 - Warning: discarding unexpected <rustdoc-toolbar>
-line 1 column 2501 - Warning: discarding unexpected </rustdoc-toolbar>
+line 1 column 2473 - Error: <rustdoc-search> is not recognized! Did you mean to enable the custom-tags option?
+line 1 column 2473 - Warning: discarding unexpected <rustdoc-search>
+line 1 column 2489 - Warning: discarding unexpected </rustdoc-search>
+line 1 column 2798 - Error: <rustdoc-toolbar> is not recognized! Did you mean to enable the custom-tags option?
+line 1 column 2798 - Warning: discarding unexpected <rustdoc-toolbar>
+line 1 column 2815 - Warning: discarding unexpected </rustdoc-toolbar>
 line 1 column 1766 - Warning: trimming empty <button>
 This document has errors that must be fixed before
 using HTML Tidy to generate a tidied up version.
@@ -574,12 +574,12 @@ using HTML Tidy to generate a tidied up version.
 ./docs/treasure_your_passwords/constant.GREEN.html
 Document: "2" is not a file!
 
-line 1 column 2160 - Error: <rustdoc-search> is not recognized! Did you mean to enable the custom-tags option?
-line 1 column 2160 - Warning: discarding unexpected <rustdoc-search>
-line 1 column 2176 - Warning: discarding unexpected </rustdoc-search>
-line 1 column 2486 - Error: <rustdoc-toolbar> is not recognized! Did you mean to enable the custom-tags option?
-line 1 column 2486 - Warning: discarding unexpected <rustdoc-toolbar>
-line 1 column 2503 - Warning: discarding unexpected </rustdoc-toolbar>
+line 1 column 2464 - Error: <rustdoc-search> is not recognized! Did you mean to enable the custom-tags option?
+line 1 column 2464 - Warning: discarding unexpected <rustdoc-search>
+line 1 column 2480 - Warning: discarding unexpected </rustdoc-search>
+line 1 column 2790 - Error: <rustdoc-toolbar> is not recognized! Did you mean to enable the custom-tags option?
+line 1 column 2790 - Warning: discarding unexpected <rustdoc-toolbar>
+line 1 column 2807 - Warning: discarding unexpected </rustdoc-toolbar>
 line 1 column 1767 - Warning: trimming empty <button>
 This document has errors that must be fixed before
 using HTML Tidy to generate a tidied up version.
@@ -587,12 +587,12 @@ using HTML Tidy to generate a tidied up version.
 ./docs/treasure_your_passwords/fn.store_token.html
 Document: "2" is not a file!
 
-line 1 column 2161 - Error: <rustdoc-search> is not recognized! Did you mean to enable the custom-tags option?
-line 1 column 2161 - Warning: discarding unexpected <rustdoc-search>
-line 1 column 2177 - Warning: discarding unexpected </rustdoc-search>
-line 1 column 2487 - Error: <rustdoc-toolbar> is not recognized! Did you mean to enable the custom-tags option?
-line 1 column 2487 - Warning: discarding unexpected <rustdoc-toolbar>
-line 1 column 2504 - Warning: discarding unexpected </rustdoc-toolbar>
+line 1 column 2479 - Error: <rustdoc-search> is not recognized! Did you mean to enable the custom-tags option?
+line 1 column 2479 - Warning: discarding unexpected <rustdoc-search>
+line 1 column 2495 - Warning: discarding unexpected </rustdoc-search>
+line 1 column 2805 - Error: <rustdoc-toolbar> is not recognized! Did you mean to enable the custom-tags option?
+line 1 column 2805 - Warning: discarding unexpected <rustdoc-toolbar>
+line 1 column 2822 - Warning: discarding unexpected </rustdoc-toolbar>
 line 1 column 1768 - Warning: trimming empty <button>
 This document has errors that must be fixed before
 using HTML Tidy to generate a tidied up version.
@@ -600,12 +600,12 @@ using HTML Tidy to generate a tidied up version.
 ./docs/treasure_your_passwords/fn.delete_token.html
 Document: "2" is not a file!
 
-line 1 column 2163 - Error: <rustdoc-search> is not recognized! Did you mean to enable the custom-tags option?
-line 1 column 2163 - Warning: discarding unexpected <rustdoc-search>
-line 1 column 2179 - Warning: discarding unexpected </rustdoc-search>
-line 1 column 2490 - Error: <rustdoc-toolbar> is not recognized! Did you mean to enable the custom-tags option?
-line 1 column 2490 - Warning: discarding unexpected <rustdoc-toolbar>
-line 1 column 2507 - Warning: discarding unexpected </rustdoc-toolbar>
+line 1 column 2485 - Error: <rustdoc-search> is not recognized! Did you mean to enable the custom-tags option?
+line 1 column 2485 - Warning: discarding unexpected <rustdoc-search>
+line 1 column 2501 - Warning: discarding unexpected </rustdoc-search>
+line 1 column 2812 - Error: <rustdoc-toolbar> is not recognized! Did you mean to enable the custom-tags option?
+line 1 column 2812 - Warning: discarding unexpected <rustdoc-toolbar>
+line 1 column 2829 - Warning: discarding unexpected </rustdoc-toolbar>
 line 1 column 1770 - Warning: trimming empty <button>
 This document has errors that must be fixed before
 using HTML Tidy to generate a tidied up version.
@@ -613,12 +613,12 @@ using HTML Tidy to generate a tidied up version.
 ./docs/treasure_your_passwords/constant.YELLOW.html
 Document: "2" is not a file!
 
-line 1 column 2161 - Error: <rustdoc-search> is not recognized! Did you mean to enable the custom-tags option?
-line 1 column 2161 - Warning: discarding unexpected <rustdoc-search>
-line 1 column 2177 - Warning: discarding unexpected </rustdoc-search>
-line 1 column 2488 - Error: <rustdoc-toolbar> is not recognized! Did you mean to enable the custom-tags option?
-line 1 column 2488 - Warning: discarding unexpected <rustdoc-toolbar>
-line 1 column 2505 - Warning: discarding unexpected </rustdoc-toolbar>
+line 1 column 2466 - Error: <rustdoc-search> is not recognized! Did you mean to enable the custom-tags option?
+line 1 column 2466 - Warning: discarding unexpected <rustdoc-search>
+line 1 column 2482 - Warning: discarding unexpected </rustdoc-search>
+line 1 column 2793 - Error: <rustdoc-toolbar> is not recognized! Did you mean to enable the custom-tags option?
+line 1 column 2793 - Warning: discarding unexpected <rustdoc-toolbar>
+line 1 column 2810 - Warning: discarding unexpected </rustdoc-toolbar>
 line 1 column 1768 - Warning: trimming empty <button>
 This document has errors that must be fixed before
 using HTML Tidy to generate a tidied up version.
@@ -636,12 +636,12 @@ using HTML Tidy to generate a tidied up version.
 ./docs/treasure_your_passwords/fn.read_bare_file_name.html
 Document: "2" is not a file!
 
-line 1 column 2197 - Error: <rustdoc-search> is not recognized! Did you mean to enable the custom-tags option?
-line 1 column 2197 - Warning: discarding unexpected <rustdoc-search>
-line 1 column 2213 - Warning: discarding unexpected </rustdoc-search>
-line 1 column 2531 - Error: <rustdoc-toolbar> is not recognized! Did you mean to enable the custom-tags option?
-line 1 column 2531 - Warning: discarding unexpected <rustdoc-toolbar>
-line 1 column 2548 - Warning: discarding unexpected </rustdoc-toolbar>
+line 1 column 2617 - Error: <rustdoc-search> is not recognized! Did you mean to enable the custom-tags option?
+line 1 column 2617 - Warning: discarding unexpected <rustdoc-search>
+line 1 column 2633 - Warning: discarding unexpected </rustdoc-search>
+line 1 column 2951 - Error: <rustdoc-toolbar> is not recognized! Did you mean to enable the custom-tags option?
+line 1 column 2951 - Warning: discarding unexpected <rustdoc-toolbar>
+line 1 column 2968 - Warning: discarding unexpected </rustdoc-toolbar>
 line 1 column 1804 - Warning: trimming empty <button>
 This document has errors that must be fixed before
 using HTML Tidy to generate a tidied up version.
@@ -649,12 +649,12 @@ using HTML Tidy to generate a tidied up version.
 ./docs/treasure_your_passwords/constant.RESET.html
 Document: "2" is not a file!
 
-line 1 column 2160 - Error: <rustdoc-search> is not recognized! Did you mean to enable the custom-tags option?
-line 1 column 2160 - Warning: discarding unexpected <rustdoc-search>
-line 1 column 2176 - Warning: discarding unexpected </rustdoc-search>
-line 1 column 2486 - Error: <rustdoc-toolbar> is not recognized! Did you mean to enable the custom-tags option?
-line 1 column 2486 - Warning: discarding unexpected <rustdoc-toolbar>
-line 1 column 2503 - Warning: discarding unexpected </rustdoc-toolbar>
+line 1 column 2464 - Error: <rustdoc-search> is not recognized! Did you mean to enable the custom-tags option?
+line 1 column 2464 - Warning: discarding unexpected <rustdoc-search>
+line 1 column 2480 - Warning: discarding unexpected </rustdoc-search>
+line 1 column 2790 - Error: <rustdoc-toolbar> is not recognized! Did you mean to enable the custom-tags option?
+line 1 column 2790 - Warning: discarding unexpected <rustdoc-toolbar>
+line 1 column 2807 - Warning: discarding unexpected </rustdoc-toolbar>
 line 1 column 1767 - Warning: trimming empty <button>
 This document has errors that must be fixed before
 using HTML Tidy to generate a tidied up version.
@@ -662,12 +662,12 @@ using HTML Tidy to generate a tidied up version.
 ./docs/treasure_your_passwords/fn.list_token_names.html
 Document: "2" is not a file!
 
-line 1 column 2171 - Error: <rustdoc-search> is not recognized! Did you mean to enable the custom-tags option?
-line 1 column 2171 - Warning: discarding unexpected <rustdoc-search>
-line 1 column 2187 - Warning: discarding unexpected </rustdoc-search>
-line 1 column 2502 - Error: <rustdoc-toolbar> is not recognized! Did you mean to enable the custom-tags option?
-line 1 column 2502 - Warning: discarding unexpected <rustdoc-toolbar>
-line 1 column 2519 - Warning: discarding unexpected </rustdoc-toolbar>
+line 1 column 2514 - Error: <rustdoc-search> is not recognized! Did you mean to enable the custom-tags option?
+line 1 column 2514 - Warning: discarding unexpected <rustdoc-search>
+line 1 column 2530 - Warning: discarding unexpected </rustdoc-search>
+line 1 column 2845 - Error: <rustdoc-toolbar> is not recognized! Did you mean to enable the custom-tags option?
+line 1 column 2845 - Warning: discarding unexpected <rustdoc-toolbar>
+line 1 column 2862 - Warning: discarding unexpected </rustdoc-toolbar>
 line 1 column 1778 - Warning: trimming empty <button>
 This document has errors that must be fixed before
 using HTML Tidy to generate a tidied up version.
@@ -675,12 +675,12 @@ using HTML Tidy to generate a tidied up version.
 ./docs/treasure_your_passwords/fn.convert_to_strong_password.html
 Document: "2" is not a file!
 
-line 1 column 2191 - Error: <rustdoc-search> is not recognized! Did you mean to enable the custom-tags option?
-line 1 column 2191 - Warning: discarding unexpected <rustdoc-search>
-line 1 column 2207 - Warning: discarding unexpected </rustdoc-search>
-line 1 column 2532 - Error: <rustdoc-toolbar> is not recognized! Did you mean to enable the custom-tags option?
-line 1 column 2532 - Warning: discarding unexpected <rustdoc-toolbar>
-line 1 column 2549 - Warning: discarding unexpected </rustdoc-toolbar>
+line 1 column 2579 - Error: <rustdoc-search> is not recognized! Did you mean to enable the custom-tags option?
+line 1 column 2579 - Warning: discarding unexpected <rustdoc-search>
+line 1 column 2595 - Warning: discarding unexpected </rustdoc-search>
+line 1 column 2920 - Error: <rustdoc-toolbar> is not recognized! Did you mean to enable the custom-tags option?
+line 1 column 2920 - Warning: discarding unexpected <rustdoc-toolbar>
+line 1 column 2937 - Warning: discarding unexpected </rustdoc-toolbar>
 line 1 column 1798 - Warning: trimming empty <button>
 This document has errors that must be fixed before
 using HTML Tidy to generate a tidied up version.
@@ -688,12 +688,12 @@ using HTML Tidy to generate a tidied up version.
 ./docs/treasure_your_passwords/fn.show_token.html
 Document: "2" is not a file!
 
-line 1 column 2159 - Error: <rustdoc-search> is not recognized! Did you mean to enable the custom-tags option?
-line 1 column 2159 - Warning: discarding unexpected <rustdoc-search>
-line 1 column 2175 - Warning: discarding unexpected </rustdoc-search>
-line 1 column 2484 - Error: <rustdoc-toolbar> is not recognized! Did you mean to enable the custom-tags option?
-line 1 column 2484 - Warning: discarding unexpected <rustdoc-toolbar>
-line 1 column 2501 - Warning: discarding unexpected </rustdoc-toolbar>
+line 1 column 2473 - Error: <rustdoc-search> is not recognized! Did you mean to enable the custom-tags option?
+line 1 column 2473 - Warning: discarding unexpected <rustdoc-search>
+line 1 column 2489 - Warning: discarding unexpected </rustdoc-search>
+line 1 column 2798 - Error: <rustdoc-toolbar> is not recognized! Did you mean to enable the custom-tags option?
+line 1 column 2798 - Warning: discarding unexpected <rustdoc-toolbar>
+line 1 column 2815 - Warning: discarding unexpected </rustdoc-toolbar>
 line 1 column 1766 - Warning: trimming empty <button>
 This document has errors that must be fixed before
 using HTML Tidy to generate a tidied up version.
@@ -701,12 +701,12 @@ using HTML Tidy to generate a tidied up version.
 ./docs/treasure_your_passwords/constant.RED.html
 Document: "2" is not a file!
 
-line 1 column 2158 - Error: <rustdoc-search> is not recognized! Did you mean to enable the custom-tags option?
-line 1 column 2158 - Warning: discarding unexpected <rustdoc-search>
-line 1 column 2174 - Warning: discarding unexpected </rustdoc-search>
-line 1 column 2482 - Error: <rustdoc-toolbar> is not recognized! Did you mean to enable the custom-tags option?
-line 1 column 2482 - Warning: discarding unexpected <rustdoc-toolbar>
-line 1 column 2499 - Warning: discarding unexpected </rustdoc-toolbar>
+line 1 column 2460 - Error: <rustdoc-search> is not recognized! Did you mean to enable the custom-tags option?
+line 1 column 2460 - Warning: discarding unexpected <rustdoc-search>
+line 1 column 2476 - Warning: discarding unexpected </rustdoc-search>
+line 1 column 2784 - Error: <rustdoc-toolbar> is not recognized! Did you mean to enable the custom-tags option?
+line 1 column 2784 - Warning: discarding unexpected <rustdoc-toolbar>
+line 1 column 2801 - Warning: discarding unexpected </rustdoc-toolbar>
 line 1 column 1765 - Warning: trimming empty <button>
 This document has errors that must be fixed before
 using HTML Tidy to generate a tidied up version.

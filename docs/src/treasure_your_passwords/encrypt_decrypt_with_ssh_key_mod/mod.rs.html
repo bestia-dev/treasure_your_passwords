@@ -352,24 +352,24 @@
 <span class="comment">// region: Public API constants
 // ANSI colors for Linux terminal
 // https://github.com/shiena/ansicolor/blob/master/README.md
-</span><span class="doccomment">/// ANSI color
+</span><span class="doccomment">/// # ANSI color
 </span><span class="kw">pub const </span>RED: <span class="kw-2">&amp;</span>str = <span class="string">"\x1b[31m"</span>;
-<span class="doccomment">/// ANSI color
+<span class="doccomment">/// # ANSI color
 </span><span class="attr">#[allow(dead_code)]
 </span><span class="kw">pub const </span>GREEN: <span class="kw-2">&amp;</span>str = <span class="string">"\x1b[32m"</span>;
-<span class="doccomment">/// ANSI color
+<span class="doccomment">/// # ANSI color
 </span><span class="kw">pub const </span>YELLOW: <span class="kw-2">&amp;</span>str = <span class="string">"\x1b[33m"</span>;
-<span class="doccomment">/// ANSI color
+<span class="doccomment">/// # ANSI color
 </span><span class="attr">#[allow(dead_code)]
 </span><span class="kw">pub const </span>BLUE: <span class="kw-2">&amp;</span>str = <span class="string">"\x1b[34m"</span>;
-<span class="doccomment">/// ANSI color
+<span class="doccomment">/// # ANSI color
 </span><span class="kw">pub const </span>RESET: <span class="kw-2">&amp;</span>str = <span class="string">"\x1b[0m"</span>;
 <span class="comment">// endregion: Public API constants
 
 </span><span class="kw">use </span>anyhow::Context;
 <span class="kw">use </span>secrecy::{ExposeSecret, ExposeSecretMut, SecretBox, SecretString};
 
-<span class="doccomment">/// Struct that represents the json data saved in the '*.enc' file
+<span class="doccomment">/// # Struct that represents the json data saved in the '*.enc' file
 </span><span class="attr">#[derive(serde::Deserialize, serde::Serialize)]
 </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct </span>EncryptedTextWithMetadata {
     <span class="kw">pub</span>(<span class="kw">crate</span>) private_key_file_path: String,
@@ -380,7 +380,7 @@
     <span class="kw">pub</span>(<span class="kw">crate</span>) refresh_token_expiration: <span class="prelude-ty">Option</span>&lt;String&gt;,
 }
 
-<span class="doccomment">/// get private key file path
+<span class="doccomment">/// # get private key file path
 </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>get_private_key_file_path(file_bare_name: <span class="kw-2">&amp;</span>str) -&gt; anyhow::Result&lt;camino::Utf8PathBuf&gt; {
     <span class="kw">let </span>user_dirs = directories::UserDirs::new().context(<span class="string">"directories::UserDirs"</span>)<span class="question-mark">?</span>;
     <span class="kw">let </span>path_buf = user_dirs.home_dir().join(<span class="string">".ssh"</span>).join(file_bare_name);
@@ -388,7 +388,7 @@
     <span class="prelude-val">Ok</span>(private_key_file_path)
 }
 
-<span class="doccomment">/// get encrypted file path
+<span class="doccomment">/// # get encrypted file path
 </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>get_encrypted_file_path(file_bare_name: <span class="kw-2">&amp;</span>str) -&gt; anyhow::Result&lt;camino::Utf8PathBuf&gt; {
     <span class="kw">let </span>user_dirs = directories::UserDirs::new().context(<span class="string">"directories::UserDirs"</span>)<span class="question-mark">?</span>;
     <span class="kw">let </span>path_buf = user_dirs.home_dir().join(<span class="string">".ssh"</span>).join(file_bare_name).with_extension(<span class="string">"enc"</span>);
@@ -438,19 +438,19 @@
 
 <span class="comment">// region: encode and decode strings and bytes
 
-</span><span class="doccomment">/// Decode base64 from string to 32bytes
+</span><span class="doccomment">/// # Decode base64 from string to 32bytes
 </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>encode64_from_32bytes_to_string(bytes_32bytes: [u8; <span class="number">32</span>]) -&gt; anyhow::Result&lt;String&gt; {
     <span class="prelude-val">Ok</span>(&lt;base64ct::Base64 <span class="kw">as </span>base64ct::Encoding&gt;::encode_string(<span class="kw-2">&amp;</span>bytes_32bytes))
 }
 
-<span class="doccomment">/// Decode base64 from string to 32bytes
+<span class="doccomment">/// # Decode base64 from string to 32bytes
 </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>decode64_from_string_to_32bytes(plain_seed_string: <span class="kw-2">&amp;</span>str) -&gt; anyhow::Result&lt;[u8; <span class="number">32</span>]&gt; {
     <span class="kw">let </span>plain_seed_bytes = &lt;base64ct::Base64 <span class="kw">as </span>base64ct::Encoding&gt;::decode_vec(plain_seed_string)<span class="question-mark">?</span>;
     <span class="kw">let </span>plain_seed_bytes_32bytes = shorten_vec_bytes_to_32bytes(plain_seed_bytes)<span class="question-mark">?</span>;
     <span class="prelude-val">Ok</span>(plain_seed_bytes_32bytes)
 }
 
-<span class="doccomment">/// Encode base64 from bytes to string
+<span class="doccomment">/// # Encode base64 from bytes to string
 </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>encode64_from_bytes_to_string(plain_seed_bytes_32bytes: Vec&lt;u8&gt;) -&gt; String {
     &lt;base64ct::Base64 <span class="kw">as </span>base64ct::Encoding&gt;::encode_string(<span class="kw-2">&amp;</span>plain_seed_bytes_32bytes)
 }
