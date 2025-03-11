@@ -280,11 +280,7 @@
 <a href="#279" id="279">279</a>
 <a href="#280" id="280">280</a>
 <a href="#281" id="281">281</a>
-<a href="#282" id="282">282</a>
-<a href="#283" id="283">283</a>
-<a href="#284" id="284">284</a>
-<a href="#285" id="285">285</a>
-<a href="#286" id="286">286</a></pre></div><pre class="rust"><code><span class="comment">// encrypt_decrypt_with_ssh_key_mod.rs
+<a href="#282" id="282">282</a></pre></div><pre class="rust"><code><span class="comment">// encrypt_decrypt_with_ssh_key_mod/mod.rs
 
 </span><span class="kw">pub mod </span>generate_strong_password_mod;
 <span class="kw">pub mod </span>secret_vault_mod;
@@ -337,7 +333,8 @@
 <span class="doccomment">/// Generate a random seed
 ///
 /// This seed will be signed with the private key and
-/// that will be the passcode for symmetric encryption
+/// that will be the passcode for symmetric encryption.
+/// It is not a secret.
 /// We will need the bytes and the string representation
 </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>random_seed_32bytes_and_string() -&gt; anyhow::Result&lt;([u8; <span class="number">32</span>], String)&gt; {
     <span class="kw">let </span><span class="kw-2">mut </span>seed_32bytes = [<span class="number">0_u8</span>; <span class="number">32</span>];
@@ -373,7 +370,7 @@
     <span class="prelude-val">Ok</span>(secret_passcode_32bytes)
 }
 
-<span class="comment">// region: seed encode and decode - string and bytes
+<span class="comment">// region: encode and decode strings and bytes
 
 </span><span class="doccomment">/// Decode base64 from string to 32bytes
 </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>encode64_from_32bytes_to_string(bytes_32bytes: [u8; <span class="number">32</span>]) -&gt; anyhow::Result&lt;String&gt; {
@@ -392,12 +389,7 @@
     &lt;base64ct::Base64 <span class="kw">as </span>base64ct::Encoding&gt;::encode_string(<span class="kw-2">&amp;</span>plain_seed_bytes_32bytes)
 }
 
-<span class="comment">// /// decode base64 from string to bytes
-// pub(crate) fn decode64_from_string_to_bytes(plain_encrypted_string: String) -&gt; anyhow::Result&lt;Vec&lt;u8&gt;&gt; {
-//     Ok(&lt;base64ct::Base64 as base64ct::Encoding&gt;::decode_vec(&amp;plain_encrypted_string)?)
-// }
-
-</span><span class="doccomment">/// Encode base64 from string to string
+<span class="doccomment">/// Encode base64 from string to string
 ///
 /// It is a silly little obfuscation just to avoid using plain text.
 </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>encode64_from_string_to_string(string_to_encode: <span class="kw-2">&amp;</span>str) -&gt; String {
@@ -412,7 +404,7 @@
     <span class="prelude-val">Ok</span>(decoded_string)
 }
 
-<span class="comment">// endregion: seed encode and decode - string and bytes
+<span class="comment">// endregion: encode and decode strings and bytes
 
 // region: sign the seed with ssh-agent or private key
 
@@ -421,7 +413,7 @@
 /// First it tries to use the ssh-agent.
 /// Else it uses the private key and ask the user to input the passphrase.
 /// The secret signed seed will be the actual password for symmetrical encryption.
-/// Returns secret_password_bytes
+/// Returns secret_passcode_32bytes
 </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>sign_seed_with_ssh_agent_or_private_key_file(private_key_file_path: <span class="kw-2">&amp;</span>camino::Utf8Path, plain_seed_bytes_32bytes: [u8; <span class="number">32</span>]) -&gt; anyhow::Result&lt;SecretBox&lt;[u8; <span class="number">32</span>]&gt;&gt; {
     <span class="kw">let </span>secret_passcode_32bytes_maybe = sign_seed_with_ssh_agent(plain_seed_bytes_32bytes, private_key_file_path);
     <span class="kw">let </span>secret_passcode_32bytes: SecretBox&lt;[u8; <span class="number">32</span>]&gt; = <span class="kw">if </span>secret_passcode_32bytes_maybe.is_ok() {
@@ -444,7 +436,7 @@
 <span class="doccomment">/// Sign seed with ssh-agent into 32 bytes secret
 ///
 /// This will be the true passcode for symmetrical encryption and decryption.  
-/// Returns secret_password_bytes  
+/// Returns secret_passcode_32bytes  
 </span><span class="kw">fn </span>sign_seed_with_ssh_agent(plain_seed_bytes_32bytes: [u8; <span class="number">32</span>], private_key_file_path: <span class="kw-2">&amp;</span>camino::Utf8Path) -&gt; anyhow::Result&lt;SecretBox&lt;[u8; <span class="number">32</span>]&gt;&gt; {
     <span class="doccomment">/// Internal function returns the public_key inside ssh-add
     </span><span class="kw">fn </span>public_key_from_ssh_agent(client: <span class="kw-2">&amp;mut </span>ssh_agent_client_rs::Client, fingerprint_from_file: <span class="kw-2">&amp;</span>str) -&gt; anyhow::Result&lt;ssh_key::PublicKey&gt; {
@@ -484,7 +476,7 @@
 ///
 /// User must input the passphrase to unlock the private key file.  
 /// This will be the true passcode for symmetrical encryption and decryption.  
-/// Returns secret_password_bytes
+/// Returns secret_passcode_32bytes
 </span><span class="kw">fn </span>sign_seed_with_private_key_file(plain_seed_bytes_32bytes: [u8; <span class="number">32</span>], private_key_file_path: <span class="kw-2">&amp;</span>camino::Utf8Path) -&gt; anyhow::Result&lt;SecretBox&lt;[u8; <span class="number">32</span>]&gt;&gt; {
     <span class="doccomment">/// Internal function for user input passphrase
     </span><span class="kw">fn </span>user_input_secret_passphrase() -&gt; anyhow::Result&lt;SecretString&gt; {
