@@ -483,13 +483,13 @@ using HTML Tidy to generate a tidied up version.
 ./docs/treasure_your_passwords/encrypt_decrypt_with_ssh_key_mod/index.html
 Document: "2" is not a file!
 
-line 1 column 2848 - Error: <rustdoc-search> is not recognized! Did you mean to enable the custom-tags option?
-line 1 column 2848 - Warning: discarding unexpected <rustdoc-search>
-line 1 column 2864 - Warning: discarding unexpected </rustdoc-search>
-line 1 column 3185 - Error: <rustdoc-toolbar> is not recognized! Did you mean to enable the custom-tags option?
-line 1 column 3185 - Warning: discarding unexpected <rustdoc-toolbar>
-line 1 column 3202 - Warning: discarding unexpected </rustdoc-toolbar>
-line 1 column 1915 - Warning: trimming empty <button>
+line 1 column 2775 - Error: <rustdoc-search> is not recognized! Did you mean to enable the custom-tags option?
+line 1 column 2775 - Warning: discarding unexpected <rustdoc-search>
+line 1 column 2791 - Warning: discarding unexpected </rustdoc-search>
+line 1 column 3112 - Error: <rustdoc-toolbar> is not recognized! Did you mean to enable the custom-tags option?
+line 1 column 3112 - Warning: discarding unexpected <rustdoc-toolbar>
+line 1 column 3129 - Warning: discarding unexpected </rustdoc-toolbar>
+line 1 column 1842 - Warning: trimming empty <button>
 This document has errors that must be fixed before
 using HTML Tidy to generate a tidied up version.
 

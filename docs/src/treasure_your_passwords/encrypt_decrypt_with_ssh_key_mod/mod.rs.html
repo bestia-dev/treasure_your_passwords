@@ -282,7 +282,43 @@
 <a href="#281" id="281">281</a>
 <a href="#282" id="282">282</a>
 <a href="#283" id="283">283</a>
-<a href="#284" id="284">284</a></pre></div><pre class="rust"><code><span class="comment">// encrypt_decrypt_with_ssh_key_mod/mod.rs
+<a href="#284" id="284">284</a>
+<a href="#285" id="285">285</a>
+<a href="#286" id="286">286</a>
+<a href="#287" id="287">287</a>
+<a href="#288" id="288">288</a>
+<a href="#289" id="289">289</a>
+<a href="#290" id="290">290</a>
+<a href="#291" id="291">291</a>
+<a href="#292" id="292">292</a>
+<a href="#293" id="293">293</a>
+<a href="#294" id="294">294</a>
+<a href="#295" id="295">295</a>
+<a href="#296" id="296">296</a>
+<a href="#297" id="297">297</a>
+<a href="#298" id="298">298</a>
+<a href="#299" id="299">299</a>
+<a href="#300" id="300">300</a>
+<a href="#301" id="301">301</a>
+<a href="#302" id="302">302</a></pre></div><pre class="rust"><code><span class="comment">// encrypt_decrypt_with_ssh_key_mod/mod.rs
+
+</span><span class="doccomment">//! encrypt and decrypt with ssh key
+//!
+//! In development, we often use SSH keys to connect to remote computers.  
+//! Because of this, we learned how to create and maintain SSH private keys.  
+//! This knowledge can be used to encrypt and decrypt many different secrets.  
+//! The core principle is simple:  
+//! Create a random seed 32 bytes. This is not a secret.  
+//! Sign it with the SSH private key. Only the owner can do that.  
+//! The signature is our new secret password.  
+//! Use symmetrical encryption to encrypt the strings.  
+//! Use bas64 encoding to convert between strings and bytes.  
+//! 
+//! Private SSH keys are protected by a passcode that only the owner knows.  
+//! This is the foundation of the security of this process.  
+//! Typing the passcode every time we need the private key is tedious.  
+//! We can use the ssh-agent to store the opened private key for some limited time.  
+//! This is more convenient, but it is less secure.  
 
 </span><span class="kw">pub mod </span>generate_strong_password_mod;
 <span class="kw">pub mod </span>secret_vault_mod;
