@@ -4,8 +4,6 @@
 //!
 //! With one SSH private key, we can store many secret tokens.
 
-#![allow(dead_code)]
-
 use secrecy::{SecretBox, SecretString};
 
 use crate::encrypt_decrypt_with_ssh_key_mod as ende;

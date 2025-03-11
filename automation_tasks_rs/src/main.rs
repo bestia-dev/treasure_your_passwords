@@ -424,14 +424,15 @@ fn task_github_new_release() {
 
     // region: upload asset only for executables, not for libraries
 
+    // Linux executable binary tar-gz-ed
     let release_id = json_value.get("id").unwrap().as_i64().unwrap().to_string();
     println!("  {YELLOW}Now uploading release asset. This can take some time if the files are big. Wait...{RESET}");
     // compress files tar.gz
-    let tar_name = format!("{repo_name}-{tag_name_version}-x86_64-unknown-linux-gnu.tar.gz");
+    let compressed_name = format!("{repo_name}-{tag_name_version}-x86_64-unknown-linux-gnu.tar.gz");
 
-    cl::ShellCommandLimitedDoubleQuotesSanitizer::new(r#"tar -zcvf "{tar_name_sanitized_for_double_quote}" "target/release/{repo_name_sanitized_for_double_quote}" "#)
+    cl::ShellCommandLimitedDoubleQuotesSanitizer::new(r#"tar -zcvf "{compressed_name_sanitized_for_double_quote}" "target/release/{repo_name_sanitized_for_double_quote}" "#)
         .unwrap_or_else(|e| panic!("{e}"))
-        .arg("{tar_name_sanitized_for_double_quote}", &tar_name)
+        .arg("{compressed_name_sanitized_for_double_quote}", &compressed_name)
         .unwrap_or_else(|e| panic!("{e}"))
         .arg("{repo_name_sanitized_for_double_quote}", &repo_name)
         .unwrap_or_else(|e| panic!("{e}"))
@@ -439,16 +440,46 @@ fn task_github_new_release() {
         .unwrap_or_else(|e| panic!("{e}"));
 
     // upload asset
-    cgl::github_api_upload_asset_to_release(&github_owner, &repo_name, &release_id, &tar_name);
+    cgl::github_api_upload_asset_to_release(&github_owner, &repo_name, &release_id, &compressed_name);
 
-    cl::ShellCommandLimitedDoubleQuotesSanitizer::new(r#"rm "{tar_name_sanitized_for_double_quote}" "#)
+    cl::ShellCommandLimitedDoubleQuotesSanitizer::new(r#"rm "{compressed_name_sanitized_for_double_quote}" "#)
         .unwrap_or_else(|e| panic!("{e}"))
-        .arg("{tar_name_sanitized_for_double_quote}", &tar_name)
+        .arg("{compressed_name_sanitized_for_double_quote}", &compressed_name)
         .unwrap_or_else(|e| panic!("{e}"))
         .run()
         .unwrap_or_else(|e| panic!("{e}"));
     println!(r#"  {YELLOW}Asset uploaded. Open and edit the description on GitHub Releases in the browser.{RESET}"#);
 
+    // Windows executable binary zipped
+    // Prerequisites: Install zip into the container from the parent WSL:
+    // podman exec --user=root crustde_vscode_cnt   apt-get install -y zip
+    // compress file with zip because it is Windows
+    let compressed_name = format!("{repo_name}-{tag_name_version}-x86_64-pc-windows-gnu.zip");
+
+    cl::ShellCommandLimitedDoubleQuotesSanitizer::new(r#"zip "{compressed_name_sanitized_for_double_quote}" "target/x86_64-pc-windows-gnu/release/{repo_name_sanitized_for_double_quote}.exe" "#)
+        .unwrap_or_else(|e| panic!("{e}"))
+        .arg("{compressed_name_sanitized_for_double_quote}", &compressed_name)
+        .unwrap_or_else(|e| panic!("{e}"))
+        .arg("{repo_name_sanitized_for_double_quote}", &repo_name)
+        .unwrap_or_else(|e| panic!("{e}"))
+        .run()
+        .unwrap_or_else(|e| panic!("{e}"));
+
+    // upload asset
+    cgl::github_api_upload_asset_to_release(&github_owner, &repo_name, &release_id, &compressed_name);
+
+    cl::ShellCommandLimitedDoubleQuotesSanitizer::new(r#"rm "{compressed_name_sanitized_for_double_quote}" "#)
+        .unwrap_or_else(|e| panic!("{e}"))
+        .arg("{compressed_name_sanitized_for_double_quote}", &compressed_name)
+        .unwrap_or_else(|e| panic!("{e}"))
+        .run()
+        .unwrap_or_else(|e| panic!("{e}"));
+
+    println!(
+        r#"
+    {YELLOW}Asset uploaded. Open and edit the description on GitHub Releases in the browser.{RESET}
+    "#
+    );
     // endregion: upload asset only for executables, not for libraries
 
     println!(r#"{GREEN}https://github.com/{github_owner}/{repo_name}/releases{RESET} "#);

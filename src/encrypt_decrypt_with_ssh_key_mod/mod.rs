@@ -34,6 +34,7 @@ pub(crate) struct EncryptedTextWithMetadata {
     pub(crate) refresh_token_expiration: Option<String>,
 }
 
+/// get private key file path
 pub(crate) fn get_private_key_file_path(file_bare_name: &str) -> anyhow::Result<camino::Utf8PathBuf> {
     let user_dirs = directories::UserDirs::new().context("directories::UserDirs")?;
     let path_buf = user_dirs.home_dir().join(".ssh").join(file_bare_name);
@@ -41,6 +42,7 @@ pub(crate) fn get_private_key_file_path(file_bare_name: &str) -> anyhow::Result<
     Ok(private_key_file_path)
 }
 
+/// get encrypted file path
 pub(crate) fn get_encrypted_file_path(file_bare_name: &str) -> anyhow::Result<camino::Utf8PathBuf> {
     let user_dirs = directories::UserDirs::new().context("directories::UserDirs")?;
     let path_buf = user_dirs.home_dir().join(".ssh").join(file_bare_name).with_extension("enc");
@@ -51,9 +53,9 @@ pub(crate) fn get_encrypted_file_path(file_bare_name: &str) -> anyhow::Result<ca
 /// Generate a random seed
 ///
 /// This seed will be signed with the private key and
-/// that will be the passcode for symmetric encryption.
-/// It is not a secret.
-/// We will need the bytes and the string representation
+/// that will be the passcode for symmetric encryption.  
+/// It is not a secret.  
+/// We will need the bytes and the string representation.  
 pub(crate) fn random_seed_32bytes_and_string() -> anyhow::Result<([u8; 32], String)> {
     let mut seed_32bytes = [0_u8; 32];
     use aes_gcm::aead::rand_core::RngCore;
@@ -77,7 +79,7 @@ pub(crate) fn open_file_b64_get_string(plain_file_b64_path: &camino::Utf8Path) -
     Ok(plain_file_text)
 }
 
-/// shorten the `Vec<u8> to [u8;32]`  
+/// shorten the `Vec<u8>` to `[u8;32]`  
 pub(crate) fn shorten_vec_bytes_to_32bytes(vec_u8: Vec<u8>) -> anyhow::Result<[u8; 32]> {
     if vec_u8.len() < 32 {
         anyhow::bail!("The bytes must never be less then 32 bytes.");
@@ -128,10 +130,10 @@ pub(crate) fn decode64_from_string_to_string(string_to_decode: &str) -> anyhow::
 
 /// Returns the secret signed seed
 ///
-/// First it tries to use the ssh-agent.
-/// Else it uses the private key and ask the user to input the passphrase.
-/// The secret signed seed will be the actual password for symmetrical encryption.
-/// Returns secret_passcode_32bytes
+/// First it tries to use the ssh-agent.  
+/// Else it uses the private key and ask the user to input the passphrase.  
+/// The secret signed seed will be the actual password for symmetrical encryption.  
+/// Returns secret_passcode_32bytes  
 pub(crate) fn sign_seed_with_ssh_agent_or_private_key_file(private_key_file_path: &camino::Utf8Path, plain_seed_bytes_32bytes: [u8; 32]) -> anyhow::Result<SecretBox<[u8; 32]>> {
     let secret_passcode_32bytes_maybe = sign_seed_with_ssh_agent(plain_seed_bytes_32bytes, private_key_file_path);
     let secret_passcode_32bytes: SecretBox<[u8; 32]> = if secret_passcode_32bytes_maybe.is_ok() {
