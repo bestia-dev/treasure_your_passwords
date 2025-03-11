@@ -280,7 +280,9 @@
 <a href="#279" id="279">279</a>
 <a href="#280" id="280">280</a>
 <a href="#281" id="281">281</a>
-<a href="#282" id="282">282</a></pre></div><pre class="rust"><code><span class="comment">// encrypt_decrypt_with_ssh_key_mod/mod.rs
+<a href="#282" id="282">282</a>
+<a href="#283" id="283">283</a>
+<a href="#284" id="284">284</a></pre></div><pre class="rust"><code><span class="comment">// encrypt_decrypt_with_ssh_key_mod/mod.rs
 
 </span><span class="kw">pub mod </span>generate_strong_password_mod;
 <span class="kw">pub mod </span>secret_vault_mod;
@@ -316,14 +318,16 @@
     <span class="kw">pub</span>(<span class="kw">crate</span>) refresh_token_expiration: <span class="prelude-ty">Option</span>&lt;String&gt;,
 }
 
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>get_private_key_file_path(file_bare_name: <span class="kw-2">&amp;</span>str) -&gt; anyhow::Result&lt;camino::Utf8PathBuf&gt; {
+<span class="doccomment">/// get private key file path
+</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>get_private_key_file_path(file_bare_name: <span class="kw-2">&amp;</span>str) -&gt; anyhow::Result&lt;camino::Utf8PathBuf&gt; {
     <span class="kw">let </span>user_dirs = directories::UserDirs::new().context(<span class="string">"directories::UserDirs"</span>)<span class="question-mark">?</span>;
     <span class="kw">let </span>path_buf = user_dirs.home_dir().join(<span class="string">".ssh"</span>).join(file_bare_name);
     <span class="kw">let </span>private_key_file_path = camino::Utf8PathBuf::from_path_buf(path_buf).expect(<span class="string">"Utf8PathBuf::from_path_buf"</span>);
     <span class="prelude-val">Ok</span>(private_key_file_path)
 }
 
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>get_encrypted_file_path(file_bare_name: <span class="kw-2">&amp;</span>str) -&gt; anyhow::Result&lt;camino::Utf8PathBuf&gt; {
+<span class="doccomment">/// get encrypted file path
+</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>get_encrypted_file_path(file_bare_name: <span class="kw-2">&amp;</span>str) -&gt; anyhow::Result&lt;camino::Utf8PathBuf&gt; {
     <span class="kw">let </span>user_dirs = directories::UserDirs::new().context(<span class="string">"directories::UserDirs"</span>)<span class="question-mark">?</span>;
     <span class="kw">let </span>path_buf = user_dirs.home_dir().join(<span class="string">".ssh"</span>).join(file_bare_name).with_extension(<span class="string">"enc"</span>);
     <span class="kw">let </span>encrypted_file_path = camino::Utf8PathBuf::from_path_buf(path_buf).expect(<span class="string">"Utf8PathBuf::from_path_buf"</span>);
@@ -333,9 +337,9 @@
 <span class="doccomment">/// Generate a random seed
 ///
 /// This seed will be signed with the private key and
-/// that will be the passcode for symmetric encryption.
-/// It is not a secret.
-/// We will need the bytes and the string representation
+/// that will be the passcode for symmetric encryption.  
+/// It is not a secret.  
+/// We will need the bytes and the string representation.  
 </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>random_seed_32bytes_and_string() -&gt; anyhow::Result&lt;([u8; <span class="number">32</span>], String)&gt; {
     <span class="kw">let </span><span class="kw-2">mut </span>seed_32bytes = [<span class="number">0_u8</span>; <span class="number">32</span>];
     <span class="kw">use </span>aes_gcm::aead::rand_core::RngCore;
@@ -359,7 +363,7 @@
     <span class="prelude-val">Ok</span>(plain_file_text)
 }
 
-<span class="doccomment">/// shorten the `Vec&lt;u8&gt; to [u8;32]`  
+<span class="doccomment">/// shorten the `Vec&lt;u8&gt;` to `[u8;32]`  
 </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>shorten_vec_bytes_to_32bytes(vec_u8: Vec&lt;u8&gt;) -&gt; anyhow::Result&lt;[u8; <span class="number">32</span>]&gt; {
     <span class="kw">if </span>vec_u8.len() &lt; <span class="number">32 </span>{
         <span class="macro">anyhow::bail!</span>(<span class="string">"The bytes must never be less then 32 bytes."</span>);
@@ -410,10 +414,10 @@
 
 </span><span class="doccomment">/// Returns the secret signed seed
 ///
-/// First it tries to use the ssh-agent.
-/// Else it uses the private key and ask the user to input the passphrase.
-/// The secret signed seed will be the actual password for symmetrical encryption.
-/// Returns secret_passcode_32bytes
+/// First it tries to use the ssh-agent.  
+/// Else it uses the private key and ask the user to input the passphrase.  
+/// The secret signed seed will be the actual password for symmetrical encryption.  
+/// Returns secret_passcode_32bytes  
 </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>sign_seed_with_ssh_agent_or_private_key_file(private_key_file_path: <span class="kw-2">&amp;</span>camino::Utf8Path, plain_seed_bytes_32bytes: [u8; <span class="number">32</span>]) -&gt; anyhow::Result&lt;SecretBox&lt;[u8; <span class="number">32</span>]&gt;&gt; {
     <span class="kw">let </span>secret_passcode_32bytes_maybe = sign_seed_with_ssh_agent(plain_seed_bytes_32bytes, private_key_file_path);
     <span class="kw">let </span>secret_passcode_32bytes: SecretBox&lt;[u8; <span class="number">32</span>]&gt; = <span class="kw">if </span>secret_passcode_32bytes_maybe.is_ok() {
