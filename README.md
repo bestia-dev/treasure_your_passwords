@@ -19,8 +19,8 @@
  ![treasure_your_passwords](https://bestia.dev/webpage_hit_counter/get_svg_image/779107454.svg)
 
 [//]: # (auto_lines_of_code start)
-[![Lines in Rust code](https://img.shields.io/badge/Lines_in_Rust-510-green.svg)](https://github.com/bestia-dev/treasure/)
-[![Lines in Doc comments](https://img.shields.io/badge/Lines_in_Doc_comments-177-blue.svg)](https://github.com/bestia-dev/treasure/)
+[![Lines in Rust code](https://img.shields.io/badge/Lines_in_Rust-511-green.svg)](https://github.com/bestia-dev/treasure/)
+[![Lines in Doc comments](https://img.shields.io/badge/Lines_in_Doc_comments-194-blue.svg)](https://github.com/bestia-dev/treasure/)
 [![Lines in Comments](https://img.shields.io/badge/Lines_in_comments-56-purple.svg)](https://github.com/bestia-dev/treasure/)
 [![Lines in examples](https://img.shields.io/badge/Lines_in_examples-0-yellow.svg)](https://github.com/bestia-dev/treasure/)
 [![Lines in tests](https://img.shields.io/badge/Lines_in_tests-0-orange.svg)](https://github.com/bestia-dev/treasure/)
@@ -38,7 +38,8 @@ Create the SSH key and protect it with a passcode.
 ssh-keygen -t ed25519 -f "vault_ssh_1" -C "vault for secret tokens"
 ```
 
-Save the file `ssh_private_key_bare_file_name.cfg` with the content `vault_ssh_1`. The program `treasure` will read this file to find the SSH private key in the `~/.ssh` folder.
+Save the file `ssh_private_key_bare_file_name.cfg` with the content `vault_ssh_1`.  
+The program `treasure` will read this file to find the SSH private key in the `~/.ssh` folder.
 
 ## Use SSH private key to store passwords
 
