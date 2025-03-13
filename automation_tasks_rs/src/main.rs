@@ -159,7 +159,7 @@ fn print_help() {
   {YELLOW}Then you can type the passphrase of the private key every time. This is pretty secure.{RESET}
   {YELLOW}Somewhat less secure (but more comfortable) way is to store the private key in ssh-agent.{RESET}
 
-  {YELLOW}© 2025 bestia.dev  MIT License github.com/automation--tasks--rs/cargo-auto{RESET}
+  {YELLOW}© 2025 bestia.dev  MIT License github.com/automation-tasks-rs/cargo-auto{RESET}
 "#
     );
     print_examples_cmd();
@@ -170,14 +170,14 @@ fn print_examples_cmd() {
     /*
         println!(
             r#"
-      {YELLOW}run examples:{RESET}
-    {GREEN}cargo run --example plantuml1{RESET}
+  {YELLOW}run examples:{RESET}
+{GREEN}cargo run --example plantuml1{RESET}
     "#
         );
     */
 }
 
-/// sub-command for bash auto-completion of `cargo auto` using the crate `dev_bestia_cargo_completion`
+/// Sub-command for bash auto-completion of `cargo auto` using the crate `dev_bestia_cargo_completion`.
 fn completion() {
     let args: Vec<String> = std::env::args().collect();
     let word_being_completed = args[2].as_str();
@@ -236,6 +236,7 @@ fn task_release() {
     cl::run_shell_command_static("cargo clippy --no-deps").unwrap_or_else(|e| panic!("{e}"));
     cl::run_shell_command_static("cargo build --release").unwrap_or_else(|e| panic!("{e}"));
 
+    #[cfg(target_family = "unix")]
     cl::ShellCommandLimitedDoubleQuotesSanitizer::new(r#"strip "target/release/{package_name}" "#)
         .unwrap_or_else(|e| panic!("{e}"))
         .arg("{package_name}", &cargo_toml.package_name())
@@ -260,7 +261,7 @@ fn task_release() {
     print_examples_cmd();
 }
 
-/// cargo build --release
+/// cargo build --release for x86_64-pc-windows-gnu
 fn task_win_release() {
     let cargo_toml = cl::CargoToml::read();
     cl::auto_version_increment_semver_or_date();
@@ -311,7 +312,9 @@ fn task_doc() {
         .unwrap_or_else(|e| panic!("{e}"));
 
     // pretty html
+    #[cfg(target_family = "unix")]
     cl::auto_doc_tidy_html().unwrap_or_else(|e| panic!("{e}"));
+
     cl::run_shell_command_static("cargo fmt").unwrap_or_else(|e| panic!("{e}"));
     // message to help user with next move
     println!(
@@ -381,7 +384,7 @@ fn task_commit_and_push(arg_2: Option<String>) {
   {YELLOW}After `cargo auto commit_and_push "message"`{RESET}
 
   {YELLOW}First write the content of the release in the RELEASES.md in the `## Unreleased` section, {RESET}
-  {YELLOW}Then create the GitHub Release:{RESET}
+  {YELLOW}Then create the GitHub Release.{RESET}
 {GREEN}cargo auto github_new_release{RESET}
 "#
     );
