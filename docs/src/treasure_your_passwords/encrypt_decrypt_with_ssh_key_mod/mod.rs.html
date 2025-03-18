@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src\encrypt_decrypt_with_ssh_key_mod\mod.rs`."><title>mod.rs - source</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-6b053e98.ttf.woff2,FiraSans-Regular-0fe48ade.woff2,FiraSans-Medium-e1aa3f0a.woff2,SourceCodePro-Regular-8badfe75.ttf.woff2,SourceCodePro-Semibold-aa29a496.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../../static.files/normalize-9960930a.css"><link rel="stylesheet" href="../../../static.files/rustdoc-46132b98.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="treasure_your_passwords" data-themes="" data-resource-suffix="" data-rustdoc-version="1.85.0 (4d91de4e4 2025-02-17)" data-channel="1.85.0" data-search-js="search-75f5ac3e.js" data-settings-js="settings-0f613d39.js" ><script src="../../../static.files/storage-59e33391.js"></script><script defer src="../../../static.files/src-script-56102188.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-5f194d8c.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-893ab5e7.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-6580c154.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-044be391.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title"><h2>Files</h2></div></nav><div class="sidebar-resizer"></div><main><rustdoc-search></rustdoc-search><section id="main-content" class="content"><div class="main-heading"><h1><div class="sub-heading">treasure_your_passwords\encrypt_decrypt_with_ssh_key_mod/</div>mod.rs</h1><rustdoc-toolbar></rustdoc-toolbar></div><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers">
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src/encrypt_decrypt_with_ssh_key_mod/mod.rs`."><title>mod.rs - source</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-6b053e98.ttf.woff2,FiraSans-Regular-0fe48ade.woff2,FiraSans-Medium-e1aa3f0a.woff2,SourceCodePro-Regular-8badfe75.ttf.woff2,SourceCodePro-Semibold-aa29a496.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../../static.files/normalize-9960930a.css"><link rel="stylesheet" href="../../../static.files/rustdoc-46132b98.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="treasure_your_passwords" data-themes="" data-resource-suffix="" data-rustdoc-version="1.85.0 (4d91de4e4 2025-02-17)" data-channel="1.85.0" data-search-js="search-75f5ac3e.js" data-settings-js="settings-0f613d39.js" ><script src="../../../static.files/storage-59e33391.js"></script><script defer src="../../../static.files/src-script-56102188.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-5f194d8c.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-893ab5e7.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-6580c154.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-044be391.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title"><h2>Files</h2></div></nav><div class="sidebar-resizer"></div><main><rustdoc-search></rustdoc-search><section id="main-content" class="content"><div class="main-heading"><h1><div class="sub-heading">treasure_your_passwords/encrypt_decrypt_with_ssh_key_mod/</div>mod.rs</h1><rustdoc-toolbar></rustdoc-toolbar></div><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers">
 <a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
@@ -313,7 +313,29 @@
 <a href="#312" id="312">312</a>
 <a href="#313" id="313">313</a>
 <a href="#314" id="314">314</a>
-<a href="#315" id="315">315</a></pre></div><pre class="rust"><code><span class="comment">// encrypt_decrypt_with_ssh_key_mod/mod.rs
+<a href="#315" id="315">315</a>
+<a href="#316" id="316">316</a>
+<a href="#317" id="317">317</a>
+<a href="#318" id="318">318</a>
+<a href="#319" id="319">319</a>
+<a href="#320" id="320">320</a>
+<a href="#321" id="321">321</a>
+<a href="#322" id="322">322</a>
+<a href="#323" id="323">323</a>
+<a href="#324" id="324">324</a>
+<a href="#325" id="325">325</a>
+<a href="#326" id="326">326</a>
+<a href="#327" id="327">327</a>
+<a href="#328" id="328">328</a>
+<a href="#329" id="329">329</a>
+<a href="#330" id="330">330</a>
+<a href="#331" id="331">331</a>
+<a href="#332" id="332">332</a>
+<a href="#333" id="333">333</a>
+<a href="#334" id="334">334</a>
+<a href="#335" id="335">335</a>
+<a href="#336" id="336">336</a>
+<a href="#337" id="337">337</a></pre></div><pre class="rust"><code><span class="comment">// encrypt_decrypt_with_ssh_key_mod/mod.rs
 
 </span><span class="doccomment">//! Encrypt and decrypt strings with ssh key.
 //!
@@ -399,7 +421,7 @@
 <span class="doccomment">/// Generate a random seed.
 ///
 /// This seed will be signed with the private key and
-/// that will be the passcode for symmetric encryption.  
+/// that will be the passcode for symmetric encryption.
 /// It is not a secret.  
 /// We will need the bytes and the string representation.  
 </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>random_seed_32bytes_and_string() -&gt; anyhow::Result&lt;([u8; <span class="number">32</span>], String)&gt; {
@@ -436,7 +458,7 @@
     <span class="prelude-val">Ok</span>(secret_passcode_32bytes)
 }
 
-<span class="comment">// region: encode and decode strings and bytes
+<span class="comment">// region: seed encode and decode - string and bytes
 
 </span><span class="doccomment">/// Decode base64 from string to 32bytes.
 </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>encode64_from_32bytes_to_string(bytes_32bytes: [u8; <span class="number">32</span>]) -&gt; anyhow::Result&lt;String&gt; {
@@ -470,7 +492,7 @@
     <span class="prelude-val">Ok</span>(decoded_string)
 }
 
-<span class="comment">// endregion: encode and decode strings and bytes
+<span class="comment">// endregion: seed encode and decode - string and bytes
 
 // region: sign the seed with ssh-agent or private key
 
@@ -478,10 +500,12 @@
 ///
 /// First it tries to use the ssh-agent.  
 /// Else it uses the private key and ask the user to input the passphrase.  
+/// If the passphrase is 'empty string' it will try ssh-agent one more time.
 /// The secret signed seed will be the actual password for symmetrical encryption.  
 /// Returns secret_passcode_32bytes.  
-</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>sign_seed_with_ssh_agent_or_private_key_file(private_key_file_path: <span class="kw-2">&amp;</span>camino::Utf8Path, plain_seed_bytes_32bytes: [u8; <span class="number">32</span>]) -&gt; anyhow::Result&lt;SecretBox&lt;[u8; <span class="number">32</span>]&gt;&gt; {
-    <span class="kw">let </span>secret_passcode_32bytes_maybe = sign_seed_with_ssh_agent(plain_seed_bytes_32bytes, private_key_file_path);
+</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>sign_seed_with_ssh_agent_or_private_key_file(tilde_private_key_file_path: <span class="kw-2">&amp;</span>str, plain_seed_bytes_32bytes: [u8; <span class="number">32</span>]) -&gt; anyhow::Result&lt;SecretBox&lt;[u8; <span class="number">32</span>]&gt;&gt; {
+    <span class="kw">let </span>private_key_file_path = <span class="kw">crate</span>::cl::tilde_expand_to_home_dir_utf8(tilde_private_key_file_path)<span class="question-mark">?</span>;
+    <span class="kw">let </span>secret_passcode_32bytes_maybe = sign_seed_with_ssh_agent(plain_seed_bytes_32bytes, <span class="kw-2">&amp;</span>private_key_file_path);
     <span class="kw">let </span>secret_passcode_32bytes: SecretBox&lt;[u8; <span class="number">32</span>]&gt; = <span class="kw">if </span>secret_passcode_32bytes_maybe.is_ok() {
         secret_passcode_32bytes_maybe<span class="question-mark">?
     </span>} <span class="kw">else </span>{
@@ -490,12 +514,22 @@
         <span class="macro">println!</span>(<span class="string">"  {YELLOW}Without ssh-agent, you will have to type the private key passphrase every time.{RESET}"</span>);
         <span class="macro">println!</span>(<span class="string">"  {YELLOW}This is more secure, but inconvenient.{RESET}"</span>);
         <span class="macro">println!</span>(<span class="string">"  {YELLOW}WARNING: using ssh-agent is less secure, because there is no need for user interaction.{RESET}"</span>);
-        <span class="macro">println!</span>(<span class="string">"  {YELLOW}Knowing this, you can manually add the SSH private key to ssh-agent for 1 hour:{RESET}"</span>);
-        <span class="macro">println!</span>(<span class="string">"{GREEN}ssh-add -t 1h {private_key_file_path}{RESET}"</span>);
+        <span class="macro">println!</span>(<span class="string">"  {YELLOW}Knowing this, you can manually add the SSH private key to ssh-agent for 1 hour.{RESET}"</span>);
+        <span class="macro">println!</span>(<span class="string">"  {YELLOW}You can simply open a new bash terminal and add the key there right now:{RESET}"</span>);
+        <span class="macro">println!</span>(<span class="string">"{GREEN}ssh-add -t 1h {tilde_private_key_file_path}{RESET}"</span>);
         <span class="macro">println!</span>(<span class="string">"  {YELLOW}Unlock the private key to decrypt the saved file.{RESET}"</span>);
 
-        sign_seed_with_private_key_file(plain_seed_bytes_32bytes, private_key_file_path)<span class="question-mark">?
-    </span>};
+        <span class="kw">match </span>sign_seed_with_private_key_file(plain_seed_bytes_32bytes, <span class="kw-2">&amp;</span>private_key_file_path) {
+            <span class="prelude-val">Ok</span>(secret_passcode_32bytes) =&gt; secret_passcode_32bytes,
+            <span class="prelude-val">Err</span>(err) =&gt; {
+                <span class="kw">if </span>err.to_string() == <span class="string">"Passphrase empty" </span>{
+                    <span class="comment">// try with ssh-agent, because maybe the developer has ssh-add in another terminal right now
+                    </span><span class="kw">return </span>sign_seed_with_ssh_agent(plain_seed_bytes_32bytes, <span class="kw-2">&amp;</span>private_key_file_path);
+                }
+                <span class="macro">anyhow::bail!</span>(err)
+            }
+        }
+    };
     <span class="prelude-val">Ok</span>(secret_passcode_32bytes)
 }
 
@@ -505,11 +539,12 @@
 /// Returns secret_passcode_32bytes.  
 </span><span class="kw">fn </span>sign_seed_with_ssh_agent(plain_seed_bytes_32bytes: [u8; <span class="number">32</span>], private_key_file_path: <span class="kw-2">&amp;</span>camino::Utf8Path) -&gt; anyhow::Result&lt;SecretBox&lt;[u8; <span class="number">32</span>]&gt;&gt; {
     <span class="doccomment">/// Internal function returns the public_key inside ssh-add
-    </span><span class="kw">fn </span>public_key_from_ssh_agent(client: <span class="kw-2">&amp;mut </span>ssh_agent_client_rs::Client, fingerprint_from_file: <span class="kw-2">&amp;</span>str) -&gt; anyhow::Result&lt;ssh_key::PublicKey&gt; {
+    </span><span class="kw">fn </span>public_key_from_ssh_agent(client: <span class="kw-2">&amp;mut </span>ssh_agent_client_rs_git_bash::Client, fingerprint_from_file: <span class="kw-2">&amp;</span>str) -&gt; anyhow::Result&lt;ssh_key::PublicKey&gt; {
         <span class="kw">let </span>vec_public_key = client.list_identities()<span class="question-mark">?</span>;
 
         <span class="kw">for </span>public_key <span class="kw">in </span>vec_public_key.iter() {
             <span class="kw">let </span>fingerprint_from_agent = public_key.key_data().fingerprint(Default::default()).to_string();
+
             <span class="kw">if </span>fingerprint_from_agent == fingerprint_from_file {
                 <span class="kw">return </span><span class="prelude-val">Ok</span>(public_key.to_owned());
             }
@@ -522,9 +557,11 @@
     <span class="kw">let </span>fingerprint_from_file = public_key.fingerprint(Default::default()).to_string();
 
     <span class="macro">println!</span>(<span class="string">"  {YELLOW}Connect to ssh-agent on SSH_AUTH_SOCK{RESET}"</span>);
-    <span class="kw">let </span>var_ssh_auth_sock = std::env::var(<span class="string">"SSH_AUTH_SOCK"</span>).unwrap();
-    <span class="kw">let </span>path_ssh_auth_sock = std::path::PathBuf::from(<span class="kw-2">&amp;</span>var_ssh_auth_sock);
-    <span class="kw">let </span><span class="kw-2">mut </span>ssh_agent_client = ssh_agent_client_rs::Client::connect(<span class="kw-2">&amp;</span>path_ssh_auth_sock)<span class="question-mark">?</span>;
+    <span class="kw">let </span>var_ssh_auth_sock = std::env::var(<span class="string">"SSH_AUTH_SOCK"</span>)<span class="question-mark">?</span>;
+    <span class="kw">let </span>path_ssh_auth_sock = camino::Utf8Path::new(<span class="kw-2">&amp;</span>var_ssh_auth_sock);
+    <span class="comment">// import trait into scope
+    </span><span class="kw">use </span>ssh_agent_client_rs_git_bash::GitBash;
+    <span class="kw">let </span><span class="kw-2">mut </span>ssh_agent_client = ssh_agent_client_rs_git_bash::Client::connect_to_git_bash_or_linux(path_ssh_auth_sock.as_std_path())<span class="question-mark">?</span>;
 
     <span class="kw">let </span>public_key = public_key_from_ssh_agent(<span class="kw-2">&amp;mut </span>ssh_agent_client, <span class="kw-2">&amp;</span>fingerprint_from_file)<span class="question-mark">?</span>;
 
@@ -549,8 +586,15 @@
         <span class="macro">println!</span>();
         <span class="macro">println!</span>(<span class="string">"{BLUE}Enter the passphrase for the SSH private key:{RESET}"</span>);
 
-        <span class="kw">let </span>secret_passphrase = SecretString::from(inquire::Password::new(<span class="string">""</span>).without_confirmation().with_display_mode(inquire::PasswordDisplayMode::Masked).prompt()<span class="question-mark">?</span>);
-
+        <span class="kw">let </span>secret_passphrase = SecretString::from(
+            <span class="kw">crate</span>::cl::inquire::Password::new(<span class="string">""</span>)
+                .without_confirmation()
+                .with_display_mode(<span class="kw">crate</span>::cl::inquire::PasswordDisplayMode::Masked)
+                .prompt()<span class="question-mark">?</span>,
+        );
+        <span class="kw">if </span>secret_passphrase.expose_secret().is_empty() {
+            <span class="macro">anyhow::bail!</span>(<span class="string">"Passphrase empty"</span>);
+        }
         <span class="prelude-val">Ok</span>(secret_passphrase)
     }
     <span class="comment">// the user is the only one that knows the passphrase to unlock the private key
