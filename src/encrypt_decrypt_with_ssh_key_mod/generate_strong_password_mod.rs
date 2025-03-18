@@ -35,10 +35,15 @@ pub(crate) fn generate_strong_password(file_bare_name: &str) -> anyhow::Result<S
     println!("  {YELLOW}This function will convert your human password into a digital form hopefully harder to guess. {RESET}");
     println!();
     println!("{BLUE}Enter the human easy password to convert:{RESET}");
-    let secret_human_password = secrecy::SecretString::from(inquire::Password::new("").without_confirmation().with_display_mode(inquire::PasswordDisplayMode::Masked).prompt()?);
+    let secret_human_password = secrecy::SecretString::from(
+        crate::cl::inquire::Password::new("")
+            .without_confirmation()
+            .with_display_mode(crate::cl::inquire::PasswordDisplayMode::Masked)
+            .prompt()?,
+    );
     let secret_first_human_hash_32bytes: [u8; 32] = rsa::sha2::Sha256::digest(secret_human_password.expose_secret().as_bytes()).into();
     // first try to use the private key from ssh-agent, else use the private file with user interaction
-    let secret_passcode_32bytes: SecretBox<[u8; 32]> = ende::sign_seed_with_ssh_agent_or_private_key_file(&private_key_file_path, secret_first_human_hash_32bytes)?;
+    let secret_passcode_32bytes: SecretBox<[u8; 32]> = ende::sign_seed_with_ssh_agent_or_private_key_file(private_key_file_path.as_str(), secret_first_human_hash_32bytes)?;
     // hash one more time because signature with private key can be decrypted with the public key
     let secret_final_human_hash_32bytes: [u8; 32] = rsa::sha2::Sha256::digest(secret_passcode_32bytes.expose_secret()).into();
     // encode into string that has ascii uppercase, lowercase, numbers and special characters: !, @, $, %, ^, &, *, +, #

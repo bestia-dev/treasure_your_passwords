@@ -1,6 +1,6 @@
 [package]
 name = "treasure_your_passwords"
-version = "0.0.56"
+version = "0.0.59"
 description = "Use SSH private key to store your passwords locally and make them strong"
 authors = ["bestia.dev"]
 homepage = "https://bestia.dev"
@@ -25,6 +25,7 @@ include = [
 # WARNING: Although dependencies in Cargo.toml look like a specific version of the crate, they are just like a caret version (^x.y.z) and actually specify 
 # the minimum version and allow automatic SemVer compatible updates up to a MAJOR increment! Always check the true version with `cargo tree`!
 [dependencies]
+cargo_auto_lib = "3.0.12"
 log = "0.4.26"
 pretty_env_logger="0.5.0"
 thiserror = "2.0.12"
@@ -34,15 +35,11 @@ reqwest={version="=0.12.12", features=["json","blocking"]}
 serde ={ version= "1.0.219", features=["std","derive"]}
 serde_json = "1.0.140"
 ssh-key = { version = "0.6.7", features = [ "rsa", "encryption","ed25519"] }
-
-# I forked this crate to add implementation for 'windows git-bash'
-# ssh-agent-client-rs = {git = "https://github.com/bestia-dev/ssh-agent-client-rs-win-git-bash.git", branch="no_sscanf_regex"}
-ssh-agent-client-rs = {path="../ssh-agent-client-rs-win-git-bash"}
+ssh_agent_client_rs_git_bash = "0.0.11"
 rsa = { version = "0.9.8", features = ["sha2"] }
 zeroize = {version="1.8.1", features=["derive"]}
 aes-gcm = "0.10.3"
 camino = "1.1.9"
-base64ct = {version = "1.7.1", features = ["alloc"] }
-inquire = "0.7.5"
+base64ct = {version = "1.7.3", features = ["alloc"] }
 secrecy = "0.10.3"
 directories = "6.0.0"

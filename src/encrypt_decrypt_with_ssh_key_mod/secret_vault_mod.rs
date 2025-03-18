@@ -76,7 +76,7 @@ pub(crate) fn show_secret_token_from_vault(file_bare_name: &str, token_name: &st
         // here we are sure that this is the equal token_name
         let plain_seed_bytes_32bytes = ende::decode64_from_string_to_32bytes(&encrypted_text_with_metadata.plain_seed_string)?;
         let private_key_file_path = camino::Utf8PathBuf::from(&encrypted_text_with_metadata.private_key_file_path);
-        let secret_passcode_32bytes: SecretBox<[u8; 32]> = ende::sign_seed_with_ssh_agent_or_private_key_file(&private_key_file_path, plain_seed_bytes_32bytes)?;
+        let secret_passcode_32bytes: SecretBox<[u8; 32]> = ende::sign_seed_with_ssh_agent_or_private_key_file(private_key_file_path.as_str(), plain_seed_bytes_32bytes)?;
 
         // decrypt the secret access token string
         let secret_access_token: SecretString = ende::decrypt_symmetric(secret_passcode_32bytes, encrypted_text_with_metadata.plain_encrypted_text.clone())?;
@@ -109,12 +109,17 @@ pub(crate) fn store_secret_token_to_vault(file_bare_name: &str, token_name: &str
     }
     println!();
     println!("{BLUE}Enter the secret token to encrypt:{RESET}");
-    let secret_access_token = secrecy::SecretString::from(inquire::Password::new("").without_confirmation().with_display_mode(inquire::PasswordDisplayMode::Masked).prompt()?);
+    let secret_access_token = secrecy::SecretString::from(
+        crate::cl::inquire::Password::new("")
+            .without_confirmation()
+            .with_display_mode(crate::cl::inquire::PasswordDisplayMode::Masked)
+            .prompt()?,
+    );
 
     // prepare the random bytes, sign it with the private key, that is the true passcode used to encrypt the secret
     let (plain_seed_bytes_32bytes, plain_seed_string) = ende::random_seed_32bytes_and_string()?;
     // first try to use the private key from ssh-agent, else use the private file with user interaction
-    let secret_passcode_32bytes: SecretBox<[u8; 32]> = ende::sign_seed_with_ssh_agent_or_private_key_file(&private_key_file_path, plain_seed_bytes_32bytes)?;
+    let secret_passcode_32bytes: SecretBox<[u8; 32]> = ende::sign_seed_with_ssh_agent_or_private_key_file(private_key_file_path.as_str(), plain_seed_bytes_32bytes)?;
     let plain_encrypted_text = ende::encrypt_symmetric(secret_passcode_32bytes, secret_access_token)?;
 
     // delete the token before writing it with the same token_name

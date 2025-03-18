@@ -84,7 +84,7 @@ pub(crate) fn get_encrypted_file_path(file_bare_name: &str) -> anyhow::Result<ca
 /// Generate a random seed.
 ///
 /// This seed will be signed with the private key and
-/// that will be the passcode for symmetric encryption.  
+/// that will be the passcode for symmetric encryption.
 /// It is not a secret.  
 /// We will need the bytes and the string representation.  
 pub(crate) fn random_seed_32bytes_and_string() -> anyhow::Result<([u8; 32], String)> {
@@ -121,7 +121,7 @@ pub(crate) fn shorten_vec_bytes_to_32bytes(vec_u8: Vec<u8>) -> anyhow::Result<[u
     Ok(secret_passcode_32bytes)
 }
 
-// region: encode and decode strings and bytes
+// region: seed encode and decode - string and bytes
 
 /// Decode base64 from string to 32bytes.
 pub(crate) fn encode64_from_32bytes_to_string(bytes_32bytes: [u8; 32]) -> anyhow::Result<String> {
@@ -155,7 +155,7 @@ pub(crate) fn decode64_from_string_to_string(string_to_decode: &str) -> anyhow::
     Ok(decoded_string)
 }
 
-// endregion: encode and decode strings and bytes
+// endregion: seed encode and decode - string and bytes
 
 // region: sign the seed with ssh-agent or private key
 
@@ -163,10 +163,12 @@ pub(crate) fn decode64_from_string_to_string(string_to_decode: &str) -> anyhow::
 ///
 /// First it tries to use the ssh-agent.  
 /// Else it uses the private key and ask the user to input the passphrase.  
+/// If the passphrase is 'empty string' it will try ssh-agent one more time.
 /// The secret signed seed will be the actual password for symmetrical encryption.  
 /// Returns secret_passcode_32bytes.  
-pub(crate) fn sign_seed_with_ssh_agent_or_private_key_file(private_key_file_path: &camino::Utf8Path, plain_seed_bytes_32bytes: [u8; 32]) -> anyhow::Result<SecretBox<[u8; 32]>> {
-    let secret_passcode_32bytes_maybe = sign_seed_with_ssh_agent(plain_seed_bytes_32bytes, private_key_file_path);
+pub(crate) fn sign_seed_with_ssh_agent_or_private_key_file(tilde_private_key_file_path: &str, plain_seed_bytes_32bytes: [u8; 32]) -> anyhow::Result<SecretBox<[u8; 32]>> {
+    let private_key_file_path = crate::cl::tilde_expand_to_home_dir_utf8(tilde_private_key_file_path)?;
+    let secret_passcode_32bytes_maybe = sign_seed_with_ssh_agent(plain_seed_bytes_32bytes, &private_key_file_path);
     let secret_passcode_32bytes: SecretBox<[u8; 32]> = if secret_passcode_32bytes_maybe.is_ok() {
         secret_passcode_32bytes_maybe?
     } else {
@@ -175,11 +177,21 @@ pub(crate) fn sign_seed_with_ssh_agent_or_private_key_file(private_key_file_path
         println!("  {YELLOW}Without ssh-agent, you will have to type the private key passphrase every time.{RESET}");
         println!("  {YELLOW}This is more secure, but inconvenient.{RESET}");
         println!("  {YELLOW}WARNING: using ssh-agent is less secure, because there is no need for user interaction.{RESET}");
-        println!("  {YELLOW}Knowing this, you can manually add the SSH private key to ssh-agent for 1 hour:{RESET}");
-        println!("{GREEN}ssh-add -t 1h {private_key_file_path}{RESET}");
+        println!("  {YELLOW}Knowing this, you can manually add the SSH private key to ssh-agent for 1 hour.{RESET}");
+        println!("  {YELLOW}You can simply open a new bash terminal and add the key there right now:{RESET}");
+        println!("{GREEN}ssh-add -t 1h {tilde_private_key_file_path}{RESET}");
         println!("  {YELLOW}Unlock the private key to decrypt the saved file.{RESET}");
 
-        sign_seed_with_private_key_file(plain_seed_bytes_32bytes, private_key_file_path)?
+        match sign_seed_with_private_key_file(plain_seed_bytes_32bytes, &private_key_file_path) {
+            Ok(secret_passcode_32bytes) => secret_passcode_32bytes,
+            Err(err) => {
+                if err.to_string() == "Passphrase empty" {
+                    // try with ssh-agent, because maybe the developer has ssh-add in another terminal right now
+                    return sign_seed_with_ssh_agent(plain_seed_bytes_32bytes, &private_key_file_path);
+                }
+                anyhow::bail!(err)
+            }
+        }
     };
     Ok(secret_passcode_32bytes)
 }
@@ -190,11 +202,12 @@ pub(crate) fn sign_seed_with_ssh_agent_or_private_key_file(private_key_file_path
 /// Returns secret_passcode_32bytes.  
 fn sign_seed_with_ssh_agent(plain_seed_bytes_32bytes: [u8; 32], private_key_file_path: &camino::Utf8Path) -> anyhow::Result<SecretBox<[u8; 32]>> {
     /// Internal function returns the public_key inside ssh-add
-    fn public_key_from_ssh_agent(client: &mut ssh_agent_client_rs::Client, fingerprint_from_file: &str) -> anyhow::Result<ssh_key::PublicKey> {
+    fn public_key_from_ssh_agent(client: &mut ssh_agent_client_rs_git_bash::Client, fingerprint_from_file: &str) -> anyhow::Result<ssh_key::PublicKey> {
         let vec_public_key = client.list_identities()?;
 
         for public_key in vec_public_key.iter() {
             let fingerprint_from_agent = public_key.key_data().fingerprint(Default::default()).to_string();
+
             if fingerprint_from_agent == fingerprint_from_file {
                 return Ok(public_key.to_owned());
             }
@@ -207,9 +220,11 @@ fn sign_seed_with_ssh_agent(plain_seed_bytes_32bytes: [u8; 32], private_key_file
     let fingerprint_from_file = public_key.fingerprint(Default::default()).to_string();
 
     println!("  {YELLOW}Connect to ssh-agent on SSH_AUTH_SOCK{RESET}");
-    let var_ssh_auth_sock = std::env::var("SSH_AUTH_SOCK").unwrap();
-    let path_ssh_auth_sock = std::path::PathBuf::from(&var_ssh_auth_sock);
-    let mut ssh_agent_client = ssh_agent_client_rs::Client::connect(&path_ssh_auth_sock)?;
+    let var_ssh_auth_sock = std::env::var("SSH_AUTH_SOCK")?;
+    let path_ssh_auth_sock = camino::Utf8Path::new(&var_ssh_auth_sock);
+    // import trait into scope
+    use ssh_agent_client_rs_git_bash::GitBash;
+    let mut ssh_agent_client = ssh_agent_client_rs_git_bash::Client::connect_to_git_bash_or_linux(path_ssh_auth_sock.as_std_path())?;
 
     let public_key = public_key_from_ssh_agent(&mut ssh_agent_client, &fingerprint_from_file)?;
 
@@ -234,8 +249,15 @@ fn sign_seed_with_private_key_file(plain_seed_bytes_32bytes: [u8; 32], private_k
         println!();
         println!("{BLUE}Enter the passphrase for the SSH private key:{RESET}");
 
-        let secret_passphrase = SecretString::from(inquire::Password::new("").without_confirmation().with_display_mode(inquire::PasswordDisplayMode::Masked).prompt()?);
-
+        let secret_passphrase = SecretString::from(
+            crate::cl::inquire::Password::new("")
+                .without_confirmation()
+                .with_display_mode(crate::cl::inquire::PasswordDisplayMode::Masked)
+                .prompt()?,
+        );
+        if secret_passphrase.expose_secret().is_empty() {
+            anyhow::bail!("Passphrase empty");
+        }
         Ok(secret_passphrase)
     }
     // the user is the only one that knows the passphrase to unlock the private key
