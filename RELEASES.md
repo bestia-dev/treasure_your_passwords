@@ -11,6 +11,8 @@ The TODO section is part of the [README.md](https://github.com/bestia-dev/treasu
 
 ## Unreleased
 
+## Version 0.0.59 (2025-03-18)
+
 - update auto
 
 ## Version 0.0.56 (2025-03-13)
