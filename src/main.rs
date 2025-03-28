@@ -93,17 +93,41 @@
 mod encrypt_decrypt_with_ssh_key_mod;
 use encrypt_decrypt_with_ssh_key_mod as ende;
 
-pub use cargo_auto_lib as cl;
+// region: Public API constants
+// ANSI colors for Linux terminal
+// https://github.com/shiena/ansicolor/blob/master/README.md
+/// ANSI color
+pub const RED: &str = "\x1b[31m";
+/// ANSI color
+#[allow(dead_code)]
+pub const GREEN: &str = "\x1b[32m";
+/// ANSI color
+pub const YELLOW: &str = "\x1b[33m";
+/// ANSI color
+#[allow(dead_code)]
+pub const BLUE: &str = "\x1b[34m";
+/// ANSI color
+pub const RESET: &str = "\x1b[0m";
+// endregion: Public API constants
 
-pub use ende::{GREEN, RED, RESET, YELLOW};
 // import trait
 use secrecy::ExposeSecret;
 
+#[derive(serde::Deserialize, serde::Serialize)]
+pub struct TreasureConfig {
+    pub treasure_private_key_file_name: String,
+}
+
+/// Application state (static) is initialized only once in the main() function.
+///
+/// And then is accessible all over the code.
+pub static TREASURE_CONFIG: std::sync::OnceLock<TreasureConfig> = std::sync::OnceLock::new();
+
 /// Entry point into the bin-executable.
 fn main() {
-    // logging is essential for every project
-    pretty_env_logger::init();
-
+    std::panic::set_hook(Box::new(panic_set_hook));
+    tracing_init();
+    treasure_config_initialize();
     // super simple argument parsing. There are crates that can parse more complex arguments.
     match std::env::args().nth(1).as_deref() {
         None | Some("--help") | Some("-h") => print_help(),
@@ -133,6 +157,84 @@ fn main() {
         _ => eprintln!("{RED}Error: Unrecognized arguments. Try `treasure --help`{RESET}"),
     }
 }
+// region: general functions
+
+/// Initialize tracing to file logs/automation_tasks_rs.log
+///
+/// The folder logs/ is in .gitignore and will not be committed.
+pub fn tracing_init() {
+    // uncomment this line to enable tracing to file
+    // let file_appender = tracing_appender::rolling::daily("logs", "treasure_your_password.log");
+
+    let offset = time::UtcOffset::current_local_offset().expect("should get local offset!");
+    let timer = tracing_subscriber::fmt::time::OffsetTime::new(
+        offset,
+        time::macros::format_description!("[hour]:[minute]:[second].[subsecond digits:6]"),
+    );
+
+    // Filter out logs from: hyper_util, reqwest
+    // A filter consists of one or more comma-separated directives
+    // target[span{field=value}]=level
+    // examples: tokio::net=info
+    // directives can be added with the RUST_LOG environment variable:
+    // export RUST_LOG=automation_tasks_rs=trace
+    // Unset the environment variable RUST_LOG
+    // unset RUST_LOG
+    let filter = tracing_subscriber::EnvFilter::from_default_env()
+        .add_directive("hyper_util=error".parse().unwrap_or_else(|e| panic!("{e}")))
+        .add_directive("reqwest=error".parse().unwrap_or_else(|e| panic!("{e}")));
+
+    tracing_subscriber::fmt()
+        .with_file(true)
+        .with_max_level(tracing::Level::DEBUG)
+        .with_timer(timer)
+        .with_line_number(true)
+        .with_ansi(false)
+        //.with_writer(file_appender)
+        .with_env_filter(filter)
+        .init();
+}
+
+/// The original Rust report of the panic is ugly for the end user
+///
+/// I use panics extensively to stop the execution. I am lazy to implement a super complicated error handling.
+/// I just need to stop the execution on every little bit of error. This utility is for developers. They will understand me.
+/// For errors I print the location. If the message contains "Exiting..." than it is a "not-error exit" and  the location is not important.
+fn panic_set_hook(panic_info: &std::panic::PanicHookInfo) {
+    let mut string_message = "".to_string();
+    if let Some(message) = panic_info.payload().downcast_ref::<String>() {
+        string_message = message.to_owned();
+    }
+    if let Some(message) = panic_info.payload().downcast_ref::<&str>() {
+        string_message.push_str(message);
+    }
+
+    tracing::debug!("{string_message}");
+    eprintln!("{string_message}");
+
+    if !string_message.contains("Exiting...") {
+        let file = panic_info.location().unwrap().file();
+        let line = panic_info.location().unwrap().line();
+        let column = panic_info.location().unwrap().column();
+        tracing::debug!("Location: {file}:{line}:{column}");
+        eprintln!("Location: {file}:{line}:{column}");
+    }
+}
+
+// endregion: general functions
+
+/// Application state (static) is initialized only once in the main() function.
+///
+/// And then is accessible all over the code.
+fn treasure_config_initialize() {
+    if TREASURE_CONFIG.get().is_some() {
+        return;
+    }
+
+    let treasure_config_json = std::fs::read_to_string("treasure_config.json").unwrap();
+    let treasure_config: TreasureConfig = serde_json::from_str(&treasure_config_json).unwrap();
+    let _ = TREASURE_CONFIG.set(treasure_config);
+}
 
 /// Print help on the terminal.
 fn print_help() {
@@ -157,43 +259,30 @@ fn print_help() {
     );
 }
 
-/// Panics if it cannot read file_bare_name.
-fn read_bare_file_name() -> String {
-    let Ok(file_bare_name) = std::fs::read_to_string("ssh_private_key_bare_file_name.cfg") else {
-        panic!("{RED}Cannot read file ssh_private_key_bare_file_name.cfg{RESET}");
-    };
-    file_bare_name
-}
-
 /// Convert to strong password.
 fn convert_to_strong_password() {
-    let file_bare_name = read_bare_file_name();
-    let strong_password = ende::generate_strong_password_mod::generate_strong_password(&file_bare_name).unwrap();
+    let strong_password = ende::generate_strong_password_mod::generate_strong_password().unwrap();
     println!("{}", strong_password);
 }
 
 /// List token names.
 fn list_token_names() {
-    let file_bare_name = read_bare_file_name();
-    let vec_string = ende::secret_vault_mod::list_tokens_from_vault(&file_bare_name).unwrap();
+    let vec_string = ende::secret_vault_mod::list_tokens_from_vault().unwrap();
     println!("{:?}", vec_string);
 }
 
 /// Store token, encrypted.
 fn store_token(token_name: &str) {
-    let file_bare_name = read_bare_file_name();
-    ende::secret_vault_mod::store_secret_token_to_vault(&file_bare_name, token_name).unwrap();
+    ende::secret_vault_mod::store_secret_token_to_vault(token_name).unwrap();
 }
 
 /// Show token, decrypted.
 fn show_token(token_name: &str) {
-    let file_bare_name = read_bare_file_name();
-    let secret_token = ende::secret_vault_mod::show_secret_token_from_vault(&file_bare_name, token_name).unwrap();
+    let secret_token = ende::secret_vault_mod::show_secret_token_from_vault(token_name).unwrap();
     println!("{}", secret_token.expose_secret());
 }
 
 /// Delete token.
 fn delete_token(token_name: &str) {
-    let file_bare_name = read_bare_file_name();
-    ende::secret_vault_mod::delete_token_from_vault(&file_bare_name, token_name).unwrap();
+    ende::secret_vault_mod::delete_token_from_vault(token_name).unwrap();
 }

@@ -1,6 +1,6 @@
 [package]
 name = "treasure_your_passwords"
-version = "0.0.59"
+version = "0.0.67"
 description = "Use SSH private key to store your passwords locally and make them strong"
 authors = ["bestia.dev"]
 homepage = "https://bestia.dev"
@@ -25,9 +25,11 @@ include = [
 # WARNING: Although dependencies in Cargo.toml look like a specific version of the crate, they are just like a caret version (^x.y.z) and actually specify 
 # the minimum version and allow automatic SemVer compatible updates up to a MAJOR increment! Always check the true version with `cargo tree`!
 [dependencies]
-cargo_auto_lib = "3.0.12"
-log = "0.4.26"
-pretty_env_logger="0.5.0"
+tracing = "0.1.41"
+tracing-subscriber = { version = "0.3.19", features = ["env-filter", "std", "fmt", "time"] }
+# tracing-appender="0.2.3"
+time = {version="0.3.39", features=["macros","local-offset"]}
+
 thiserror = "2.0.12"
 anyhow="1.0.97"
 # the last version of reqwest that builds in win-git-bah is 0.12.12
@@ -42,4 +44,5 @@ aes-gcm = "0.10.3"
 camino = "1.1.9"
 base64ct = {version = "1.7.3", features = ["alloc"] }
 secrecy = "0.10.3"
-directories = "6.0.0"
+home = "0.5.11"
+inquire="0.7.5"
