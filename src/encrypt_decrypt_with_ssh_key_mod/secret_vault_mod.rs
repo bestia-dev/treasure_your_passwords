@@ -23,7 +23,7 @@ pub(crate) fn list_tokens_from_vault() -> anyhow::Result<Vec<String>> {
 
     let encrypted_path_struct =
         ende::PathStructInSshFolder::new(format!("{private_key_file_name}.enc"))?;
-    if !std::fs::exists(encrypted_path_struct.get_full_file_path())? {
+    if !encrypted_path_struct.exists() {
         println!("  {YELLOW}Encrypted file {encrypted_path_struct} does not exist.{RESET}");
         println!("  {YELLOW}Create the vault and store a secret using the store command. {RESET}");
         anyhow::bail!("Encrypted file not found.");
@@ -62,7 +62,7 @@ pub(crate) fn show_secret_token_from_vault(token_name: &str) -> anyhow::Result<S
     println!("  {YELLOW}Check if the encrypted file exists.{RESET}");
     let encrypted_path_struct =
         ende::PathStructInSshFolder::new(format!("{private_key_file_name}.enc"))?;
-    if !std::fs::exists(encrypted_path_struct.get_full_file_path())? {
+    if !encrypted_path_struct.exists() {
         println!("  {YELLOW}Encrypted file {encrypted_path_struct} does not exist.{RESET}");
         println!("  {YELLOW}Create the vault and store a secret using the store command. {RESET}");
         anyhow::bail!("Encrypted file not found.");
@@ -92,7 +92,7 @@ pub(crate) fn show_secret_token_from_vault(token_name: &str) -> anyhow::Result<S
         let private_key_path_struct = ende::PathStructInSshFolder::new(
             encrypted_text_with_metadata.private_key_file_name.clone(),
         )?;
-        if !std::fs::exists(private_key_path_struct.get_full_file_path())? {
+        if !private_key_path_struct.exists() {
             eprintln!("{RED}Error: Private key {private_key_path_struct} does not exist. Cannot decrypt.{RESET}");
             anyhow::bail!("Private key file not found.");
         }
@@ -126,7 +126,7 @@ pub(crate) fn store_secret_token_to_vault(token_name: &str) -> anyhow::Result<()
         .to_string();
 
     let private_key_path_struct = ende::PathStructInSshFolder::new(private_key_file_name.clone())?;
-    if !std::fs::exists(private_key_path_struct.get_full_file_path())? {
+    if !private_key_path_struct.exists() {
         eprintln!("{RED}Error: Private key {private_key_path_struct} does not exist.{RESET}");
         println!("  {YELLOW}Create the private key in bash terminal:{RESET}");
         println!(
@@ -138,7 +138,7 @@ pub(crate) fn store_secret_token_to_vault(token_name: &str) -> anyhow::Result<()
     println!("  {YELLOW}Check if the encrypted file exists.{RESET}");
     let encrypted_path_struct =
         ende::PathStructInSshFolder::new(format!("{private_key_file_name}.enc"))?;
-    if std::fs::exists(encrypted_path_struct.get_full_file_path())? {
+    if encrypted_path_struct.exists() {
         println!("  {YELLOW}Open and read the encrypted file.{RESET}");
         let encrypted_text_with_metadata: String =
             ende::open_file_b64_get_string(encrypted_path_struct.get_full_file_path())?;
@@ -205,7 +205,7 @@ pub(crate) fn delete_token_from_vault(token_name: &str) -> anyhow::Result<()> {
         .to_string();
 
     let private_key_path_struct = ende::PathStructInSshFolder::new(private_key_file_name.clone())?;
-    if !std::fs::exists(private_key_path_struct.get_full_file_path())? {
+    if !private_key_path_struct.exists() {
         eprintln!("{RED}Error: Private key {private_key_path_struct} does not exist.{RESET}");
         println!("  {YELLOW}Create the private key in bash terminal:{RESET}");
         println!(
@@ -217,7 +217,7 @@ pub(crate) fn delete_token_from_vault(token_name: &str) -> anyhow::Result<()> {
     println!("  {YELLOW}Check if the encrypted file exists.{RESET}");
     let encrypted_path_struct =
         ende::PathStructInSshFolder::new(format!("{private_key_file_name}.enc"))?;
-    if !std::fs::exists(encrypted_path_struct.get_full_file_path())? {
+    if !encrypted_path_struct.exists() {
         println!("  {YELLOW}Encrypted file {encrypted_path_struct} does not exist.{RESET}");
         println!("  {YELLOW}Create the vault and store a secret using the store command. {RESET}");
         anyhow::bail!("Encrypted file not found.");

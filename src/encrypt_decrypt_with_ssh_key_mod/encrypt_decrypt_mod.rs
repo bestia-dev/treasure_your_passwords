@@ -33,6 +33,11 @@ impl PathStructInSshFolder {
     pub fn get_full_file_path(&self) -> &camino::Utf8Path {
         &self.full_file_path
     }
+
+    /// Does exist file on path
+    pub fn exists(&self) -> bool {
+        self.full_file_path.exists()
+    }
 }
 
 impl std::fmt::Display for PathStructInSshFolder {
@@ -71,7 +76,7 @@ pub(crate) fn random_seed_32bytes_and_string() -> anyhow::Result<([u8; 32], Stri
 pub(crate) fn open_file_b64_get_string(
     plain_file_b64_path: &camino::Utf8Path,
 ) -> anyhow::Result<String> {
-    if !camino::Utf8Path::new(&plain_file_b64_path).exists() {
+    if !plain_file_b64_path.exists() {
         anyhow::bail!("{RED}Error: File {plain_file_b64_path} does not exist! {RESET}");
     }
 

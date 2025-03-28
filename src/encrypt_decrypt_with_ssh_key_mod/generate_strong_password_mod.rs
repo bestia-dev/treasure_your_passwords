@@ -31,7 +31,7 @@ pub(crate) fn generate_strong_password() -> anyhow::Result<String> {
         .treasure_private_key_file_name
         .to_string();
     let private_key_path_struct = ende::PathStructInSshFolder::new(private_key_file_name.clone())?;
-    if !std::fs::exists(private_key_path_struct.get_full_file_path())? {
+    if !private_key_path_struct.exists() {
         eprintln!("{RED}Error: Private key {private_key_path_struct} does not exist.{RESET}");
         println!("  {YELLOW}Create the private key in bash terminal:{RESET}");
         println!(
