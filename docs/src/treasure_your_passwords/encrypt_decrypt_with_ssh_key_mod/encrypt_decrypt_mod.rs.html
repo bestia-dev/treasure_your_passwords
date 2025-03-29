@@ -344,39 +344,7 @@
 <a href="#343" id="343">343</a>
 <a href="#344" id="344">344</a>
 <a href="#345" id="345">345</a>
-<a href="#346" id="346">346</a>
-<a href="#347" id="347">347</a>
-<a href="#348" id="348">348</a>
-<a href="#349" id="349">349</a>
-<a href="#350" id="350">350</a>
-<a href="#351" id="351">351</a>
-<a href="#352" id="352">352</a>
-<a href="#353" id="353">353</a>
-<a href="#354" id="354">354</a>
-<a href="#355" id="355">355</a>
-<a href="#356" id="356">356</a>
-<a href="#357" id="357">357</a>
-<a href="#358" id="358">358</a>
-<a href="#359" id="359">359</a>
-<a href="#360" id="360">360</a>
-<a href="#361" id="361">361</a>
-<a href="#362" id="362">362</a>
-<a href="#363" id="363">363</a>
-<a href="#364" id="364">364</a>
-<a href="#365" id="365">365</a>
-<a href="#366" id="366">366</a>
-<a href="#367" id="367">367</a>
-<a href="#368" id="368">368</a>
-<a href="#369" id="369">369</a>
-<a href="#370" id="370">370</a>
-<a href="#371" id="371">371</a>
-<a href="#372" id="372">372</a>
-<a href="#373" id="373">373</a>
-<a href="#374" id="374">374</a>
-<a href="#375" id="375">375</a>
-<a href="#376" id="376">376</a>
-<a href="#377" id="377">377</a>
-<a href="#378" id="378">378</a></pre></div><pre class="rust"><code><span class="comment">// encrypt_decrypt_with_ssh_key_mod.rs
+<a href="#346" id="346">346</a></pre></div><pre class="rust"><code><span class="comment">// encrypt_decrypt_with_ssh_key_mod.rs
 
 </span><span class="doccomment">//! Generic functions to encrypt and decrypt secrets using the ssh private key.
 //!
@@ -451,9 +419,7 @@
 <span class="doccomment">/// Get the string from the file that is base64 encoded.
 ///
 /// It is encoded just to obscure it a little.
-</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>open_file_b64_get_string(
-    plain_file_b64_path: <span class="kw-2">&amp;</span>camino::Utf8Path,
-) -&gt; anyhow::Result&lt;String&gt; {
+</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>open_file_b64_get_string(plain_file_b64_path: <span class="kw-2">&amp;</span>camino::Utf8Path) -&gt; anyhow::Result&lt;String&gt; {
     <span class="kw">if </span>!plain_file_b64_path.exists() {
         <span class="macro">anyhow::bail!</span>(<span class="string">"{RED}Error: File {plain_file_b64_path} does not exist! {RESET}"</span>);
     }
@@ -480,9 +446,7 @@
 
 </span><span class="doccomment">/// Decode base64 from string to 32bytes.
 </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>encode64_from_32bytes_to_string(bytes_32bytes: [u8; <span class="number">32</span>]) -&gt; anyhow::Result&lt;String&gt; {
-    <span class="prelude-val">Ok</span>(&lt;base64ct::Base64 <span class="kw">as </span>base64ct::Encoding&gt;::encode_string(
-        <span class="kw-2">&amp;</span>bytes_32bytes,
-    ))
+    <span class="prelude-val">Ok</span>(&lt;base64ct::Base64 <span class="kw">as </span>base64ct::Encoding&gt;::encode_string(<span class="kw-2">&amp;</span>bytes_32bytes))
 }
 
 <span class="doccomment">/// Decode base64 from string to 32bytes.
@@ -508,9 +472,7 @@
 ///
 /// It is a silly little obfuscation just to avoid using plain text.
 </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>decode64_from_string_to_string(string_to_decode: <span class="kw-2">&amp;</span>str) -&gt; anyhow::Result&lt;String&gt; {
-    <span class="kw">let </span>decoded_string = String::from_utf8(&lt;base64ct::Base64 <span class="kw">as </span>base64ct::Encoding&gt;::decode_vec(
-        string_to_decode,
-    )<span class="question-mark">?</span>)<span class="question-mark">?</span>;
+    <span class="kw">let </span>decoded_string = String::from_utf8(&lt;base64ct::Base64 <span class="kw">as </span>base64ct::Encoding&gt;::decode_vec(string_to_decode)<span class="question-mark">?</span>)<span class="question-mark">?</span>;
     <span class="prelude-val">Ok</span>(decoded_string)
 }
 
@@ -529,15 +491,12 @@
     private_key_path_struct: <span class="kw-2">&amp;</span>PathStructInSshFolder,
     plain_seed_bytes_32bytes: [u8; <span class="number">32</span>],
 ) -&gt; anyhow::Result&lt;SecretBox&lt;[u8; <span class="number">32</span>]&gt;&gt; {
-    <span class="kw">let </span>secret_passcode_32bytes_maybe =
-        sign_seed_with_ssh_agent(plain_seed_bytes_32bytes, private_key_path_struct);
+    <span class="kw">let </span>secret_passcode_32bytes_maybe = sign_seed_with_ssh_agent(plain_seed_bytes_32bytes, private_key_path_struct);
     <span class="kw">let </span>secret_passcode_32bytes: SecretBox&lt;[u8; <span class="number">32</span>]&gt; = <span class="kw">if </span>secret_passcode_32bytes_maybe.is_ok() {
         secret_passcode_32bytes_maybe<span class="question-mark">?
     </span>} <span class="kw">else </span>{
         <span class="comment">// ask user to think about adding key into ssh-agent with ssh-add
-        </span><span class="macro">println!</span>(
-            <span class="string">"  {YELLOW}SSH key for encrypted secret_token is not found in the ssh-agent.{RESET}"
-        </span>);
+        </span><span class="macro">println!</span>(<span class="string">"  {YELLOW}SSH key for encrypted secret_token is not found in the ssh-agent.{RESET}"</span>);
         <span class="macro">println!</span>(<span class="string">"  {YELLOW}Without ssh-agent, you will have to type the private key passphrase every time.{RESET}"</span>);
         <span class="macro">println!</span>(<span class="string">"  {YELLOW}This is more secure, but inconvenient.{RESET}"</span>);
         <span class="macro">println!</span>(<span class="string">"  {YELLOW}WARNING: using ssh-agent is less secure, because there is no need for user interaction.{RESET}"</span>);
@@ -546,18 +505,12 @@
         <span class="macro">println!</span>(<span class="string">"{GREEN}ssh-add -t 1h {private_key_path_struct}{RESET}"</span>);
         <span class="macro">println!</span>(<span class="string">"  {YELLOW}Unlock the private key to decrypt the saved file.{RESET}"</span>);
 
-        <span class="kw">match </span>sign_seed_with_private_key_file(
-            plain_seed_bytes_32bytes,
-            private_key_path_struct.get_full_file_path(),
-        ) {
+        <span class="kw">match </span>sign_seed_with_private_key_file(plain_seed_bytes_32bytes, private_key_path_struct.get_full_file_path()) {
             <span class="prelude-val">Ok</span>(secret_passcode_32bytes) =&gt; secret_passcode_32bytes,
             <span class="prelude-val">Err</span>(err) =&gt; {
                 <span class="kw">if </span>err.to_string() == <span class="string">"Passphrase empty" </span>{
                     <span class="comment">// try with ssh-agent, because maybe the developer has ssh-add in another terminal right now
-                    </span><span class="kw">return </span>sign_seed_with_ssh_agent(
-                        plain_seed_bytes_32bytes,
-                        private_key_path_struct,
-                    );
+                    </span><span class="kw">return </span>sign_seed_with_ssh_agent(plain_seed_bytes_32bytes, private_key_path_struct);
                 }
                 <span class="macro">anyhow::bail!</span>(err)
             }
@@ -582,10 +535,7 @@
         <span class="kw">let </span>vec_public_key = client.list_identities()<span class="question-mark">?</span>;
 
         <span class="kw">for </span>public_key <span class="kw">in </span>vec_public_key.iter() {
-            <span class="kw">let </span>fingerprint_from_agent = public_key
-                .key_data()
-                .fingerprint(Default::default())
-                .to_string();
+            <span class="kw">let </span>fingerprint_from_agent = public_key.key_data().fingerprint(Default::default()).to_string();
 
             <span class="kw">if </span>fingerprint_from_agent == fingerprint_from_file {
                 <span class="kw">return </span><span class="prelude-val">Ok</span>(public_key.to_owned());
@@ -593,11 +543,8 @@
         }
         <span class="macro">anyhow::bail!</span>(<span class="string">"This private key is not added to ssh-agent."</span>)
     }
-    <span class="kw">let </span>public_key_path_struct =
-        PathStructInSshFolder::new(<span class="macro">format!</span>(<span class="string">"{}.pub"</span>, private_key_path_struct.get_file_name()))<span class="question-mark">?</span>;
-    <span class="kw">let </span>public_key = ssh_key::PublicKey::read_openssh_file(
-        public_key_path_struct.get_full_file_path().as_std_path(),
-    )<span class="question-mark">?</span>;
+    <span class="kw">let </span>public_key_path_struct = PathStructInSshFolder::new(<span class="macro">format!</span>(<span class="string">"{}.pub"</span>, private_key_path_struct.get_file_name()))<span class="question-mark">?</span>;
+    <span class="kw">let </span>public_key = ssh_key::PublicKey::read_openssh_file(public_key_path_struct.get_full_file_path().as_std_path())<span class="question-mark">?</span>;
     <span class="kw">let </span>fingerprint_from_file = public_key.fingerprint(Default::default()).to_string();
 
     <span class="macro">println!</span>(<span class="string">"  {YELLOW}Connect to ssh-agent on SSH_AUTH_SOCK{RESET}"</span>);
@@ -605,20 +552,16 @@
     <span class="kw">let </span>path_ssh_auth_sock = camino::Utf8Path::new(<span class="kw-2">&amp;</span>var_ssh_auth_sock);
     <span class="comment">// import trait into scope
     </span><span class="kw">use </span>ssh_agent_client_rs_git_bash::GitBash;
-    <span class="kw">let </span><span class="kw-2">mut </span>ssh_agent_client = ssh_agent_client_rs_git_bash::Client::connect_to_git_bash_or_linux(
-        path_ssh_auth_sock.as_std_path(),
-    )<span class="question-mark">?</span>;
+    <span class="kw">let </span><span class="kw-2">mut </span>ssh_agent_client = ssh_agent_client_rs_git_bash::Client::connect_to_git_bash_or_linux(path_ssh_auth_sock.as_std_path())<span class="question-mark">?</span>;
 
     <span class="kw">let </span>public_key = public_key_from_ssh_agent(<span class="kw-2">&amp;mut </span>ssh_agent_client, <span class="kw-2">&amp;</span>fingerprint_from_file)<span class="question-mark">?</span>;
 
     <span class="kw">let </span><span class="kw-2">mut </span>secret_passcode_32bytes = SecretBox::new(Box::new([<span class="number">0u8</span>; <span class="number">32</span>]));
     <span class="comment">// sign with public key from ssh-agent
     // only the data part of the signature goes into as_bytes.
-    </span>secret_passcode_32bytes.expose_secret_mut().copy_from_slice(
-        <span class="kw-2">&amp;</span>ssh_agent_client
-            .sign(<span class="kw-2">&amp;</span>public_key, <span class="kw-2">&amp;</span>plain_seed_bytes_32bytes)<span class="question-mark">?
-            </span>.as_bytes()[<span class="number">0</span>..<span class="number">32</span>],
-    );
+    </span>secret_passcode_32bytes
+        .expose_secret_mut()
+        .copy_from_slice(<span class="kw-2">&amp;</span>ssh_agent_client.sign(<span class="kw-2">&amp;</span>public_key, <span class="kw-2">&amp;</span>plain_seed_bytes_32bytes)<span class="question-mark">?</span>.as_bytes()[<span class="number">0</span>..<span class="number">32</span>]);
 
     <span class="prelude-val">Ok</span>(secret_passcode_32bytes)
 }
@@ -665,10 +608,9 @@
     <span class="kw">let </span><span class="kw-2">mut </span>secret_passcode_32bytes = SecretBox::new(Box::new([<span class="number">0u8</span>; <span class="number">32</span>]));
     <span class="comment">// only the data part of the signature goes into as_bytes.
     // only the first 32 bytes
-    </span>secret_passcode_32bytes.expose_secret_mut().copy_from_slice(
-        <span class="kw-2">&amp;</span>rsa::signature::SignerMut::try_sign(<span class="kw-2">&amp;mut </span>secret_private_key, <span class="kw-2">&amp;</span>plain_seed_bytes_32bytes)<span class="question-mark">?
-            </span>.as_bytes()[<span class="number">0</span>..<span class="number">32</span>],
-    );
+    </span>secret_passcode_32bytes
+        .expose_secret_mut()
+        .copy_from_slice(<span class="kw-2">&amp;</span>rsa::signature::SignerMut::try_sign(<span class="kw-2">&amp;mut </span>secret_private_key, <span class="kw-2">&amp;</span>plain_seed_bytes_32bytes)<span class="question-mark">?</span>.as_bytes()[<span class="number">0</span>..<span class="number">32</span>]);
 
     <span class="prelude-val">Ok</span>(secret_passcode_32bytes)
 }
@@ -686,13 +628,10 @@
     secret_string_to_encrypt: SecretString,
 ) -&gt; anyhow::Result&lt;String&gt; {
     <span class="comment">// nonce is salt
-    </span><span class="kw">let </span>nonce =
-        &lt;aes_gcm::Aes256Gcm <span class="kw">as </span>aes_gcm::AeadCore&gt;::generate_nonce(<span class="kw-2">&amp;mut </span>aes_gcm::aead::OsRng);
+    </span><span class="kw">let </span>nonce = &lt;aes_gcm::Aes256Gcm <span class="kw">as </span>aes_gcm::AeadCore&gt;::generate_nonce(<span class="kw-2">&amp;mut </span>aes_gcm::aead::OsRng);
     <span class="kw">let </span><span class="prelude-val">Ok</span>(cipher_text_encrypted) = aes_gcm::aead::Aead::encrypt(
         <span class="comment">// cipher_secret is the true passcode, here I don't know how to use secrecy, because the type has not the trait Zeroize
-        </span><span class="kw-2">&amp;</span>&lt;aes_gcm::Aes256Gcm <span class="kw">as </span>aes_gcm::KeyInit&gt;::new(
-            secret_passcode_32bytes.expose_secret().into(),
-        ),
+        </span><span class="kw-2">&amp;</span>&lt;aes_gcm::Aes256Gcm <span class="kw">as </span>aes_gcm::KeyInit&gt;::new(secret_passcode_32bytes.expose_secret().into()),
         <span class="kw-2">&amp;</span>nonce,
         secret_string_to_encrypt.expose_secret().as_bytes(),
     ) <span class="kw">else </span>{
@@ -715,17 +654,14 @@
     secret_passcode_32bytes: SecretBox&lt;[u8; <span class="number">32</span>]&gt;,
     plain_encrypted_string: String,
 ) -&gt; anyhow::Result&lt;SecretString&gt; {
-    <span class="kw">let </span>encrypted_bytes =
-        &lt;base64ct::Base64 <span class="kw">as </span>base64ct::Encoding&gt;::decode_vec(<span class="kw-2">&amp;</span>plain_encrypted_string)<span class="question-mark">?</span>;
+    <span class="kw">let </span>encrypted_bytes = &lt;base64ct::Base64 <span class="kw">as </span>base64ct::Encoding&gt;::decode_vec(<span class="kw-2">&amp;</span>plain_encrypted_string)<span class="question-mark">?</span>;
     <span class="comment">// nonce is salt
     </span><span class="kw">let </span>nonce = rsa::sha2::digest::generic_array::GenericArray::from_slice(<span class="kw-2">&amp;</span>encrypted_bytes[..<span class="number">12</span>]);
     <span class="kw">let </span>cipher_text = <span class="kw-2">&amp;</span>encrypted_bytes[<span class="number">12</span>..];
 
     <span class="kw">let </span><span class="prelude-val">Ok</span>(secret_decrypted_bytes) = aes_gcm::aead::Aead::decrypt(
         <span class="comment">// cipher_secret is the true passcode, here I don't know how to use secrecy, because the type has not the trait Zeroize
-        </span><span class="kw-2">&amp;</span>&lt;aes_gcm::Aes256Gcm <span class="kw">as </span>aes_gcm::KeyInit&gt;::new(
-            secret_passcode_32bytes.expose_secret().into(),
-        ),
+        </span><span class="kw-2">&amp;</span>&lt;aes_gcm::Aes256Gcm <span class="kw">as </span>aes_gcm::KeyInit&gt;::new(secret_passcode_32bytes.expose_secret().into()),
         nonce,
         cipher_text,
     ) <span class="kw">else </span>{
