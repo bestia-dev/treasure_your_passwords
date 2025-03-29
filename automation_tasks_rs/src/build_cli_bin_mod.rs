@@ -31,14 +31,16 @@ pub fn task_release() -> cl::CargoToml {
     cl::run_shell_command_static("cargo clippy --no-deps").unwrap_or_else(|e| panic!("{e}"));
     cl::run_shell_command_static("cargo build --release").unwrap_or_else(|e| panic!("{e}"));
 
+    // strip only for binary executables
     #[cfg(target_family = "unix")]
-    cl::ShellCommandLimitedDoubleQuotesSanitizer::new(r#"strip "target/release/{package_name}" "#)
-        .unwrap_or_else(|e| panic!("{e}"))
-        .arg("{package_name}", &cargo_toml.package_name())
-        .unwrap_or_else(|e| panic!("{e}"))
-        .run()
-        .unwrap_or_else(|e| panic!("{e}"));
-
+    if std::fs::exists("target/release/{package_name}").unwrap() {
+        cl::ShellCommandLimitedDoubleQuotesSanitizer::new(r#"strip "target/release/{package_name}" "#)
+            .unwrap_or_else(|e| panic!("{e}"))
+            .arg("{package_name}", &cargo_toml.package_name())
+            .unwrap_or_else(|e| panic!("{e}"))
+            .run()
+            .unwrap_or_else(|e| panic!("{e}"));
+    }
     cargo_toml
 }
 
@@ -59,8 +61,8 @@ pub fn task_publish_to_crates_io() -> String {
   {YELLOW}After `cargo auto publish_to_crates_io`, check in browser{RESET}
 {GREEN}https://crates.io/crates/{package_name}{RESET}
   {YELLOW}Install the crate with{RESET}
-  {YELLOW}Add the dependency to your Rust project and check how it works.{RESET}
-{GREEN}{package_name} = "{version}"{RESET}
+{GREEN}cargo install {package_name}{RESET}
+  {YELLOW}and check how it works.{RESET}
 "#
     );
     tag_name_version
