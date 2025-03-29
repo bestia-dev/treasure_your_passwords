@@ -4,7 +4,7 @@
 //! # treasure_your_passwords
 //!
 //! **Use SSH private key to store your passwords locally and make them strong**  
-//! ***version: 0.0.68 date: 2025-03-29 author: [bestia.dev](https://bestia.dev) repository: [GitHub](https://github.com/bestia-dev/treasure_your_passwords)***
+//! ***version: 0.0.70 date: 2025-03-29 author: [bestia.dev](https://bestia.dev) repository: [GitHub](https://github.com/bestia-dev/treasure_your_passwords)***
 //!
 //!  ![maintained](https://img.shields.io/badge/maintained-green)
 //!  ![ready-for-use](https://img.shields.io/badge/ready_for_use-green)
@@ -14,7 +14,7 @@
 //!  ![Rust](https://github.com/bestia-dev/treasure_your_passwords/workflows/rust_fmt_auto_build_test/badge.svg)
 //!  ![treasure_your_passwords](https://bestia.dev/webpage_hit_counter/get_svg_image/779107454.svg)
 //!
-//! [![Lines in Rust code](https://img.shields.io/badge/Lines_in_Rust-747-green.svg)](https://github.com/bestia-dev/treasure_your_passwords/)
+//! [![Lines in Rust code](https://img.shields.io/badge/Lines_in_Rust-655-green.svg)](https://github.com/bestia-dev/treasure_your_passwords/)
 //! [![Lines in Doc comments](https://img.shields.io/badge/Lines_in_Doc_comments-198-blue.svg)](https://github.com/bestia-dev/treasure_your_passwords/)
 //! [![Lines in Comments](https://img.shields.io/badge/Lines_in_comments-75-purple.svg)](https://github.com/bestia-dev/treasure_your_passwords/)
 //! [![Lines in examples](https://img.shields.io/badge/Lines_in_examples-0-yellow.svg)](https://github.com/bestia-dev/treasure_your_passwords/)
