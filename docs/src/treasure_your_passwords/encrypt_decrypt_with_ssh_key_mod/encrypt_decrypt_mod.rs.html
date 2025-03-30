@@ -420,7 +420,7 @@
 ///
 /// It is encoded just to obscure it a little.
 </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>open_file_b64_get_string(plain_file_b64_path: <span class="kw-2">&amp;</span>camino::Utf8Path) -&gt; anyhow::Result&lt;String&gt; {
-    <span class="kw">if </span>!plain_file_b64_path.exists() {
+    <span class="kw">if </span>!camino::Utf8Path::new(<span class="kw-2">&amp;</span>plain_file_b64_path).exists() {
         <span class="macro">anyhow::bail!</span>(<span class="string">"{RED}Error: File {plain_file_b64_path} does not exist! {RESET}"</span>);
     }
 
