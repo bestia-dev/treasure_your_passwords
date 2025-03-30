@@ -74,7 +74,7 @@ pub(crate) fn random_seed_32bytes_and_string() -> anyhow::Result<([u8; 32], Stri
 ///
 /// It is encoded just to obscure it a little.
 pub(crate) fn open_file_b64_get_string(plain_file_b64_path: &camino::Utf8Path) -> anyhow::Result<String> {
-    if !plain_file_b64_path.exists() {
+    if !camino::Utf8Path::new(&plain_file_b64_path).exists() {
         anyhow::bail!("{RED}Error: File {plain_file_b64_path} does not exist! {RESET}");
     }
 
