@@ -101,7 +101,7 @@ pub(crate) fn store_secret_token_to_vault(token_name: &str) -> anyhow::Result<()
     if !private_key_path_struct.exists() {
         eprintln!("{RED}Error: Private key {private_key_path_struct} does not exist.{RESET}");
         println!("  {YELLOW}Create the private key in bash terminal:{RESET}");
-        println!(r#"{GREEN}ssh-keygen -t ed25519 -f "{private_key_path_struct}" -C "vault for secret tokens"{RESET}"#);
+        println!(r#"{GREEN}ssh-keygen -t ed25519 -f {private_key_path_struct} -C "vault for secret tokens"{RESET}"#);
         anyhow::bail!("Private key file not found.");
     }
 
@@ -167,7 +167,7 @@ pub(crate) fn delete_token_from_vault(token_name: &str) -> anyhow::Result<()> {
     if !private_key_path_struct.exists() {
         eprintln!("{RED}Error: Private key {private_key_path_struct} does not exist.{RESET}");
         println!("  {YELLOW}Create the private key in bash terminal:{RESET}");
-        println!(r#"{GREEN}ssh-keygen -t ed25519 -f "{private_key_path_struct}" -C "vault for secret tokens"{RESET}"#);
+        println!(r#"{GREEN}ssh-keygen -t ed25519 -f {private_key_path_struct} -C "vault for secret tokens"{RESET}"#);
         anyhow::bail!("Private key file not found.");
     }
 

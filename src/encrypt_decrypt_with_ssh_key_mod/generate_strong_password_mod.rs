@@ -30,7 +30,7 @@ pub(crate) fn generate_strong_password() -> anyhow::Result<String> {
     if !private_key_path_struct.exists() {
         eprintln!("{RED}Error: Private key {private_key_path_struct} does not exist.{RESET}");
         println!("  {YELLOW}Create the private key in bash terminal:{RESET}");
-        println!(r#"{GREEN}ssh-keygen -t ed25519 -f "{private_key_path_struct}" -C "strong password"{RESET}"#);
+        println!(r#"{GREEN}ssh-keygen -t ed25519 -f {private_key_path_struct} -C "strong password"{RESET}"#);
         anyhow::bail!("Private key file not found.");
     }
     println!("  {YELLOW}This function will convert your human password into a digital form hopefully harder to guess. {RESET}");

@@ -35,7 +35,7 @@ My projects on GitHub are more like a tutorial than a finished product: [bestia-
 Create the SSH key and protect it with a passcode.
 
 ```bash
-ssh-keygen -t ed25519 -f "vault_ssh_1" -C "vault for secret tokens"
+ssh-keygen -t ed25519 -f vault_ssh_1 -C "vault for secret tokens"
 ```
 
 Save the file `ssh_private_key_bare_file_name.cfg` with the content `vault_ssh_1`.  
