@@ -244,7 +244,11 @@ fn print_help() {
     Please, treasure your passwords!
     This small CLI can store your passwords encrypted with your SSH private key.
     With the same private key it can convert a simple human readable seed to a strong password.
-    Write the ssh private key bare file name into the file 'ssh_private_key_bare_file_name.cfg'. {RESET}
+    Write the ssh private key file name into the file 'treasure_config.json' like. 
+{{
+    "treasure_private_key_file_name":"vault_ssh_1"
+}}
+    {RESET}
 
 {GREEN}treasure --help{RESET}
 {GREEN}treasure strong {RESET}

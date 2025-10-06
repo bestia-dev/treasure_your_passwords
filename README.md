@@ -38,7 +38,14 @@ Create the SSH key and protect it with a passcode.
 ssh-keygen -t ed25519 -f vault_ssh_1 -C "vault for secret tokens"
 ```
 
-Save the file `ssh_private_key_bare_file_name.cfg` with the content `vault_ssh_1`.  
+Save the file `treasure_config.json` with the content:
+
+```json
+{
+"treasure_private_key_file_name":"vault_ssh_1"
+}
+```
+
 The program `treasure` will read this file to find the SSH private key in the `~/.ssh` folder.
 
 ## Use SSH private key to store passwords
