@@ -13,7 +13,7 @@ use rsa::sha2::Digest;
 use secrecy::{ExposeSecret, SecretBox};
 
 use super::encrypt_decrypt_mod as ende;
-use crate::{BLUE, GREEN, RED, RESET, YELLOW};
+use crate::{ResultLogError, BLUE, GREEN, RED, RESET, YELLOW};
 
 /// Generate strong password.
 ///
@@ -26,7 +26,7 @@ use crate::{BLUE, GREEN, RED, RESET, YELLOW};
 pub(crate) fn generate_strong_password() -> anyhow::Result<String> {
     println!("  {YELLOW}Check if the ssh private key exists.{RESET}");
     let private_key_file_name = crate::TREASURE_CONFIG.get().unwrap().treasure_private_key_file_name.to_string();
-    let private_key_path_struct = ende::PathStructInSshFolder::new(private_key_file_name.clone())?;
+    let private_key_path_struct = ende::PathStructInSshFolder::new(private_key_file_name.clone()).log()?;
     if !private_key_path_struct.exists() {
         eprintln!("{RED}Error: Private key {private_key_path_struct} does not exist.{RESET}");
         println!("  {YELLOW}Create the private key in bash terminal:{RESET}");
@@ -40,12 +40,13 @@ pub(crate) fn generate_strong_password() -> anyhow::Result<String> {
         inquire::Password::new("")
             .without_confirmation()
             .with_display_mode(inquire::PasswordDisplayMode::Masked)
-            .prompt()?,
+            .prompt()
+            .log()?,
     );
     let secret_first_human_hash_32bytes: [u8; 32] = rsa::sha2::Sha256::digest(secret_human_password.expose_secret().as_bytes()).into();
     // first try to use the private key from ssh-agent, else use the private file with user interaction
     let secret_passcode_32bytes: SecretBox<[u8; 32]> =
-        ende::sign_seed_with_ssh_agent_or_private_key_file(&private_key_path_struct, secret_first_human_hash_32bytes)?;
+        ende::sign_seed_with_ssh_agent_or_private_key_file(&private_key_path_struct, secret_first_human_hash_32bytes).log()?;
     // hash one more time because signature with private key can be decrypted with the public key
     let secret_final_human_hash_32bytes: [u8; 32] = rsa::sha2::Sha256::digest(secret_passcode_32bytes.expose_secret()).into();
     // encode into string that has ascii uppercase, lowercase, numbers and special characters: !, @, $, %, ^, &, *, +, #

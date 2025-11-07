@@ -4,7 +4,7 @@
 //! # treasure_your_passwords
 //!
 //! **Use SSH private key to store your passwords locally and make them strong**  
-//! ***version: 0.0.75 date: 2025-10-06 author: [bestia.dev](https://bestia.dev) repository: [GitHub](https://github.com/bestia-dev/treasure_your_passwords)***
+//! ***version: 0.0.81 date: 2025-11-07 author: [bestia.dev](https://bestia.dev) repository: [GitHub](https://github.com/bestia-dev/treasure_your_passwords)***
 //!
 //!  ![maintained](https://img.shields.io/badge/maintained-green)
 //!  ![ready-for-use](https://img.shields.io/badge/ready_for_use-green)
@@ -14,9 +14,9 @@
 //!  ![Rust](https://github.com/bestia-dev/treasure_your_passwords/workflows/rust_fmt_auto_build_test/badge.svg)
 //!  ![treasure_your_passwords](https://bestia.dev/webpage_hit_counter/get_svg_image/779107454.svg)
 //!
-//! [![Lines in Rust code](https://img.shields.io/badge/Lines_in_Rust-655-green.svg)](https://github.com/bestia-dev/treasure_your_passwords/)
-//! [![Lines in Doc comments](https://img.shields.io/badge/Lines_in_Doc_comments-200-blue.svg)](https://github.com/bestia-dev/treasure_your_passwords/)
-//! [![Lines in Comments](https://img.shields.io/badge/Lines_in_comments-75-purple.svg)](https://github.com/bestia-dev/treasure_your_passwords/)
+//! [![Lines in Rust code](https://img.shields.io/badge/Lines_in_Rust-678-green.svg)](https://github.com/bestia-dev/treasure_your_passwords/)
+//! [![Lines in Doc comments](https://img.shields.io/badge/Lines_in_Doc_comments-198-blue.svg)](https://github.com/bestia-dev/treasure_your_passwords/)
+//! [![Lines in Comments](https://img.shields.io/badge/Lines_in_comments-74-purple.svg)](https://github.com/bestia-dev/treasure_your_passwords/)
 //! [![Lines in examples](https://img.shields.io/badge/Lines_in_examples-0-yellow.svg)](https://github.com/bestia-dev/treasure_your_passwords/)
 //! [![Lines in tests](https://img.shields.io/badge/Lines_in_tests-0-orange.svg)](https://github.com/bestia-dev/treasure_your_passwords/)
 //!
@@ -31,7 +31,14 @@
 //! ssh-keygen -t ed25519 -f vault_ssh_1 -C "vault for secret tokens"
 //! ```
 //!
-//! Save the file `ssh_private_key_bare_file_name.cfg` with the content `vault_ssh_1`.  
+//! Save the file `treasure_config.json` with the content:
+//!
+//! ```json
+//! {
+//! "treasure_private_key_file_name":"vault_ssh_1"
+//! }
+//! ```
+//!
 //! The program `treasure` will read this file to find the SSH private key in the `~/.ssh` folder.
 //!
 //! ## Use SSH private key to store passwords
@@ -123,10 +130,21 @@ pub struct TreasureConfig {
 /// And then is accessible all over the code.
 pub static TREASURE_CONFIG: std::sync::OnceLock<TreasureConfig> = std::sync::OnceLock::new();
 
-/// Entry point into the bin-executable.
-fn main() {
-    std::panic::set_hook(Box::new(panic_set_hook));
-    tracing_init();
+/// The main() function returns ExitCode.
+fn main() -> std::process::ExitCode {
+    match main_returns_anyhow_result() {
+        Err(err) => {
+            eprintln!("{}", err);
+            // eprintln!("Exit program with failure exit code 1");
+            std::process::ExitCode::FAILURE
+        }
+        Ok(()) => std::process::ExitCode::SUCCESS,
+    }
+}
+
+/// The main_returns_anyhow_result() function returns anyhow::Result.
+fn main_returns_anyhow_result() -> anyhow::Result<()> {
+    tracing_init()?;
     treasure_config_initialize();
     // super simple argument parsing. There are crates that can parse more complex arguments.
     match std::env::args().nth(1).as_deref() {
@@ -156,68 +174,63 @@ fn main() {
         },
         _ => eprintln!("{RED}Error: Unrecognized arguments. Try `treasure --help`{RESET}"),
     }
+    Ok(())
 }
 // region: general functions
 
-/// Initialize tracing to file logs/automation_tasks_rs.log
+/// Initialize tracing to file logs/treasure_your_passwords.log.  \
 ///
-/// The folder logs/ is in .gitignore and will not be committed.
-pub fn tracing_init() {
-    // uncomment this line to enable tracing to file
-    // let file_appender = tracing_appender::rolling::daily("logs", "treasure_your_password.log");
-
-    let offset = time::UtcOffset::current_local_offset().expect("should get local offset!");
+/// The folder logs/ is in .gitignore and will not be committed.  
+pub fn tracing_init() -> anyhow::Result<()> {
+    let offset = time::UtcOffset::current_local_offset()?;
     let timer = tracing_subscriber::fmt::time::OffsetTime::new(
         offset,
         time::macros::format_description!("[hour]:[minute]:[second].[subsecond digits:6]"),
     );
 
-    // Filter out logs from: hyper_util, reqwest
     // A filter consists of one or more comma-separated directives
     // target[span{field=value}]=level
-    // examples: tokio::net=info
-    // directives can be added with the RUST_LOG environment variable:
-    // export RUST_LOG=automation_tasks_rs=trace
-    // Unset the environment variable RUST_LOG
-    // unset RUST_LOG
-    let filter = tracing_subscriber::EnvFilter::from_default_env()
-        .add_directive("hyper_util=error".parse().unwrap_or_else(|e| panic!("{e}")))
-        .add_directive("reqwest=error".parse().unwrap_or_else(|e| panic!("{e}")));
+    // Levels order: 1. ERROR, 2. WARN, 3. INFO, 4. DEBUG, 5. TRACE
+    // ERROR level is always logged.
+    // Add filters to TREASURE_YOUR_PASSWORDS_LOG environment variable for a single execution:
+    // ```bash
+    // TREASURE_YOUR_PASSWORDS_LOG="debug,hyper_util=info,reqwest=info" ./{package_name}
+    // ```
+    let filter = tracing_subscriber::EnvFilter::from_env("TREASURE_YOUR_PASSWORDS_LOG");
 
-    tracing_subscriber::fmt()
+    let builder = tracing_subscriber::fmt()
         .with_file(true)
-        .with_max_level(tracing::Level::DEBUG)
         .with_timer(timer)
         .with_line_number(true)
         .with_ansi(false)
-        //.with_writer(file_appender)
-        .with_env_filter(filter)
-        .init();
+        .with_env_filter(filter);
+    if std::env::var("TREASURE_YOUR_PASSWORDS_LOG").is_ok() {
+        // if TREASURE_YOUR_PASSWORDS_LOG exists than enable tracing to file
+        let file_appender = tracing_appender::rolling::RollingFileAppender::builder()
+            .rotation(tracing_appender::rolling::Rotation::DAILY)
+            .filename_prefix("treasure_your_passwords")
+            .filename_suffix("log")
+            .build("logs")
+            .expect("initializing rolling file appender failed");
+        builder.with_writer(file_appender).init();
+    } else {
+        builder.init();
+    };
+
+    Ok(())
 }
 
-/// The original Rust report of the panic is ugly for the end user
-///
-/// I use panics extensively to stop the execution. I am lazy to implement a super complicated error handling.
-/// I just need to stop the execution on every little bit of error. This utility is for developers. They will understand me.
-/// For errors I print the location. If the message contains "Exiting..." than it is a "not-error exit" and  the location is not important.
-fn panic_set_hook(panic_info: &std::panic::PanicHookInfo) {
-    let mut string_message = "".to_string();
-    if let Some(message) = panic_info.payload().downcast_ref::<String>() {
-        string_message = message.to_owned();
-    }
-    if let Some(message) = panic_info.payload().downcast_ref::<&str>() {
-        string_message.push_str(message);
-    }
+/// Trait to log the error from Result before propagation with ?.
+pub trait ResultLogError<T, E>: Sized {
+    fn log(self) -> Self;
+}
 
-    tracing::debug!("{string_message}");
-    eprintln!("{string_message}");
-
-    if !string_message.contains("Exiting...") {
-        let file = panic_info.location().unwrap().file();
-        let line = panic_info.location().unwrap().line();
-        let column = panic_info.location().unwrap().column();
-        tracing::debug!("Location: {file}:{line}:{column}");
-        eprintln!("Location: {file}:{line}:{column}");
+/// Implements LogError for anyhow::Result.
+impl<T, E: std::fmt::Debug> ResultLogError<T, E> for core::result::Result<T, E> {
+    #[inline(always)]
+    #[track_caller]
+    fn log(self) -> Self {
+        self.inspect_err(|err| tracing::error!(?err))
     }
 }
 

@@ -1,6 +1,6 @@
 [package]
 name = "treasure_your_passwords"
-version = "0.0.75"
+version = "0.0.81"
 description = "Use SSH private key to store your passwords locally and make them strong"
 authors = ["bestia.dev"]
 homepage = "https://bestia.dev"
@@ -27,7 +27,7 @@ include = [
 [dependencies]
 tracing = "0.1.41"
 tracing-subscriber = { version = "0.3.19", features = ["env-filter", "std", "fmt", "time"] }
-# tracing-appender="0.2.3"
+tracing-appender="0.2.3"
 time = {version="0.3.39", features=["macros","local-offset"]}
 
 thiserror = "2.0.12"
@@ -37,7 +37,7 @@ reqwest={version="=0.12.12", features=["json","blocking"]}
 serde ={ version= "1.0.219", features=["std","derive"]}
 serde_json = "1.0.140"
 ssh-key = { version = "0.6.7", features = [ "rsa", "encryption","ed25519"] }
-ssh_agent_client_rs_git_bash = "0.0.11"
+ssh_agent_client_rs_git_bash = "0.0.19"
 rsa = { version = "0.9.8", features = ["sha2"] }
 zeroize = {version="1.8.1", features=["derive"]}
 aes-gcm = "0.10.3"
@@ -45,4 +45,4 @@ camino = "1.1.9"
 base64ct = {version = "1.7.3", features = ["alloc"] }
 secrecy = "0.10.3"
 home = "0.5.11"
-inquire="0.7.5"
+inquire="0.9.1"

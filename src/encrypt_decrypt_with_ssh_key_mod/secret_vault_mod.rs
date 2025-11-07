@@ -7,7 +7,7 @@
 use secrecy::{SecretBox, SecretString};
 
 use super::encrypt_decrypt_mod as ende;
-use crate::{BLUE, GREEN, RED, RESET, YELLOW};
+use crate::{ResultLogError, BLUE, GREEN, RED, RESET, YELLOW};
 
 /// List token names from vault.
 ///
@@ -17,16 +17,17 @@ pub(crate) fn list_tokens_from_vault() -> anyhow::Result<Vec<String>> {
     println!("  {YELLOW}Check if the encrypted file exists.{RESET}");
     let private_key_file_name = crate::TREASURE_CONFIG.get().unwrap().treasure_private_key_file_name.to_string();
 
-    let encrypted_path_struct = ende::PathStructInSshFolder::new(format!("{private_key_file_name}.enc"))?;
+    let encrypted_path_struct = ende::PathStructInSshFolder::new(format!("{private_key_file_name}.enc")).log()?;
     if !encrypted_path_struct.exists() {
         println!("  {YELLOW}Encrypted file {encrypted_path_struct} does not exist.{RESET}");
         println!("  {YELLOW}Create the vault and store a secret using the store command. {RESET}");
         anyhow::bail!("Encrypted file not found.");
     }
     println!("  {YELLOW}Open and read the encrypted file.{RESET}");
-    let encrypted_text_with_metadata: String = ende::open_file_b64_get_string(encrypted_path_struct.get_full_file_path())?;
+    let encrypted_text_with_metadata: String = ende::open_file_b64_get_string(encrypted_path_struct.get_full_file_path()).log()?;
     // parse json
-    let vec_encrypted_text_with_metadata: Vec<ende::EncryptedTextWithMetadata> = serde_json::from_str(&encrypted_text_with_metadata)?;
+    let vec_encrypted_text_with_metadata: Vec<ende::EncryptedTextWithMetadata> =
+        serde_json::from_str(&encrypted_text_with_metadata).log()?;
     println!("  {YELLOW}Decrypt the file with ssh-agent or private key.{RESET}");
     for encrypted_text_with_metadata in vec_encrypted_text_with_metadata.iter() {
         let iter_token_name = if let Some(iter_token_name) = encrypted_text_with_metadata.token_name.as_ref() {
@@ -48,7 +49,7 @@ pub(crate) fn show_secret_token_from_vault(token_name: &str) -> anyhow::Result<S
     let private_key_file_name = crate::TREASURE_CONFIG.get().unwrap().treasure_private_key_file_name.to_string();
 
     println!("  {YELLOW}Check if the encrypted file exists.{RESET}");
-    let encrypted_path_struct = ende::PathStructInSshFolder::new(format!("{private_key_file_name}.enc"))?;
+    let encrypted_path_struct = ende::PathStructInSshFolder::new(format!("{private_key_file_name}.enc")).log()?;
     if !encrypted_path_struct.exists() {
         println!("  {YELLOW}Encrypted file {encrypted_path_struct} does not exist.{RESET}");
         println!("  {YELLOW}Create the vault and store a secret using the store command. {RESET}");
@@ -56,9 +57,10 @@ pub(crate) fn show_secret_token_from_vault(token_name: &str) -> anyhow::Result<S
     }
 
     println!("  {YELLOW}Open and read the encrypted file.{RESET}");
-    let encrypted_text_with_metadata: String = ende::open_file_b64_get_string(encrypted_path_struct.get_full_file_path())?;
+    let encrypted_text_with_metadata: String = ende::open_file_b64_get_string(encrypted_path_struct.get_full_file_path()).log()?;
     // parse json
-    let vec_encrypted_text_with_metadata: Vec<ende::EncryptedTextWithMetadata> = serde_json::from_str(&encrypted_text_with_metadata)?;
+    let vec_encrypted_text_with_metadata: Vec<ende::EncryptedTextWithMetadata> =
+        serde_json::from_str(&encrypted_text_with_metadata).log()?;
     println!("  {YELLOW}Decrypt the file with ssh-agent or private key.{RESET}");
     for encrypted_text_with_metadata in vec_encrypted_text_with_metadata.iter() {
         let iter_token_name = if let Some(iter_token_name) = encrypted_text_with_metadata.token_name.as_ref() {
@@ -70,20 +72,20 @@ pub(crate) fn show_secret_token_from_vault(token_name: &str) -> anyhow::Result<S
             continue;
         }
         // here we are sure that this is the equal token_name
-        let plain_seed_bytes_32bytes = ende::decode64_from_string_to_32bytes(&encrypted_text_with_metadata.plain_seed_string)?;
+        let plain_seed_bytes_32bytes = ende::decode64_from_string_to_32bytes(&encrypted_text_with_metadata.plain_seed_string).log()?;
         // use the private key from the encrypted file
-        let private_key_path_struct = ende::PathStructInSshFolder::new(encrypted_text_with_metadata.private_key_file_name.clone())?;
+        let private_key_path_struct = ende::PathStructInSshFolder::new(encrypted_text_with_metadata.private_key_file_name.clone()).log()?;
         if !private_key_path_struct.exists() {
             eprintln!("{RED}Error: Private key {private_key_path_struct} does not exist. Cannot decrypt.{RESET}");
             anyhow::bail!("Private key file not found.");
         }
 
         let secret_passcode_32bytes: SecretBox<[u8; 32]> =
-            ende::sign_seed_with_ssh_agent_or_private_key_file(&private_key_path_struct, plain_seed_bytes_32bytes)?;
+            ende::sign_seed_with_ssh_agent_or_private_key_file(&private_key_path_struct, plain_seed_bytes_32bytes).log()?;
 
         // decrypt the secret access token string
         let secret_access_token: SecretString =
-            ende::decrypt_symmetric(secret_passcode_32bytes, encrypted_text_with_metadata.plain_encrypted_text.clone())?;
+            ende::decrypt_symmetric(secret_passcode_32bytes, encrypted_text_with_metadata.plain_encrypted_text.clone()).log()?;
         return Ok(secret_access_token);
     }
     anyhow::bail!("Token with this name not found.");
@@ -97,7 +99,7 @@ pub(crate) fn store_secret_token_to_vault(token_name: &str) -> anyhow::Result<()
     println!("  {YELLOW}Check if the ssh private key exists.{RESET}");
     let private_key_file_name = crate::TREASURE_CONFIG.get().unwrap().treasure_private_key_file_name.to_string();
 
-    let private_key_path_struct = ende::PathStructInSshFolder::new(private_key_file_name.clone())?;
+    let private_key_path_struct = ende::PathStructInSshFolder::new(private_key_file_name.clone()).log()?;
     if !private_key_path_struct.exists() {
         eprintln!("{RED}Error: Private key {private_key_path_struct} does not exist.{RESET}");
         println!("  {YELLOW}Create the private key in bash terminal:{RESET}");
@@ -106,12 +108,12 @@ pub(crate) fn store_secret_token_to_vault(token_name: &str) -> anyhow::Result<()
     }
 
     println!("  {YELLOW}Check if the encrypted file exists.{RESET}");
-    let encrypted_path_struct = ende::PathStructInSshFolder::new(format!("{private_key_file_name}.enc"))?;
+    let encrypted_path_struct = ende::PathStructInSshFolder::new(format!("{private_key_file_name}.enc")).log()?;
     if encrypted_path_struct.exists() {
         println!("  {YELLOW}Open and read the encrypted file.{RESET}");
-        let encrypted_text_with_metadata: String = ende::open_file_b64_get_string(encrypted_path_struct.get_full_file_path())?;
+        let encrypted_text_with_metadata: String = ende::open_file_b64_get_string(encrypted_path_struct.get_full_file_path()).log()?;
         // parse json
-        vec_encrypted_text_with_metadata = serde_json::from_str(&encrypted_text_with_metadata)?;
+        vec_encrypted_text_with_metadata = serde_json::from_str(&encrypted_text_with_metadata).log()?;
     }
     println!();
     println!("{BLUE}Enter the secret token to encrypt:{RESET}");
@@ -119,21 +121,22 @@ pub(crate) fn store_secret_token_to_vault(token_name: &str) -> anyhow::Result<()
         inquire::Password::new("")
             .without_confirmation()
             .with_display_mode(inquire::PasswordDisplayMode::Masked)
-            .prompt()?,
+            .prompt()
+            .log()?,
     );
 
     // prepare the random bytes, sign it with the private key, that is the true passcode used to encrypt the secret
-    let (plain_seed_bytes_32bytes, plain_seed_string) = ende::random_seed_32bytes_and_string()?;
+    let (plain_seed_bytes_32bytes, plain_seed_string) = ende::random_seed_32bytes_and_string().log()?;
     // first try to use the private key from ssh-agent, else use the private file with user interaction
     let secret_passcode_32bytes: SecretBox<[u8; 32]> =
-        ende::sign_seed_with_ssh_agent_or_private_key_file(&private_key_path_struct, plain_seed_bytes_32bytes)?;
-    let plain_encrypted_text = ende::encrypt_symmetric(secret_passcode_32bytes, secret_access_token)?;
+        ende::sign_seed_with_ssh_agent_or_private_key_file(&private_key_path_struct, plain_seed_bytes_32bytes).log()?;
+    let plain_encrypted_text = ende::encrypt_symmetric(secret_passcode_32bytes, secret_access_token).log()?;
 
     // delete the token before writing it with the same token_name
     if !vec_encrypted_text_with_metadata.is_empty() && delete_token_from_vault(token_name).is_ok() {
-        let encrypted_text_with_metadata: String = ende::open_file_b64_get_string(encrypted_path_struct.get_full_file_path())?;
+        let encrypted_text_with_metadata: String = ende::open_file_b64_get_string(encrypted_path_struct.get_full_file_path()).log()?;
         // parse json
-        vec_encrypted_text_with_metadata = serde_json::from_str(&encrypted_text_with_metadata)?;
+        vec_encrypted_text_with_metadata = serde_json::from_str(&encrypted_text_with_metadata).log()?;
     }
 
     // prepare a struct to save as encoded string
@@ -147,11 +150,11 @@ pub(crate) fn store_secret_token_to_vault(token_name: &str) -> anyhow::Result<()
     };
     vec_encrypted_text_with_metadata.push(encrypted_text_with_metadata);
 
-    let file_text = serde_json::to_string_pretty(&vec_encrypted_text_with_metadata)?;
+    let file_text = serde_json::to_string_pretty(&vec_encrypted_text_with_metadata).log()?;
     // encode it just to obscure it a little bit
     let file_text = ende::encode64_from_string_to_string(&file_text);
 
-    std::fs::write(encrypted_path_struct.get_full_file_path(), file_text)?;
+    std::fs::write(encrypted_path_struct.get_full_file_path(), file_text).log()?;
     println!("  {YELLOW}Encrypted text saved to file.{RESET}");
     Ok(())
 }
@@ -163,7 +166,7 @@ pub(crate) fn delete_token_from_vault(token_name: &str) -> anyhow::Result<()> {
     println!("  {YELLOW}Check if the ssh private key exists.{RESET}");
     let private_key_file_name = crate::TREASURE_CONFIG.get().unwrap().treasure_private_key_file_name.to_string();
 
-    let private_key_path_struct = ende::PathStructInSshFolder::new(private_key_file_name.clone())?;
+    let private_key_path_struct = ende::PathStructInSshFolder::new(private_key_file_name.clone()).log()?;
     if !private_key_path_struct.exists() {
         eprintln!("{RED}Error: Private key {private_key_path_struct} does not exist.{RESET}");
         println!("  {YELLOW}Create the private key in bash terminal:{RESET}");
@@ -172,7 +175,7 @@ pub(crate) fn delete_token_from_vault(token_name: &str) -> anyhow::Result<()> {
     }
 
     println!("  {YELLOW}Check if the encrypted file exists.{RESET}");
-    let encrypted_path_struct = ende::PathStructInSshFolder::new(format!("{private_key_file_name}.enc"))?;
+    let encrypted_path_struct = ende::PathStructInSshFolder::new(format!("{private_key_file_name}.enc")).log()?;
     if !encrypted_path_struct.exists() {
         println!("  {YELLOW}Encrypted file {encrypted_path_struct} does not exist.{RESET}");
         println!("  {YELLOW}Create the vault and store a secret using the store command. {RESET}");
@@ -180,9 +183,10 @@ pub(crate) fn delete_token_from_vault(token_name: &str) -> anyhow::Result<()> {
     }
 
     println!("  {YELLOW}Open and read the encrypted file.{RESET}");
-    let encrypted_text_with_metadata: String = ende::open_file_b64_get_string(encrypted_path_struct.get_full_file_path())?;
+    let encrypted_text_with_metadata: String = ende::open_file_b64_get_string(encrypted_path_struct.get_full_file_path()).log()?;
     // parse json
-    let mut vec_encrypted_text_with_metadata: Vec<ende::EncryptedTextWithMetadata> = serde_json::from_str(&encrypted_text_with_metadata)?;
+    let mut vec_encrypted_text_with_metadata: Vec<ende::EncryptedTextWithMetadata> =
+        serde_json::from_str(&encrypted_text_with_metadata).log()?;
     println!("  {YELLOW}Decrypt the file with ssh-agent or private key.{RESET}");
     let mut index_to_delete = None;
 
@@ -203,11 +207,11 @@ pub(crate) fn delete_token_from_vault(token_name: &str) -> anyhow::Result<()> {
 
         vec_encrypted_text_with_metadata.remove(index_to_delete);
 
-        let file_text = serde_json::to_string_pretty(&vec_encrypted_text_with_metadata)?;
+        let file_text = serde_json::to_string_pretty(&vec_encrypted_text_with_metadata).log()?;
         // encode it just to obscure it a little bit
         let file_text = ende::encode64_from_string_to_string(&file_text);
 
-        std::fs::write(encrypted_path_struct.get_full_file_path(), file_text)?;
+        std::fs::write(encrypted_path_struct.get_full_file_path(), file_text).log()?;
         println!("  {YELLOW}Encrypted text saved to file.{RESET}");
     } else {
         anyhow::bail!("Token with this name not found.");

@@ -8,18 +8,24 @@ mod build_cli_bin_win_mod;
 mod build_lib_mod;
 mod build_wasm_mod;
 mod cargo_auto_github_api_mod;
+pub mod cargo_auto_lib;
 mod encrypt_decrypt_with_ssh_key_mod;
+#[macro_use]
 mod generic_functions_mod;
 mod tasks_mod;
 
 pub use cargo_auto_lib as cl;
+
 #[allow(unused_imports)]
 use crossplatform_path::CrossPathBuf;
 
-use crate::cargo_auto_github_api_mod as cgl;
+// use crate::cargo_auto_github_api_mod as cgl;
 use crate::encrypt_decrypt_with_ssh_key_mod as ende;
 use crate::generic_functions_mod as gn;
 use crate::tasks_mod as ts;
+
+// Bring trait for Result into scope.
+use crate::generic_functions_mod::ResultLogError;
 
 pub use cl::{BLUE, GREEN, RED, RESET, YELLOW};
 
@@ -44,13 +50,13 @@ fn main() -> std::process::ExitCode {
 fn main_returns_anyhow_result() -> anyhow::Result<()> {
     gn::tracing_init()?;
     cl::exit_if_not_run_in_rust_project_root_directory();
-    ende::github_api_token_with_oauth2_mod::github_api_config_initialize()?;
-    ende::crates_io_api_token_mod::crates_io_config_initialize()?;
+    ende::github_api_token_with_oauth2_mod::github_api_config_initialize().log(pos!())?;
+    ende::crates_io_api_token_mod::crates_io_config_initialize().log(pos!())?;
     // get CLI arguments
     let mut args = std::env::args();
     // the zero argument is the name of the program
     let _arg_0 = args.next();
-    match_arguments_and_call_tasks(args)?;
+    match_arguments_and_call_tasks(args).log(pos!())?;
     Ok(())
 }
 
@@ -61,30 +67,30 @@ fn match_arguments_and_call_tasks(mut args: std::env::Args) -> anyhow::Result<()
     // the first argument is the user defined task: (no argument for help), build, release,...
     let arg_1 = args.next();
     match arg_1 {
-        None => print_help()?,
+        None => print_help().log(pos!())?,
         Some(task) => {
             if &task == "completion" {
-                completion()?;
+                completion().log(pos!())?;
             } else {
                 println!("  {YELLOW}Running automation task: {task}{RESET}");
                 if &task == "build" {
-                    task_build()?;
+                    task_build().log(pos!())?;
                 } else if &task == "release" {
-                    task_release()?;
-                    } else if &task == "win_release" {
-                    task_win_release()?;
+                    task_release().log(pos!())?;
+                } else if &task == "win_release" {
+                    task_win_release().log(pos!())?;
                 } else if &task == "doc" {
-                    task_doc()?;
+                    task_doc().log(pos!())?;
                 } else if &task == "test" {
-                    task_test()?;
+                    task_test().log(pos!())?;
                 } else if &task == "commit_and_push" {
                     let arg_2 = args.next();
-                    task_commit_and_push(arg_2)?;
+                    task_commit_and_push(arg_2).log(pos!())?;
                 } else if &task == "github_new_release" {
-                    task_github_new_release()?;
+                    task_github_new_release().log(pos!())?;
                 } else {
                     eprintln!("{RED}Error: Task {task} is unknown.{RESET}");
-                    print_help()?;
+                    print_help().log(pos!())?;
                 }
             }
         }
@@ -175,7 +181,7 @@ fn completion() -> anyhow::Result<()> {
 
 /// Run 'cargo build' and appropriate functions.
 fn task_build() -> anyhow::Result<()> {
-    let cargo_toml = crate::build_cli_bin_mod::task_build()?;
+    let cargo_toml = crate::build_cli_bin_mod::task_build().log(pos!())?;
     println!(
         r#"
   {YELLOW}After `cargo auto build`, run the compiled binary, examples and/or tests{RESET}
@@ -197,7 +203,7 @@ fn task_build() -> anyhow::Result<()> {
 
 /// Run 'cargo build --release' and appropriate functions.
 fn task_release() -> anyhow::Result<()> {
-    let cargo_toml = crate::build_cli_bin_mod::task_release()?;
+    let cargo_toml = crate::build_cli_bin_mod::task_release().log(pos!())?;
 
     println!(
         r#"
@@ -219,7 +225,7 @@ fn task_release() -> anyhow::Result<()> {
 
 /// Run 'cargo build --release' for x86_64-pc-windows-gnu.
 fn task_win_release() -> anyhow::Result<()> {
-    let cargo_toml = crate::build_cli_bin_win_mod::task_release()?;
+    let cargo_toml = crate::build_cli_bin_win_mod::task_release().log(pos!())?;
 
     println!(
         r#"
@@ -244,7 +250,7 @@ fn task_win_release() -> anyhow::Result<()> {
 
 /// Run 'cargo doc', then copy to /docs/ folder, because this is a GitHub standard folder.
 fn task_doc() -> anyhow::Result<()> {
-    ts::task_doc()?;
+    ts::task_doc().log(pos!())?;
     // message to help user with next move
     println!(
         r#"
@@ -261,7 +267,7 @@ fn task_doc() -> anyhow::Result<()> {
 
 /// Run 'cargo test'.
 fn task_test() -> anyhow::Result<()> {
-    cl::run_shell_command_static("cargo test")?;
+    cl::run_shell_command_static("cargo test").log(pos!())?;
     println!(
         r#"
   {YELLOW}After `cargo auto test`. If ok then {RESET}
@@ -274,11 +280,11 @@ fn task_test() -> anyhow::Result<()> {
 
 /// Run 'commit' and 'push'. Separate docs and other updates.
 fn task_commit_and_push(arg_2: Option<String>) -> anyhow::Result<()> {
-    ts::task_commit_and_push(arg_2)?;
+    ts::task_commit_and_push(arg_2).log(pos!())?;
     println!(
         r#"
   {YELLOW}After `cargo auto commit_and_push "message"`{RESET}
-  {YELLOW}Now, write the content of the release in the RELEASES.md in the `## Unreleased` section, then{RESET}
+  {YELLOW}Now, edit the content of the release in the RELEASES.md in the `## Unreleased` section, then{RESET}
   {YELLOW}Next, create the GitHub Release.{RESET}
 {GREEN}cargo auto github_new_release{RESET}
 "#
@@ -288,7 +294,7 @@ fn task_commit_and_push(arg_2: Option<String>) -> anyhow::Result<()> {
 
 /// Create a new release on github and uploads binary executables.
 fn task_github_new_release() -> anyhow::Result<()> {
-    ts::task_github_new_release()?;
+    ts::task_github_new_release().log(pos!())?;
     println!(
         r#"
   {YELLOW}No more automation tasks. {RESET}
