@@ -6,7 +6,7 @@
 <a href=#6 id=6 data-nosnippet>6</a>//! cargo auto update_automation_tasks_rs
 <a href=#7 id=7 data-nosnippet>7</a>//! If you want to customize it, copy the code into main.rs and modify it there.
 <a href=#8 id=8 data-nosnippet>8</a>
-<a href=#9 id=9 data-nosnippet>9</a></span><span class="kw">use crate</span>::{BLUE, GREEN, RED, RESET, YELLOW};
+<a href=#9 id=9 data-nosnippet>9</a></span><span class="kw">use crate</span>::{ResultLogError, BLUE, GREEN, RED, RESET, YELLOW};
 <a href=#10 id=10 data-nosnippet>10</a><span class="kw">use </span>secrecy::{ExposeSecret, ExposeSecretMut, SecretBox, SecretString};
 <a href=#11 id=11 data-nosnippet>11</a>
 <a href=#12 id=12 data-nosnippet>12</a><span class="kw">pub struct </span>PathStructInSshFolder {
@@ -19,7 +19,7 @@
 <a href=#19 id=19 data-nosnippet>19</a>    <span class="doccomment">/// Private key file path: tilde string and PathBuf.
 <a href=#20 id=20 data-nosnippet>20</a>    </span><span class="kw">pub fn </span>new(file_name: String) -&gt; anyhow::Result&lt;<span class="self">Self</span>&gt; {
 <a href=#21 id=21 data-nosnippet>21</a>        <span class="kw">let </span>tilde_file_path = <span class="macro">format!</span>(<span class="string">"~/.ssh/{file_name}"</span>);
-<a href=#22 id=22 data-nosnippet>22</a>        <span class="kw">let </span>full_file_path = tilde_expand_to_home_dir_utf8(<span class="kw-2">&amp;</span>tilde_file_path)<span class="question-mark">?</span>;
+<a href=#22 id=22 data-nosnippet>22</a>        <span class="kw">let </span>full_file_path = tilde_expand_to_home_dir_utf8(<span class="kw-2">&amp;</span>tilde_file_path).log()<span class="question-mark">?</span>;
 <a href=#23 id=23 data-nosnippet>23</a>        <span class="prelude-val">Ok</span>(PathStructInSshFolder {
 <a href=#24 id=24 data-nosnippet>24</a>            file_name,
 <a href=#25 id=25 data-nosnippet>25</a>            tilde_file_path,
@@ -68,7 +68,7 @@
 <a href=#68 id=68 data-nosnippet>68</a>    <span class="kw">let </span><span class="kw-2">mut </span>seed_32bytes = [<span class="number">0_u8</span>; <span class="number">32</span>];
 <a href=#69 id=69 data-nosnippet>69</a>    <span class="kw">use </span>aes_gcm::aead::rand_core::RngCore;
 <a href=#70 id=70 data-nosnippet>70</a>    aes_gcm::aead::OsRng.fill_bytes(<span class="kw-2">&amp;mut </span>seed_32bytes);
-<a href=#71 id=71 data-nosnippet>71</a>    <span class="kw">let </span>plain_seed_string = encode64_from_32bytes_to_string(seed_32bytes)<span class="question-mark">?</span>;
+<a href=#71 id=71 data-nosnippet>71</a>    <span class="kw">let </span>plain_seed_string = encode64_from_32bytes_to_string(seed_32bytes).log()<span class="question-mark">?</span>;
 <a href=#72 id=72 data-nosnippet>72</a>    <span class="prelude-val">Ok</span>((seed_32bytes, plain_seed_string))
 <a href=#73 id=73 data-nosnippet>73</a>}
 <a href=#74 id=74 data-nosnippet>74</a>
@@ -80,9 +80,9 @@
 <a href=#80 id=80 data-nosnippet>80</a>        <span class="macro">anyhow::bail!</span>(<span class="string">"{RED}Error: File {plain_file_b64_path} does not exist! {RESET}"</span>);
 <a href=#81 id=81 data-nosnippet>81</a>    }
 <a href=#82 id=82 data-nosnippet>82</a>
-<a href=#83 id=83 data-nosnippet>83</a>    <span class="kw">let </span>plain_file_text = std::fs::read_to_string(plain_file_b64_path)<span class="question-mark">?</span>;
+<a href=#83 id=83 data-nosnippet>83</a>    <span class="kw">let </span>plain_file_text = std::fs::read_to_string(plain_file_b64_path).log()<span class="question-mark">?</span>;
 <a href=#84 id=84 data-nosnippet>84</a>    <span class="comment">// it is encoded just to obscure it a little
-<a href=#85 id=85 data-nosnippet>85</a>    </span><span class="kw">let </span>plain_file_text = decode64_from_string_to_string(<span class="kw-2">&amp;</span>plain_file_text)<span class="question-mark">?</span>;
+<a href=#85 id=85 data-nosnippet>85</a>    </span><span class="kw">let </span>plain_file_text = decode64_from_string_to_string(<span class="kw-2">&amp;</span>plain_file_text).log()<span class="question-mark">?</span>;
 <a href=#86 id=86 data-nosnippet>86</a>
 <a href=#87 id=87 data-nosnippet>87</a>    <span class="prelude-val">Ok</span>(plain_file_text)
 <a href=#88 id=88 data-nosnippet>88</a>}
@@ -107,8 +107,8 @@
 <a href=#107 id=107 data-nosnippet>107</a>
 <a href=#108 id=108 data-nosnippet>108</a><span class="doccomment">/// Decode base64 from string to 32bytes.
 <a href=#109 id=109 data-nosnippet>109</a></span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>decode64_from_string_to_32bytes(plain_seed_string: <span class="kw-2">&amp;</span>str) -&gt; anyhow::Result&lt;[u8; <span class="number">32</span>]&gt; {
-<a href=#110 id=110 data-nosnippet>110</a>    <span class="kw">let </span>plain_seed_bytes = &lt;base64ct::Base64 <span class="kw">as </span>base64ct::Encoding&gt;::decode_vec(plain_seed_string)<span class="question-mark">?</span>;
-<a href=#111 id=111 data-nosnippet>111</a>    <span class="kw">let </span>plain_seed_bytes_32bytes = shorten_vec_bytes_to_32bytes(plain_seed_bytes)<span class="question-mark">?</span>;
+<a href=#110 id=110 data-nosnippet>110</a>    <span class="kw">let </span>plain_seed_bytes = &lt;base64ct::Base64 <span class="kw">as </span>base64ct::Encoding&gt;::decode_vec(plain_seed_string).log()<span class="question-mark">?</span>;
+<a href=#111 id=111 data-nosnippet>111</a>    <span class="kw">let </span>plain_seed_bytes_32bytes = shorten_vec_bytes_to_32bytes(plain_seed_bytes).log()<span class="question-mark">?</span>;
 <a href=#112 id=112 data-nosnippet>112</a>    <span class="prelude-val">Ok</span>(plain_seed_bytes_32bytes)
 <a href=#113 id=113 data-nosnippet>113</a>}
 <a href=#114 id=114 data-nosnippet>114</a>
@@ -128,7 +128,7 @@
 <a href=#128 id=128 data-nosnippet>128</a>///
 <a href=#129 id=129 data-nosnippet>129</a>/// It is a silly little obfuscation just to avoid using plain text.
 <a href=#130 id=130 data-nosnippet>130</a></span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>decode64_from_string_to_string(string_to_decode: <span class="kw-2">&amp;</span>str) -&gt; anyhow::Result&lt;String&gt; {
-<a href=#131 id=131 data-nosnippet>131</a>    <span class="kw">let </span>decoded_string = String::from_utf8(&lt;base64ct::Base64 <span class="kw">as </span>base64ct::Encoding&gt;::decode_vec(string_to_decode)<span class="question-mark">?</span>)<span class="question-mark">?</span>;
+<a href=#131 id=131 data-nosnippet>131</a>    <span class="kw">let </span>decoded_string = String::from_utf8(&lt;base64ct::Base64 <span class="kw">as </span>base64ct::Encoding&gt;::decode_vec(string_to_decode).log()<span class="question-mark">?</span>).log()<span class="question-mark">?</span>;
 <a href=#132 id=132 data-nosnippet>132</a>    <span class="prelude-val">Ok</span>(decoded_string)
 <a href=#133 id=133 data-nosnippet>133</a>}
 <a href=#134 id=134 data-nosnippet>134</a>
@@ -188,161 +188,166 @@
 <a href=#188 id=188 data-nosnippet>188</a>        client: <span class="kw-2">&amp;mut </span>ssh_agent_client_rs_git_bash::Client,
 <a href=#189 id=189 data-nosnippet>189</a>        fingerprint_from_file: <span class="kw-2">&amp;</span>str,
 <a href=#190 id=190 data-nosnippet>190</a>    ) -&gt; anyhow::Result&lt;ssh_key::PublicKey&gt; {
-<a href=#191 id=191 data-nosnippet>191</a>        <span class="kw">let </span>vec_public_key = client.list_identities()<span class="question-mark">?</span>;
-<a href=#192 id=192 data-nosnippet>192</a>
-<a href=#193 id=193 data-nosnippet>193</a>        <span class="kw">for </span>public_key <span class="kw">in </span>vec_public_key.iter() {
-<a href=#194 id=194 data-nosnippet>194</a>            <span class="kw">let </span>fingerprint_from_agent = public_key.key_data().fingerprint(Default::default()).to_string();
+<a href=#191 id=191 data-nosnippet>191</a>        <span class="kw">let </span>vec_identities = client.list_all_identities().log()<span class="question-mark">?</span>;
+<a href=#192 id=192 data-nosnippet>192</a>        <span class="kw">for </span>identity <span class="kw">in </span>vec_identities.iter() {
+<a href=#193 id=193 data-nosnippet>193</a>            <span class="kw">if let </span>ssh_agent_client_rs_git_bash::Identity::PublicKey(public_key) = identity {
+<a href=#194 id=194 data-nosnippet>194</a>                <span class="kw">let </span>fingerprint_from_agent = public_key.key_data().fingerprint(Default::default()).to_string();
 <a href=#195 id=195 data-nosnippet>195</a>
-<a href=#196 id=196 data-nosnippet>196</a>            <span class="kw">if </span>fingerprint_from_agent == fingerprint_from_file {
-<a href=#197 id=197 data-nosnippet>197</a>                <span class="kw">return </span><span class="prelude-val">Ok</span>(public_key.to_owned());
-<a href=#198 id=198 data-nosnippet>198</a>            }
-<a href=#199 id=199 data-nosnippet>199</a>        }
-<a href=#200 id=200 data-nosnippet>200</a>        <span class="macro">anyhow::bail!</span>(<span class="string">"This private key is not added to ssh-agent."</span>)
-<a href=#201 id=201 data-nosnippet>201</a>    }
-<a href=#202 id=202 data-nosnippet>202</a>    <span class="kw">let </span>public_key_path_struct = PathStructInSshFolder::new(<span class="macro">format!</span>(<span class="string">"{}.pub"</span>, private_key_path_struct.get_file_name()))<span class="question-mark">?</span>;
-<a href=#203 id=203 data-nosnippet>203</a>    <span class="kw">let </span>public_key = ssh_key::PublicKey::read_openssh_file(public_key_path_struct.get_full_file_path().as_std_path())<span class="question-mark">?</span>;
-<a href=#204 id=204 data-nosnippet>204</a>    <span class="kw">let </span>fingerprint_from_file = public_key.fingerprint(Default::default()).to_string();
-<a href=#205 id=205 data-nosnippet>205</a>
-<a href=#206 id=206 data-nosnippet>206</a>    <span class="macro">println!</span>(<span class="string">"  {YELLOW}Connect to ssh-agent on SSH_AUTH_SOCK{RESET}"</span>);
-<a href=#207 id=207 data-nosnippet>207</a>    <span class="kw">let </span>var_ssh_auth_sock = std::env::var(<span class="string">"SSH_AUTH_SOCK"</span>)<span class="question-mark">?</span>;
-<a href=#208 id=208 data-nosnippet>208</a>    <span class="kw">let </span>path_ssh_auth_sock = camino::Utf8Path::new(<span class="kw-2">&amp;</span>var_ssh_auth_sock);
-<a href=#209 id=209 data-nosnippet>209</a>    <span class="comment">// import trait into scope
-<a href=#210 id=210 data-nosnippet>210</a>    </span><span class="kw">use </span>ssh_agent_client_rs_git_bash::GitBash;
-<a href=#211 id=211 data-nosnippet>211</a>    <span class="kw">let </span><span class="kw-2">mut </span>ssh_agent_client = ssh_agent_client_rs_git_bash::Client::connect_to_git_bash_or_linux(path_ssh_auth_sock.as_std_path())<span class="question-mark">?</span>;
-<a href=#212 id=212 data-nosnippet>212</a>
-<a href=#213 id=213 data-nosnippet>213</a>    <span class="kw">let </span>public_key = public_key_from_ssh_agent(<span class="kw-2">&amp;mut </span>ssh_agent_client, <span class="kw-2">&amp;</span>fingerprint_from_file)<span class="question-mark">?</span>;
+<a href=#196 id=196 data-nosnippet>196</a>                <span class="kw">if </span>fingerprint_from_agent == fingerprint_from_file {
+<a href=#197 id=197 data-nosnippet>197</a>                    <span class="kw">return </span><span class="prelude-val">Ok</span>(public_key.clone().into_owned());
+<a href=#198 id=198 data-nosnippet>198</a>                }
+<a href=#199 id=199 data-nosnippet>199</a>            }
+<a href=#200 id=200 data-nosnippet>200</a>        }
+<a href=#201 id=201 data-nosnippet>201</a>        <span class="macro">anyhow::bail!</span>(<span class="string">"This private key is not added to ssh-agent."</span>)
+<a href=#202 id=202 data-nosnippet>202</a>    }
+<a href=#203 id=203 data-nosnippet>203</a>    <span class="kw">let </span>public_key_path_struct = PathStructInSshFolder::new(<span class="macro">format!</span>(<span class="string">"{}.pub"</span>, private_key_path_struct.get_file_name())).log()<span class="question-mark">?</span>;
+<a href=#204 id=204 data-nosnippet>204</a>    <span class="kw">let </span>public_key = ssh_key::PublicKey::read_openssh_file(public_key_path_struct.get_full_file_path().as_std_path()).log()<span class="question-mark">?</span>;
+<a href=#205 id=205 data-nosnippet>205</a>    <span class="kw">let </span>fingerprint_from_file = public_key.fingerprint(Default::default()).to_string();
+<a href=#206 id=206 data-nosnippet>206</a>
+<a href=#207 id=207 data-nosnippet>207</a>    <span class="macro">println!</span>(<span class="string">"  {YELLOW}Connect to ssh-agent on SSH_AUTH_SOCK{RESET}"</span>);
+<a href=#208 id=208 data-nosnippet>208</a>    <span class="kw">let </span>var_ssh_auth_sock = std::env::var(<span class="string">"SSH_AUTH_SOCK"</span>).log()<span class="question-mark">?</span>;
+<a href=#209 id=209 data-nosnippet>209</a>    <span class="kw">let </span>path_ssh_auth_sock = camino::Utf8Path::new(<span class="kw-2">&amp;</span>var_ssh_auth_sock);
+<a href=#210 id=210 data-nosnippet>210</a>    <span class="comment">// import trait into scope
+<a href=#211 id=211 data-nosnippet>211</a>    </span><span class="kw">use </span>ssh_agent_client_rs_git_bash::GitBash;
+<a href=#212 id=212 data-nosnippet>212</a>    <span class="kw">let </span><span class="kw-2">mut </span>ssh_agent_client =
+<a href=#213 id=213 data-nosnippet>213</a>        ssh_agent_client_rs_git_bash::Client::connect_to_git_bash_or_linux(path_ssh_auth_sock.as_std_path()).log()<span class="question-mark">?</span>;
 <a href=#214 id=214 data-nosnippet>214</a>
-<a href=#215 id=215 data-nosnippet>215</a>    <span class="kw">let </span><span class="kw-2">mut </span>secret_passcode_32bytes = SecretBox::new(Box::new([<span class="number">0u8</span>; <span class="number">32</span>]));
-<a href=#216 id=216 data-nosnippet>216</a>    <span class="comment">// sign with public key from ssh-agent
-<a href=#217 id=217 data-nosnippet>217</a>    // only the data part of the signature goes into as_bytes.
-<a href=#218 id=218 data-nosnippet>218</a>    </span>secret_passcode_32bytes
-<a href=#219 id=219 data-nosnippet>219</a>        .expose_secret_mut()
-<a href=#220 id=220 data-nosnippet>220</a>        .copy_from_slice(<span class="kw-2">&amp;</span>ssh_agent_client.sign(<span class="kw-2">&amp;</span>public_key, <span class="kw-2">&amp;</span>plain_seed_bytes_32bytes)<span class="question-mark">?</span>.as_bytes()[<span class="number">0</span>..<span class="number">32</span>]);
-<a href=#221 id=221 data-nosnippet>221</a>
-<a href=#222 id=222 data-nosnippet>222</a>    <span class="prelude-val">Ok</span>(secret_passcode_32bytes)
-<a href=#223 id=223 data-nosnippet>223</a>}
-<a href=#224 id=224 data-nosnippet>224</a>
-<a href=#225 id=225 data-nosnippet>225</a><span class="doccomment">/// Sign the seed with the private key into 32 bytes secret.
-<a href=#226 id=226 data-nosnippet>226</a>///
-<a href=#227 id=227 data-nosnippet>227</a>/// User must input the passphrase to unlock the private key file.  
-<a href=#228 id=228 data-nosnippet>228</a>/// This will be the true passcode for symmetrical encryption and decryption.  
-<a href=#229 id=229 data-nosnippet>229</a>/// Returns secret_password_bytes.  
-<a href=#230 id=230 data-nosnippet>230</a></span><span class="kw">fn </span>sign_seed_with_private_key_file(
-<a href=#231 id=231 data-nosnippet>231</a>    plain_seed_bytes_32bytes: [u8; <span class="number">32</span>],
-<a href=#232 id=232 data-nosnippet>232</a>    private_key_file_path: <span class="kw-2">&amp;</span>camino::Utf8Path,
-<a href=#233 id=233 data-nosnippet>233</a>) -&gt; anyhow::Result&lt;SecretBox&lt;[u8; <span class="number">32</span>]&gt;&gt; {
-<a href=#234 id=234 data-nosnippet>234</a>    <span class="doccomment">/// Internal function for user input passphrase
-<a href=#235 id=235 data-nosnippet>235</a>    </span><span class="kw">fn </span>user_input_secret_passphrase() -&gt; anyhow::Result&lt;SecretString&gt; {
-<a href=#236 id=236 data-nosnippet>236</a>        <span class="macro">println!</span>();
-<a href=#237 id=237 data-nosnippet>237</a>        <span class="macro">println!</span>(<span class="string">"{BLUE}Enter the passphrase for the SSH private key:{RESET}"</span>);
-<a href=#238 id=238 data-nosnippet>238</a>
-<a href=#239 id=239 data-nosnippet>239</a>        <span class="kw">let </span>secret_passphrase = SecretString::from(
-<a href=#240 id=240 data-nosnippet>240</a>            inquire::Password::new(<span class="string">""</span>)
-<a href=#241 id=241 data-nosnippet>241</a>                .without_confirmation()
-<a href=#242 id=242 data-nosnippet>242</a>                .with_display_mode(inquire::PasswordDisplayMode::Masked)
-<a href=#243 id=243 data-nosnippet>243</a>                .prompt()<span class="question-mark">?</span>,
-<a href=#244 id=244 data-nosnippet>244</a>        );
-<a href=#245 id=245 data-nosnippet>245</a>        <span class="kw">if </span>secret_passphrase.expose_secret().is_empty() {
-<a href=#246 id=246 data-nosnippet>246</a>            <span class="macro">anyhow::bail!</span>(<span class="string">"Passphrase empty"</span>);
-<a href=#247 id=247 data-nosnippet>247</a>        }
-<a href=#248 id=248 data-nosnippet>248</a>        <span class="prelude-val">Ok</span>(secret_passphrase)
-<a href=#249 id=249 data-nosnippet>249</a>    }
-<a href=#250 id=250 data-nosnippet>250</a>    <span class="comment">// the user is the only one that knows the passphrase to unlock the private key
-<a href=#251 id=251 data-nosnippet>251</a>    </span><span class="kw">let </span>secret_user_passphrase: SecretString = user_input_secret_passphrase()<span class="question-mark">?</span>;
-<a href=#252 id=252 data-nosnippet>252</a>
-<a href=#253 id=253 data-nosnippet>253</a>    <span class="comment">// sign_with_ssh_private_key_file
-<a href=#254 id=254 data-nosnippet>254</a>    </span><span class="macro">println!</span>(<span class="string">"  {YELLOW}Use ssh private key from file {RESET}"</span>);
-<a href=#255 id=255 data-nosnippet>255</a>    <span class="kw">let </span>private_key = ssh_key::PrivateKey::read_openssh_file(private_key_file_path.as_std_path())<span class="question-mark">?</span>;
-<a href=#256 id=256 data-nosnippet>256</a>    <span class="macro">println!</span>(<span class="string">"  {YELLOW}Unlock the private key {RESET}"</span>);
-<a href=#257 id=257 data-nosnippet>257</a>
-<a href=#258 id=258 data-nosnippet>258</a>    <span class="comment">// cannot use secrecy: PrivateKey does not have trait Zeroize
-<a href=#259 id=259 data-nosnippet>259</a>    </span><span class="kw">let </span><span class="kw-2">mut </span>secret_private_key = private_key.decrypt(secret_user_passphrase.expose_secret())<span class="question-mark">?</span>;
+<a href=#215 id=215 data-nosnippet>215</a>    <span class="kw">let </span>public_key = public_key_from_ssh_agent(<span class="kw-2">&amp;mut </span>ssh_agent_client, <span class="kw-2">&amp;</span>fingerprint_from_file).log()<span class="question-mark">?</span>;
+<a href=#216 id=216 data-nosnippet>216</a>
+<a href=#217 id=217 data-nosnippet>217</a>    <span class="kw">let </span><span class="kw-2">mut </span>secret_passcode_32bytes = SecretBox::new(Box::new([<span class="number">0u8</span>; <span class="number">32</span>]));
+<a href=#218 id=218 data-nosnippet>218</a>    <span class="comment">// sign with public key from ssh-agent
+<a href=#219 id=219 data-nosnippet>219</a>    // only the data part of the signature goes into as_bytes.
+<a href=#220 id=220 data-nosnippet>220</a>    </span>secret_passcode_32bytes
+<a href=#221 id=221 data-nosnippet>221</a>        .expose_secret_mut()
+<a href=#222 id=222 data-nosnippet>222</a>        .copy_from_slice(<span class="kw-2">&amp;</span>ssh_agent_client.sign(<span class="kw-2">&amp;</span>public_key, <span class="kw-2">&amp;</span>plain_seed_bytes_32bytes).log()<span class="question-mark">?</span>.as_bytes()[<span class="number">0</span>..<span class="number">32</span>]);
+<a href=#223 id=223 data-nosnippet>223</a>
+<a href=#224 id=224 data-nosnippet>224</a>    <span class="prelude-val">Ok</span>(secret_passcode_32bytes)
+<a href=#225 id=225 data-nosnippet>225</a>}
+<a href=#226 id=226 data-nosnippet>226</a>
+<a href=#227 id=227 data-nosnippet>227</a><span class="doccomment">/// Sign the seed with the private key into 32 bytes secret.
+<a href=#228 id=228 data-nosnippet>228</a>///
+<a href=#229 id=229 data-nosnippet>229</a>/// User must input the passphrase to unlock the private key file.  
+<a href=#230 id=230 data-nosnippet>230</a>/// This will be the true passcode for symmetrical encryption and decryption.  
+<a href=#231 id=231 data-nosnippet>231</a>/// Returns secret_password_bytes.  
+<a href=#232 id=232 data-nosnippet>232</a></span><span class="kw">fn </span>sign_seed_with_private_key_file(
+<a href=#233 id=233 data-nosnippet>233</a>    plain_seed_bytes_32bytes: [u8; <span class="number">32</span>],
+<a href=#234 id=234 data-nosnippet>234</a>    private_key_file_path: <span class="kw-2">&amp;</span>camino::Utf8Path,
+<a href=#235 id=235 data-nosnippet>235</a>) -&gt; anyhow::Result&lt;SecretBox&lt;[u8; <span class="number">32</span>]&gt;&gt; {
+<a href=#236 id=236 data-nosnippet>236</a>    <span class="doccomment">/// Internal function for user input passphrase
+<a href=#237 id=237 data-nosnippet>237</a>    </span><span class="kw">fn </span>user_input_secret_passphrase() -&gt; anyhow::Result&lt;SecretString&gt; {
+<a href=#238 id=238 data-nosnippet>238</a>        <span class="macro">println!</span>();
+<a href=#239 id=239 data-nosnippet>239</a>        <span class="macro">println!</span>(<span class="string">"{BLUE}Enter the passphrase for the SSH private key:{RESET}"</span>);
+<a href=#240 id=240 data-nosnippet>240</a>
+<a href=#241 id=241 data-nosnippet>241</a>        <span class="kw">let </span>secret_passphrase = SecretString::from(
+<a href=#242 id=242 data-nosnippet>242</a>            inquire::Password::new(<span class="string">""</span>)
+<a href=#243 id=243 data-nosnippet>243</a>                .without_confirmation()
+<a href=#244 id=244 data-nosnippet>244</a>                .with_display_mode(inquire::PasswordDisplayMode::Masked)
+<a href=#245 id=245 data-nosnippet>245</a>                .prompt()
+<a href=#246 id=246 data-nosnippet>246</a>                .log()<span class="question-mark">?</span>,
+<a href=#247 id=247 data-nosnippet>247</a>        );
+<a href=#248 id=248 data-nosnippet>248</a>        <span class="kw">if </span>secret_passphrase.expose_secret().is_empty() {
+<a href=#249 id=249 data-nosnippet>249</a>            <span class="macro">anyhow::bail!</span>(<span class="string">"Passphrase empty"</span>);
+<a href=#250 id=250 data-nosnippet>250</a>        }
+<a href=#251 id=251 data-nosnippet>251</a>        <span class="prelude-val">Ok</span>(secret_passphrase)
+<a href=#252 id=252 data-nosnippet>252</a>    }
+<a href=#253 id=253 data-nosnippet>253</a>    <span class="comment">// the user is the only one that knows the passphrase to unlock the private key
+<a href=#254 id=254 data-nosnippet>254</a>    </span><span class="kw">let </span>secret_user_passphrase: SecretString = user_input_secret_passphrase().log()<span class="question-mark">?</span>;
+<a href=#255 id=255 data-nosnippet>255</a>
+<a href=#256 id=256 data-nosnippet>256</a>    <span class="comment">// sign_with_ssh_private_key_file
+<a href=#257 id=257 data-nosnippet>257</a>    </span><span class="macro">println!</span>(<span class="string">"  {YELLOW}Use ssh private key from file {RESET}"</span>);
+<a href=#258 id=258 data-nosnippet>258</a>    <span class="kw">let </span>private_key = ssh_key::PrivateKey::read_openssh_file(private_key_file_path.as_std_path()).log()<span class="question-mark">?</span>;
+<a href=#259 id=259 data-nosnippet>259</a>    <span class="macro">println!</span>(<span class="string">"  {YELLOW}Unlock the private key {RESET}"</span>);
 <a href=#260 id=260 data-nosnippet>260</a>
-<a href=#261 id=261 data-nosnippet>261</a>    <span class="comment">// FYI: this type of signature is compatible with ssh-agent because it does not involve namespace
-<a href=#262 id=262 data-nosnippet>262</a>    </span><span class="macro">println!</span>(<span class="string">"  {YELLOW}Sign the seed {RESET}"</span>);
+<a href=#261 id=261 data-nosnippet>261</a>    <span class="comment">// cannot use secrecy: PrivateKey does not have trait Zeroize
+<a href=#262 id=262 data-nosnippet>262</a>    </span><span class="kw">let </span><span class="kw-2">mut </span>secret_private_key = private_key.decrypt(secret_user_passphrase.expose_secret()).log()<span class="question-mark">?</span>;
 <a href=#263 id=263 data-nosnippet>263</a>
-<a href=#264 id=264 data-nosnippet>264</a>    <span class="kw">let </span><span class="kw-2">mut </span>secret_passcode_32bytes = SecretBox::new(Box::new([<span class="number">0u8</span>; <span class="number">32</span>]));
-<a href=#265 id=265 data-nosnippet>265</a>    <span class="comment">// only the data part of the signature goes into as_bytes.
-<a href=#266 id=266 data-nosnippet>266</a>    // only the first 32 bytes
-<a href=#267 id=267 data-nosnippet>267</a>    </span>secret_passcode_32bytes
-<a href=#268 id=268 data-nosnippet>268</a>        .expose_secret_mut()
-<a href=#269 id=269 data-nosnippet>269</a>        .copy_from_slice(<span class="kw-2">&amp;</span>rsa::signature::SignerMut::try_sign(<span class="kw-2">&amp;mut </span>secret_private_key, <span class="kw-2">&amp;</span>plain_seed_bytes_32bytes)<span class="question-mark">?</span>.as_bytes()[<span class="number">0</span>..<span class="number">32</span>]);
-<a href=#270 id=270 data-nosnippet>270</a>
-<a href=#271 id=271 data-nosnippet>271</a>    <span class="prelude-val">Ok</span>(secret_passcode_32bytes)
-<a href=#272 id=272 data-nosnippet>272</a>}
-<a href=#273 id=273 data-nosnippet>273</a>
-<a href=#274 id=274 data-nosnippet>274</a><span class="comment">// endregion: sign the seed with ssh-agent or private key
+<a href=#264 id=264 data-nosnippet>264</a>    <span class="comment">// FYI: this type of signature is compatible with ssh-agent because it does not involve namespace
+<a href=#265 id=265 data-nosnippet>265</a>    </span><span class="macro">println!</span>(<span class="string">"  {YELLOW}Sign the seed {RESET}"</span>);
+<a href=#266 id=266 data-nosnippet>266</a>
+<a href=#267 id=267 data-nosnippet>267</a>    <span class="kw">let </span><span class="kw-2">mut </span>secret_passcode_32bytes = SecretBox::new(Box::new([<span class="number">0u8</span>; <span class="number">32</span>]));
+<a href=#268 id=268 data-nosnippet>268</a>    <span class="comment">// only the data part of the signature goes into as_bytes.
+<a href=#269 id=269 data-nosnippet>269</a>    // only the first 32 bytes
+<a href=#270 id=270 data-nosnippet>270</a>    </span>secret_passcode_32bytes.expose_secret_mut().copy_from_slice(
+<a href=#271 id=271 data-nosnippet>271</a>        <span class="kw-2">&amp;</span>rsa::signature::SignerMut::try_sign(<span class="kw-2">&amp;mut </span>secret_private_key, <span class="kw-2">&amp;</span>plain_seed_bytes_32bytes)
+<a href=#272 id=272 data-nosnippet>272</a>            .log()<span class="question-mark">?
+<a href=#273 id=273 data-nosnippet>273</a>            </span>.as_bytes()[<span class="number">0</span>..<span class="number">32</span>],
+<a href=#274 id=274 data-nosnippet>274</a>    );
 <a href=#275 id=275 data-nosnippet>275</a>
-<a href=#276 id=276 data-nosnippet>276</a>// region: symmetrical encrypt and decrypt
-<a href=#277 id=277 data-nosnippet>277</a>
-<a href=#278 id=278 data-nosnippet>278</a></span><span class="doccomment">/// Encrypts symmetrically secret_string_to_encrypt with secret_passcode_32bytes.
-<a href=#279 id=279 data-nosnippet>279</a>///
-<a href=#280 id=280 data-nosnippet>280</a>/// Consumes the secret_passcode_32bytes and secret_string_to_encrypt.  
-<a href=#281 id=281 data-nosnippet>281</a>/// Returns the plain_encrypted_string, it is not a secret anymore.  
-<a href=#282 id=282 data-nosnippet>282</a></span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>encrypt_symmetric(
-<a href=#283 id=283 data-nosnippet>283</a>    secret_passcode_32bytes: SecretBox&lt;[u8; <span class="number">32</span>]&gt;,
-<a href=#284 id=284 data-nosnippet>284</a>    secret_string_to_encrypt: SecretString,
-<a href=#285 id=285 data-nosnippet>285</a>) -&gt; anyhow::Result&lt;String&gt; {
-<a href=#286 id=286 data-nosnippet>286</a>    <span class="comment">// nonce is salt
-<a href=#287 id=287 data-nosnippet>287</a>    </span><span class="kw">let </span>nonce = &lt;aes_gcm::Aes256Gcm <span class="kw">as </span>aes_gcm::AeadCore&gt;::generate_nonce(<span class="kw-2">&amp;mut </span>aes_gcm::aead::OsRng);
-<a href=#288 id=288 data-nosnippet>288</a>    <span class="kw">let </span><span class="prelude-val">Ok</span>(cipher_text_encrypted) = aes_gcm::aead::Aead::encrypt(
-<a href=#289 id=289 data-nosnippet>289</a>        <span class="comment">// cipher_secret is the true passcode, here I don't know how to use secrecy, because the type has not the trait Zeroize
-<a href=#290 id=290 data-nosnippet>290</a>        </span><span class="kw-2">&amp;</span>&lt;aes_gcm::Aes256Gcm <span class="kw">as </span>aes_gcm::KeyInit&gt;::new(secret_passcode_32bytes.expose_secret().into()),
-<a href=#291 id=291 data-nosnippet>291</a>        <span class="kw-2">&amp;</span>nonce,
-<a href=#292 id=292 data-nosnippet>292</a>        secret_string_to_encrypt.expose_secret().as_bytes(),
-<a href=#293 id=293 data-nosnippet>293</a>    ) <span class="kw">else </span>{
-<a href=#294 id=294 data-nosnippet>294</a>        <span class="macro">panic!</span>(<span class="string">"{RED}Error: Encryption failed. {RESET}"</span>);
-<a href=#295 id=295 data-nosnippet>295</a>    };
-<a href=#296 id=296 data-nosnippet>296</a>
-<a href=#297 id=297 data-nosnippet>297</a>    <span class="kw">let </span><span class="kw-2">mut </span>encrypted_bytes = nonce.to_vec();
-<a href=#298 id=298 data-nosnippet>298</a>    encrypted_bytes.extend_from_slice(<span class="kw-2">&amp;</span>cipher_text_encrypted);
-<a href=#299 id=299 data-nosnippet>299</a>    <span class="comment">// plain encrypted string is not a secret anymore
-<a href=#300 id=300 data-nosnippet>300</a>    </span><span class="kw">let </span>plain_encrypted_string = encode64_from_bytes_to_string(encrypted_bytes);
+<a href=#276 id=276 data-nosnippet>276</a>    <span class="prelude-val">Ok</span>(secret_passcode_32bytes)
+<a href=#277 id=277 data-nosnippet>277</a>}
+<a href=#278 id=278 data-nosnippet>278</a>
+<a href=#279 id=279 data-nosnippet>279</a><span class="comment">// endregion: sign the seed with ssh-agent or private key
+<a href=#280 id=280 data-nosnippet>280</a>
+<a href=#281 id=281 data-nosnippet>281</a>// region: symmetrical encrypt and decrypt
+<a href=#282 id=282 data-nosnippet>282</a>
+<a href=#283 id=283 data-nosnippet>283</a></span><span class="doccomment">/// Encrypts symmetrically secret_string_to_encrypt with secret_passcode_32bytes.
+<a href=#284 id=284 data-nosnippet>284</a>///
+<a href=#285 id=285 data-nosnippet>285</a>/// Consumes the secret_passcode_32bytes and secret_string_to_encrypt.  
+<a href=#286 id=286 data-nosnippet>286</a>/// Returns the plain_encrypted_string, it is not a secret anymore.  
+<a href=#287 id=287 data-nosnippet>287</a></span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>encrypt_symmetric(
+<a href=#288 id=288 data-nosnippet>288</a>    secret_passcode_32bytes: SecretBox&lt;[u8; <span class="number">32</span>]&gt;,
+<a href=#289 id=289 data-nosnippet>289</a>    secret_string_to_encrypt: SecretString,
+<a href=#290 id=290 data-nosnippet>290</a>) -&gt; anyhow::Result&lt;String&gt; {
+<a href=#291 id=291 data-nosnippet>291</a>    <span class="comment">// nonce is salt
+<a href=#292 id=292 data-nosnippet>292</a>    </span><span class="kw">let </span>nonce = &lt;aes_gcm::Aes256Gcm <span class="kw">as </span>aes_gcm::AeadCore&gt;::generate_nonce(<span class="kw-2">&amp;mut </span>aes_gcm::aead::OsRng);
+<a href=#293 id=293 data-nosnippet>293</a>    <span class="kw">let </span><span class="prelude-val">Ok</span>(cipher_text_encrypted) = aes_gcm::aead::Aead::encrypt(
+<a href=#294 id=294 data-nosnippet>294</a>        <span class="comment">// cipher_secret is the true passcode, here I don't know how to use secrecy, because the type has not the trait Zeroize
+<a href=#295 id=295 data-nosnippet>295</a>        </span><span class="kw-2">&amp;</span>&lt;aes_gcm::Aes256Gcm <span class="kw">as </span>aes_gcm::KeyInit&gt;::new(secret_passcode_32bytes.expose_secret().into()),
+<a href=#296 id=296 data-nosnippet>296</a>        <span class="kw-2">&amp;</span>nonce,
+<a href=#297 id=297 data-nosnippet>297</a>        secret_string_to_encrypt.expose_secret().as_bytes(),
+<a href=#298 id=298 data-nosnippet>298</a>    ) <span class="kw">else </span>{
+<a href=#299 id=299 data-nosnippet>299</a>        <span class="macro">panic!</span>(<span class="string">"{RED}Error: Encryption failed. {RESET}"</span>);
+<a href=#300 id=300 data-nosnippet>300</a>    };
 <a href=#301 id=301 data-nosnippet>301</a>
-<a href=#302 id=302 data-nosnippet>302</a>    <span class="prelude-val">Ok</span>(plain_encrypted_string)
-<a href=#303 id=303 data-nosnippet>303</a>}
-<a href=#304 id=304 data-nosnippet>304</a>
-<a href=#305 id=305 data-nosnippet>305</a><span class="doccomment">/// Decrypts plain_encrypted_string with secret_passcode_32bytes.
-<a href=#306 id=306 data-nosnippet>306</a>///
-<a href=#307 id=307 data-nosnippet>307</a>/// Consumes secret_passcode_32bytes and encrypted_string.  
-<a href=#308 id=308 data-nosnippet>308</a>/// Returns the secret_decrypted_string.  
-<a href=#309 id=309 data-nosnippet>309</a></span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>decrypt_symmetric(
-<a href=#310 id=310 data-nosnippet>310</a>    secret_passcode_32bytes: SecretBox&lt;[u8; <span class="number">32</span>]&gt;,
-<a href=#311 id=311 data-nosnippet>311</a>    plain_encrypted_string: String,
-<a href=#312 id=312 data-nosnippet>312</a>) -&gt; anyhow::Result&lt;SecretString&gt; {
-<a href=#313 id=313 data-nosnippet>313</a>    <span class="kw">let </span>encrypted_bytes = &lt;base64ct::Base64 <span class="kw">as </span>base64ct::Encoding&gt;::decode_vec(<span class="kw-2">&amp;</span>plain_encrypted_string)<span class="question-mark">?</span>;
-<a href=#314 id=314 data-nosnippet>314</a>    <span class="comment">// nonce is salt
-<a href=#315 id=315 data-nosnippet>315</a>    </span><span class="kw">let </span>nonce = rsa::sha2::digest::generic_array::GenericArray::from_slice(<span class="kw-2">&amp;</span>encrypted_bytes[..<span class="number">12</span>]);
-<a href=#316 id=316 data-nosnippet>316</a>    <span class="kw">let </span>cipher_text = <span class="kw-2">&amp;</span>encrypted_bytes[<span class="number">12</span>..];
-<a href=#317 id=317 data-nosnippet>317</a>
-<a href=#318 id=318 data-nosnippet>318</a>    <span class="kw">let </span><span class="prelude-val">Ok</span>(secret_decrypted_bytes) = aes_gcm::aead::Aead::decrypt(
-<a href=#319 id=319 data-nosnippet>319</a>        <span class="comment">// cipher_secret is the true passcode, here I don't know how to use secrecy, because the type has not the trait Zeroize
-<a href=#320 id=320 data-nosnippet>320</a>        </span><span class="kw-2">&amp;</span>&lt;aes_gcm::Aes256Gcm <span class="kw">as </span>aes_gcm::KeyInit&gt;::new(secret_passcode_32bytes.expose_secret().into()),
-<a href=#321 id=321 data-nosnippet>321</a>        nonce,
-<a href=#322 id=322 data-nosnippet>322</a>        cipher_text,
-<a href=#323 id=323 data-nosnippet>323</a>    ) <span class="kw">else </span>{
-<a href=#324 id=324 data-nosnippet>324</a>        <span class="macro">panic!</span>(<span class="string">"{RED}Error: Decryption failed. {RESET}"</span>);
-<a href=#325 id=325 data-nosnippet>325</a>    };
-<a href=#326 id=326 data-nosnippet>326</a>    <span class="kw">let </span>secret_decrypted_string = SecretString::from(String::from_utf8(secret_decrypted_bytes)<span class="question-mark">?</span>);
-<a href=#327 id=327 data-nosnippet>327</a>
-<a href=#328 id=328 data-nosnippet>328</a>    <span class="prelude-val">Ok</span>(secret_decrypted_string)
-<a href=#329 id=329 data-nosnippet>329</a>}
-<a href=#330 id=330 data-nosnippet>330</a><span class="comment">// endregion: symmetrical encrypt and decrypt
-<a href=#331 id=331 data-nosnippet>331</a>
-<a href=#332 id=332 data-nosnippet>332</a></span><span class="doccomment">/// Replace tilde with home::home_dir, only for utf8.
-<a href=#333 id=333 data-nosnippet>333</a></span><span class="kw">pub fn </span>tilde_expand_to_home_dir_utf8(path_str: <span class="kw-2">&amp;</span>str) -&gt; anyhow::Result&lt;camino::Utf8PathBuf&gt; {
-<a href=#334 id=334 data-nosnippet>334</a>    <span class="kw">let </span><span class="kw-2">mut </span>expanded = String::new();
-<a href=#335 id=335 data-nosnippet>335</a>    <span class="kw">if </span>path_str.starts_with(<span class="string">"~"</span>) {
-<a href=#336 id=336 data-nosnippet>336</a>        <span class="kw">use </span>anyhow::Context;
-<a href=#337 id=337 data-nosnippet>337</a>        <span class="kw">let </span>base = home::home_dir().context(<span class="string">"Cannot find home_dir in this OS."</span>)<span class="question-mark">?</span>;
-<a href=#338 id=338 data-nosnippet>338</a>        <span class="comment">// only utf8 is accepted
-<a href=#339 id=339 data-nosnippet>339</a>        </span><span class="kw">let </span>base = base.to_string_lossy();
-<a href=#340 id=340 data-nosnippet>340</a>        expanded.push_str(<span class="kw-2">&amp;</span>base);
-<a href=#341 id=341 data-nosnippet>341</a>        expanded.push_str(path_str.trim_start_matches(<span class="string">"~"</span>));
-<a href=#342 id=342 data-nosnippet>342</a>        <span class="kw">use </span>std::str::FromStr;
-<a href=#343 id=343 data-nosnippet>343</a>        <span class="prelude-val">Ok</span>(camino::Utf8PathBuf::from_str(<span class="kw-2">&amp;</span>expanded)<span class="question-mark">?</span>)
-<a href=#344 id=344 data-nosnippet>344</a>    } <span class="kw">else </span>{
-<a href=#345 id=345 data-nosnippet>345</a>        <span class="kw">use </span>std::str::FromStr;
-<a href=#346 id=346 data-nosnippet>346</a>        <span class="prelude-val">Ok</span>(camino::Utf8PathBuf::from_str(path_str)<span class="question-mark">?</span>)
-<a href=#347 id=347 data-nosnippet>347</a>    }
-<a href=#348 id=348 data-nosnippet>348</a>}</code></pre></div></section></main></body></html>
+<a href=#302 id=302 data-nosnippet>302</a>    <span class="kw">let </span><span class="kw-2">mut </span>encrypted_bytes = nonce.to_vec();
+<a href=#303 id=303 data-nosnippet>303</a>    encrypted_bytes.extend_from_slice(<span class="kw-2">&amp;</span>cipher_text_encrypted);
+<a href=#304 id=304 data-nosnippet>304</a>    <span class="comment">// plain encrypted string is not a secret anymore
+<a href=#305 id=305 data-nosnippet>305</a>    </span><span class="kw">let </span>plain_encrypted_string = encode64_from_bytes_to_string(encrypted_bytes);
+<a href=#306 id=306 data-nosnippet>306</a>
+<a href=#307 id=307 data-nosnippet>307</a>    <span class="prelude-val">Ok</span>(plain_encrypted_string)
+<a href=#308 id=308 data-nosnippet>308</a>}
+<a href=#309 id=309 data-nosnippet>309</a>
+<a href=#310 id=310 data-nosnippet>310</a><span class="doccomment">/// Decrypts plain_encrypted_string with secret_passcode_32bytes.
+<a href=#311 id=311 data-nosnippet>311</a>///
+<a href=#312 id=312 data-nosnippet>312</a>/// Consumes secret_passcode_32bytes and encrypted_string.  
+<a href=#313 id=313 data-nosnippet>313</a>/// Returns the secret_decrypted_string.  
+<a href=#314 id=314 data-nosnippet>314</a></span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>decrypt_symmetric(
+<a href=#315 id=315 data-nosnippet>315</a>    secret_passcode_32bytes: SecretBox&lt;[u8; <span class="number">32</span>]&gt;,
+<a href=#316 id=316 data-nosnippet>316</a>    plain_encrypted_string: String,
+<a href=#317 id=317 data-nosnippet>317</a>) -&gt; anyhow::Result&lt;SecretString&gt; {
+<a href=#318 id=318 data-nosnippet>318</a>    <span class="kw">let </span>encrypted_bytes = &lt;base64ct::Base64 <span class="kw">as </span>base64ct::Encoding&gt;::decode_vec(<span class="kw-2">&amp;</span>plain_encrypted_string).log()<span class="question-mark">?</span>;
+<a href=#319 id=319 data-nosnippet>319</a>    <span class="comment">// nonce is salt
+<a href=#320 id=320 data-nosnippet>320</a>    </span><span class="kw">let </span>nonce = <span class="kw-2">&amp;</span>encrypted_bytes[..<span class="number">12</span>];
+<a href=#321 id=321 data-nosnippet>321</a>    <span class="kw">let </span>cipher_text = <span class="kw-2">&amp;</span>encrypted_bytes[<span class="number">12</span>..];
+<a href=#322 id=322 data-nosnippet>322</a>
+<a href=#323 id=323 data-nosnippet>323</a>    <span class="kw">let </span><span class="prelude-val">Ok</span>(secret_decrypted_bytes) = aes_gcm::aead::Aead::decrypt(
+<a href=#324 id=324 data-nosnippet>324</a>        <span class="comment">// cipher_secret is the true passcode, here I don't know how to use secrecy, because the type has not the trait Zeroize
+<a href=#325 id=325 data-nosnippet>325</a>        </span><span class="kw-2">&amp;</span>&lt;aes_gcm::Aes256Gcm <span class="kw">as </span>aes_gcm::KeyInit&gt;::new(secret_passcode_32bytes.expose_secret().into()),
+<a href=#326 id=326 data-nosnippet>326</a>        nonce.into(),
+<a href=#327 id=327 data-nosnippet>327</a>        cipher_text,
+<a href=#328 id=328 data-nosnippet>328</a>    ) <span class="kw">else </span>{
+<a href=#329 id=329 data-nosnippet>329</a>        <span class="macro">panic!</span>(<span class="string">"{RED}Error: Decryption failed. {RESET}"</span>);
+<a href=#330 id=330 data-nosnippet>330</a>    };
+<a href=#331 id=331 data-nosnippet>331</a>    <span class="kw">let </span>secret_decrypted_string = SecretString::from(String::from_utf8(secret_decrypted_bytes).log()<span class="question-mark">?</span>);
+<a href=#332 id=332 data-nosnippet>332</a>
+<a href=#333 id=333 data-nosnippet>333</a>    <span class="prelude-val">Ok</span>(secret_decrypted_string)
+<a href=#334 id=334 data-nosnippet>334</a>}
+<a href=#335 id=335 data-nosnippet>335</a><span class="comment">// endregion: symmetrical encrypt and decrypt
+<a href=#336 id=336 data-nosnippet>336</a>
+<a href=#337 id=337 data-nosnippet>337</a></span><span class="doccomment">/// Replace tilde with home::home_dir, only for utf8.
+<a href=#338 id=338 data-nosnippet>338</a></span><span class="kw">pub fn </span>tilde_expand_to_home_dir_utf8(path_str: <span class="kw-2">&amp;</span>str) -&gt; anyhow::Result&lt;camino::Utf8PathBuf&gt; {
+<a href=#339 id=339 data-nosnippet>339</a>    <span class="kw">let </span><span class="kw-2">mut </span>expanded = String::new();
+<a href=#340 id=340 data-nosnippet>340</a>    <span class="kw">if </span>path_str.starts_with(<span class="string">"~"</span>) {
+<a href=#341 id=341 data-nosnippet>341</a>        <span class="kw">use </span>anyhow::Context;
+<a href=#342 id=342 data-nosnippet>342</a>        <span class="kw">let </span>base = home::home_dir().context(<span class="string">"Cannot find home_dir in this OS."</span>).log()<span class="question-mark">?</span>;
+<a href=#343 id=343 data-nosnippet>343</a>        <span class="comment">// only utf8 is accepted
+<a href=#344 id=344 data-nosnippet>344</a>        </span><span class="kw">let </span>base = base.to_string_lossy();
+<a href=#345 id=345 data-nosnippet>345</a>        expanded.push_str(<span class="kw-2">&amp;</span>base);
+<a href=#346 id=346 data-nosnippet>346</a>        expanded.push_str(path_str.trim_start_matches(<span class="string">"~"</span>));
+<a href=#347 id=347 data-nosnippet>347</a>        <span class="kw">use </span>std::str::FromStr;
+<a href=#348 id=348 data-nosnippet>348</a>        <span class="prelude-val">Ok</span>(camino::Utf8PathBuf::from_str(<span class="kw-2">&amp;</span>expanded).log()<span class="question-mark">?</span>)
+<a href=#349 id=349 data-nosnippet>349</a>    } <span class="kw">else </span>{
+<a href=#350 id=350 data-nosnippet>350</a>        <span class="kw">use </span>std::str::FromStr;
+<a href=#351 id=351 data-nosnippet>351</a>        <span class="prelude-val">Ok</span>(camino::Utf8PathBuf::from_str(path_str).log()<span class="question-mark">?</span>)
+<a href=#352 id=352 data-nosnippet>352</a>    }
+<a href=#353 id=353 data-nosnippet>353</a>}</code></pre></div></section></main></body></html>
