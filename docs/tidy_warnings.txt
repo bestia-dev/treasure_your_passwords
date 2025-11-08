@@ -593,12 +593,12 @@ using HTML Tidy to generate a tidied up version.
 ./docs/treasure_your_passwords/index.html
 Document: "2" is not a file!
 
-line 1 column 3669 - Error: <rustdoc-search> is not recognized! Did you mean to enable the custom-tags option?
-line 1 column 3669 - Warning: discarding unexpected <rustdoc-search>
-line 1 column 3685 - Warning: discarding unexpected </rustdoc-search>
-line 1 column 3904 - Error: <rustdoc-toolbar> is not recognized! Did you mean to enable the custom-tags option?
-line 1 column 3904 - Warning: discarding unexpected <rustdoc-toolbar>
-line 1 column 3921 - Warning: discarding unexpected </rustdoc-toolbar>
+line 1 column 3758 - Error: <rustdoc-search> is not recognized! Did you mean to enable the custom-tags option?
+line 1 column 3758 - Warning: discarding unexpected <rustdoc-search>
+line 1 column 3774 - Warning: discarding unexpected </rustdoc-search>
+line 1 column 3993 - Error: <rustdoc-toolbar> is not recognized! Did you mean to enable the custom-tags option?
+line 1 column 3993 - Warning: discarding unexpected <rustdoc-toolbar>
+line 1 column 4010 - Warning: discarding unexpected </rustdoc-toolbar>
 line 1 column 1852 - Warning: trimming empty <button>
 This document has errors that must be fixed before
 using HTML Tidy to generate a tidied up version.

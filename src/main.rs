@@ -4,7 +4,7 @@
 //! # treasure_your_passwords
 //!
 //! **Use SSH private key to store your passwords locally and make them strong**  
-//! ***version: 0.0.81 date: 2025-11-07 author: [bestia.dev](https://bestia.dev) repository: [GitHub](https://github.com/bestia-dev/treasure_your_passwords)***
+//! ***version: 0.0.83 date: 2025-11-08 author: [bestia.dev](https://bestia.dev) repository: [GitHub](https://github.com/bestia-dev/treasure_your_passwords)***
 //!
 //!  ![maintained](https://img.shields.io/badge/maintained-green)
 //!  ![ready-for-use](https://img.shields.io/badge/ready_for_use-green)
@@ -15,13 +15,18 @@
 //!  ![treasure_your_passwords](https://bestia.dev/webpage_hit_counter/get_svg_image/779107454.svg)
 //!
 //! [![Lines in Rust code](https://img.shields.io/badge/Lines_in_Rust-678-green.svg)](https://github.com/bestia-dev/treasure_your_passwords/)
-//! [![Lines in Doc comments](https://img.shields.io/badge/Lines_in_Doc_comments-198-blue.svg)](https://github.com/bestia-dev/treasure_your_passwords/)
+//! [![Lines in Doc comments](https://img.shields.io/badge/Lines_in_Doc_comments-205-blue.svg)](https://github.com/bestia-dev/treasure_your_passwords/)
 //! [![Lines in Comments](https://img.shields.io/badge/Lines_in_comments-74-purple.svg)](https://github.com/bestia-dev/treasure_your_passwords/)
 //! [![Lines in examples](https://img.shields.io/badge/Lines_in_examples-0-yellow.svg)](https://github.com/bestia-dev/treasure_your_passwords/)
 //! [![Lines in tests](https://img.shields.io/badge/Lines_in_tests-0-orange.svg)](https://github.com/bestia-dev/treasure_your_passwords/)
 //!
 //! Hashtags: #maintained #ready-for-use #rustlang  
 //! My projects on GitHub are more like a tutorial than a finished product: [bestia-dev tutorials](https://github.com/bestia-dev/tutorials_rust_wasm).  
+//!
+//! ## ⚠️ Security Warning
+//!
+//! The implementation contained in this crate has never been independently audited!  
+//! USE AT YOUR OWN RISK!
 //!
 //! ## create the SSH key
 //!
@@ -230,7 +235,7 @@ impl<T, E: std::fmt::Debug> ResultLogError<T, E> for core::result::Result<T, E> 
     #[inline(always)]
     #[track_caller]
     fn log(self) -> Self {
-        self.inspect_err(|err| tracing::error!(?err))
+        self.inspect_err(|err| tracing::debug!(?err))
     }
 }
 

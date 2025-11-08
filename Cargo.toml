@@ -1,6 +1,6 @@
 [package]
 name = "treasure_your_passwords"
-version = "0.0.81"
+version = "0.0.83"
 description = "Use SSH private key to store your passwords locally and make them strong"
 authors = ["bestia.dev"]
 homepage = "https://bestia.dev"
@@ -30,10 +30,9 @@ tracing-subscriber = { version = "0.3.19", features = ["env-filter", "std", "fmt
 tracing-appender="0.2.3"
 time = {version="0.3.39", features=["macros","local-offset"]}
 
-thiserror = "2.0.12"
+thiserror = "2.0.17"
 anyhow="1.0.97"
-# the last version of reqwest that builds in win-git-bah is 0.12.12
-reqwest={version="=0.12.12", features=["json","blocking"]}
+reqwest={version="0.12.24", features=["json","blocking"]}
 serde ={ version= "1.0.219", features=["std","derive"]}
 serde_json = "1.0.140"
 ssh-key = { version = "0.6.7", features = [ "rsa", "encryption","ed25519"] }
